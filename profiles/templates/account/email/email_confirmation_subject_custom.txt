@@ -1,0 +1,4 @@
+{% load i18n %}
+{% autoescape off %}
+{% blocktrans %}Please confirm your email custom subject header email_confirmation_subject.txt {% endblocktrans %}
+{% endautoescape %}

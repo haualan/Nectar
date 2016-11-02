@@ -1,0 +1,16 @@
+{% extends 'profiles/layout.html' %}
+
+{% block title %}OTTO Account Confirmed{% endblock %}
+
+{% block custombody_content %}
+<p>We've e-mailed you instructions for setting your password to the e-mail address you submitted.</p>
+<p>Your Account is not confirmed yet but available for use</p>
+
+<p>key: {{ userkey }}</p>
+
+<p>dev notes: Front end should also POST to /verify-email/ endpoint with proper key as described in docs
+http://django-rest-auth.readthedocs.org/en/latest/faq.html
+</p>
+
+
+{% endblock %}

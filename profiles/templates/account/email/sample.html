@@ -1,0 +1,52 @@
+<table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable" style="font-family:Helvetica, Arial, sans-serif;">
+    <tr>
+        <td align="center" valign="top">
+            <table border="0" cellpadding="20" cellspacing="0" width="600" id="emailContainer" style="background-color:#5ABCDF ; ">
+                <tr>
+                    <td align="center" valign="top">
+                        <table border="0" cellpadding="20" cellspacing="0" width="100%" id="emailHeader" style="">
+                            <tr>
+                                <td align="center" valign="top" >
+                                    <img src="https://s3.amazonaws.com/sc.mktg/sc_logo.png" alt="Sixcycle" title="Logo" style="width:50%; display:block"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" valign="top">
+                        <table border="0" cellpadding="20" cellspacing="0" width="100%" id="emailBody" >
+                            <tr>
+                                <td align="center" valign="top" style="color:#FFFFFF; padding-top:0px;">
+                                    {% if invitedBy %}
+                                        <h3>{{ invitedBy }} wants to connect.</h3>
+                                    {% else %}
+                                        <h3>You have been invited.</h3>
+                                    {% endif %}
+
+                                    {% if customMessage %}
+                                        <h3>{{ customMessage }}</h3>
+                                    {% endif %}
+                                    
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" valign="top">
+                        <a href="{{ inviteLink }}" target="_blank" style="color:#FFFFFF; text-decoration:none;">
+                            <table border="0" cellpadding="0" cellspacing="0" style="background-color:#208AC2; border:0px solid #353535; border-radius:0px;">
+                                <tr>
+                                    <td align="center" valign="middle" style="color:#FFFFFF; font-family:Helvetica, Arial, sans-serif; font-size:16px; font-weight:bold; letter-spacing:-.5px; line-height:150%; padding-top:15px; padding-right:30px; padding-bottom:15px; padding-left:30px;">
+                                        GET STARTED
+                                    </td>
+                                </tr>
+                            </table>
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>

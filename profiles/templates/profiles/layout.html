@@ -1,0 +1,349 @@
+{% extends 'djfrontend/skeleton.html' %}
+
+{% load static %}
+
+{% block djfrontend_twbs_css %}
+    <!-- <link href="/static/css/bootstrap.css" rel="stylesheet"> -->
+    <title>Learning Gestures Site</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static "css/flat-ui.min.css" %}" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+
+    
+    <style type="text/css">
+      /* Move down content because we have a fixed navbar that is 50px tall */
+      body {
+        padding-top: 50px;
+        /*padding-bottom: 0px;*/
+      }
+
+      .navbar-toolbar {
+        padding-top: 5px;
+      }
+
+
+      .navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:hover, .navbar-inverse .navbar-nav>.active>a:focus {
+          color: #fff;
+          background-color: #54B498;
+      }
+
+      .sc-subicons:hover .sc-subicons:focus .sc-subicons-navbar {
+        background-color: blue;
+        color: black;
+       
+      }
+
+
+      .sc-subicons{
+        background-color: #479982;
+        color: #54B498;
+      }
+
+
+      .sc-subicons>span {
+        color: #54B498;
+      }
+
+
+
+
+      
+
+
+      
+    </style>
+
+    <script type="text/javascript">
+    $(document).ready(function() {
+      // // remove everything that is active in nav and hide all btn groups
+      // $(".nav").find(".active").removeClass("active");
+      // // $(".nav").children().removeClass("active");
+      // $(".nav").find(".btn-toolbar").addClass("hidden");
+
+
+      // // add active to the currently active pathname 
+      // $('a[href="' + window.location.pathname + '"]').parent().addClass("active");
+
+      // // activate its related toolbar group
+      // $('a[href="' + window.location.pathname + '"]').parent().next().children().removeClass("hidden");
+
+      // if (window.location.hash) {
+
+      //     $(".nav").find('a[href="' + window.location.hash + '"]').addClass("active");
+      //   } else {
+      //     // just light up first item in toolbar
+      //     // console.log("light up first item");
+      //     $('a[href="' + window.location.pathname + '"]').parent().next().children().children().children().first().addClass("active");
+
+      //   };
+        
+      // $(window).on('hashchange', function() {
+      //   // console.log('window hash change', window.location.hash)
+      //   $(".nav").find(".btn-group").children().removeClass("active");
+
+      //   // bootstrap automatically lights the corresponding hash btn
+      //   // $(".nav").find('a[href="' + window.location.hash + '"]').addClass("active");
+
+      // });
+      
+      var activeButton = $('a[href="' + window.location.pathname + '"]').parent().parent().parent();
+      activeButton.addClass("active");
+
+
+      var activeSubNav = $('a[href="' + window.location.pathname + '"]').parent().parent().parent().next();
+      activeSubNav.removeClass("hidden");
+
+    
+      var listOfSubNavButtons = activeSubNav.children().children();
+
+
+      if (activeButton.attr('id') == "groupViewNavbar"){
+        console.log('render links for groupViewNavbar');
+        // $('a', listOfSubNavButtons).each(function () {
+        //   console.log($(this).attr('href'));
+        // });
+
+        $('a', listOfSubNavButtons).eq(0).attr('href', "/groupCalendar/{{ qid }}");
+        $('a', listOfSubNavButtons).eq(1).attr('href', activeButton.attr("href"));
+        $('a', listOfSubNavButtons).eq(2).attr('href', "/groupGallery/{{ qid }}");
+        $('a', listOfSubNavButtons).eq(3).attr('href', "/groupChart/{{ qid }}");
+   
+      }
+
+      if (activeButton.attr('id') == "personalViewNavbar"){
+        console.log('render links for personalViewNavbar');
+
+        $('a', listOfSubNavButtons).eq(0).attr('href', "/indivCalendar/{{ qid }}");
+        $('a', listOfSubNavButtons).eq(1).attr('href', activeButton.attr("href"));
+        $('a', listOfSubNavButtons).eq(2).attr('href', "/indivGallery/{{ qid }}");
+        $('a', listOfSubNavButtons).eq(3).attr('href', "/indivChart/{{ qid }}");
+      }
+
+});
+    </script>
+
+    {% block customScripts %}
+    {% endblock customScripts %}
+{% endblock djfrontend_twbs_css %}
+
+
+{% block body_content %}
+
+    <div class="navbar navbar-default navbar-inverse navbar-fixed-top">
+      <div class="container">
+
+
+        <div class="navbar-collapse collapse">
+        <!-- <div class="navbar navbar-collapse collapse"> -->
+          {% if user.is_authenticated %}
+          <ul class="nav navbar-nav">
+            <li><a href="{% url 'profiles:dashboard' %}"><span class="fui-home"></span></a></li>
+
+
+            {% comment %}
+            <li><a href="{% url 'profiles:settings' %}">Settings</a></li>
+            <li>
+              <div class="btn-toolbar navbar-toolbar hidden">
+                <div class="btn-group">
+                  <a class="btn" href="#poo"><span class="fui-time"></span></a>
+                  <a class="btn" href="#fakelink"><span class="fui-photo"></span></a>
+                  <a class="btn" href="#fakelink"><span class="fui-heart"></span></a>
+                  <a class="btn" href="#fakelink"><span class="fui-eye"></span></a>
+                </div>
+              </div>
+            </li>
+
+            <li><a href="{% url 'sccalendar:indivCalendar' %}">Indiv Calendar</a></li>
+            <li>
+              <div class="btn-toolbar navbar-toolbar hidden">
+                <div class="btn-group">
+                  <a class="btn" href="#poo"><span class="fui-time"></span></a>
+                  <a class="btn" href="#fakelink"><span class="fui-photo"></span></a>
+                  <a class="btn" href="#fakelink"><span class="fui-heart"></span></a>
+                  <a class="btn" href="#fakelink"><span class="fui-eye"></span></a>
+                </div>
+              </div>
+            </li>
+
+            <li><a href="{% url 'activities:library' %}">Library</a></li>
+            <li>
+              <div class="btn-toolbar navbar-toolbar hidden">
+                <div class="btn-group">
+                  <a class="btn" href="#poo"><span class="fui-time"></span></a>
+                  <a class="btn" href="#fakelink"><span class="fui-photo"></span></a>
+                  <a class="btn" href="#fakelink"><span class="fui-heart"></span></a>
+                  <a class="btn" href="#fakelink"><span class="fui-eye"></span></a>
+                </div>
+              </div>
+            </li>
+
+            {% endcomment %}
+
+            {% if not user.get_trainees %}
+            <!-- if not an expert only see your self data -->
+            <li id="personalViewNavbar">
+              <a href="{% url 'streamView:indiv' 'asTrainee' 0 %}"><span class="fui-user"></span></a>
+            </li>
+
+            {% else %}
+            <!-- if indeed expert, see self data and other athletes -->
+            <li class="dropdown" id="personalViewNavbar">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="fui-user"></span>
+                              <span class="caret"></span>
+                              </a>
+              <ul class="dropdown-menu">
+              
+                <li><a href="{% url 'streamView:indiv' 'asTrainee' 0 %}">myself</a></li>
+                <li role="separator" class="divider"></li>
+
+              {% for trainee in user.get_trainees %}
+                <li><a href="{% url 'streamView:indiv' 'asExpert' trainee.id %}">{{ trainee }}</a></li>
+              {% endfor %}
+
+              </ul>
+            </li>
+
+            {% endif %}
+            <li class="hidden">
+              <ul class="nav navbar-nav sc-subicons-navbar">
+                 <li>
+                  <a href="#" class="sc-subicons"><span class="fui-calendar"></span></a>
+                </li>
+                <li>
+                  <a href="#" class="sc-subicons"><span class="fui-bubble"></span></a>
+                </li>
+                <li>
+                  <a href="#" class="sc-subicons"><span class="fui-image"></span></a>
+                </li>
+                <li>
+                  <a href="#" class="sc-subicons"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span></a>
+                </li>
+              
+              </ul>
+            </li>
+
+
+
+            {% if not user.get_groups %}
+            <li id="groupViewNavbar">
+            
+              <a href="{% url 'activities:library' %}"><span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span></a>
+              {% comment %}
+              <a href="{% url 'streamView:group' 'nogroup' %}"><span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span></a>
+
+              {% endcomment %}
+
+            </li>
+            {% else %}
+
+            <li class="dropdown" id="groupViewNavbar">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span>
+                              <span class="caret"></span>
+                              </a>
+              <ul class="dropdown-menu">
+
+              {% for group in user.get_groups %}
+                <li><a href="{% url 'streamView:group' group.id %}">{{ group }}</a></li>              
+              {% endfor %}
+
+              </ul>
+            </li>
+
+            {% endif %}
+            <li class="hidden">
+              <ul class="nav navbar-nav sc-subicons-navbar">
+                 <li>
+                  <a href="#" class="sc-subicons"><span class="fui-calendar"></span></a>
+                </li>
+                <li>
+                  <a href="#" class="sc-subicons"><span class="fui-bubble"></span></a>
+                </li>
+                <li>
+                  <a href="#" class="sc-subicons"><span class="fui-image"></span></a>
+                </li>
+                <li>
+                  <a href="#" class="sc-subicons"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span></a>
+                </li>
+              
+              </ul>
+            </li>
+
+
+            
+            <li class="directMessage">
+              <a href="{% url 'streamView:directMessage' %}"><span class="fui-mail"></span></a>
+            </li>
+            
+           
+
+          </ul>
+          {% endif %}
+
+
+          
+          <ul class="nav navbar-nav navbar-right">
+            <li><a class="navbar-brand" href="#">Sixcycle</a></li>
+
+            {% if user.is_authenticated %}
+            <li><a>Welcome, {{ user.name }}</a></li> 
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="fui-gear"></span>
+                              <span class="caret"></span>
+                              </a>
+              <ul class="dropdown-menu">
+                <li><a href="{% url 'profiles:settings' %}">Profile Settings</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="{% url 'profiles:logout' %}">Logout</a></li>
+              </ul>
+            </li>
+            {% endif %}
+          </ul>
+          
+          <!-- <form class="navbar-form navbar-right">
+            <div class="form-group">
+              <input type="text" placeholder="Email" class="form-control">
+            </div>
+            <div class="form-group">
+              <input type="password" placeholder="Password" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-success">Sign in</button>
+          </form> -->
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+<!--     <div class="jumbotron">
+      <div class="container">
+        <h1>Welcome to django-skeleton</h1>
+        <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+        <p><a class="btn btn-primary btn-lg" href="http://getbootstrap.com/">Learn more &raquo;</a></p>
+      </div>
+    </div> -->
+
+{% block custombody_content %}
+{% endblock custombody_content %}
+
+
+
+<br>   
+
+<footer class="footer">
+        <div class="container">
+        <hr>
+          <p>&copy; Sixcycle 2015</p>
+        </div>
+      </footer>
+
+
+
+  {% endblock body_content %}
+
+
+        
+
+
+

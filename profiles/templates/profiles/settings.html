@@ -1,0 +1,86 @@
+{% extends 'profiles/layout.html' %}
+
+{% block customScripts %}
+
+
+{% endblock customScripts %}
+
+{% block custombody_content %}
+
+<div class="container">
+
+
+
+<br>
+
+<div class="row">
+  <div class="col-sm-2"></div>
+  <div class="col-sm-8">
+    <div class="page-header text-center">
+      <h1>Settings</h1>
+    </div>
+
+  
+  
+  </div>
+  <div class="col-sm-2"></div>
+</div>
+
+<p>{{ request }}</p>
+<p>test</p>
+
+<form method="POST" action="{% url 'profiles:settings' %}" >
+
+{% csrf_token %}
+  {% if form.non_field_errors %}
+    <ul>
+      {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  {% for field in form %}
+  <div id="{{ field.auto_id }}_container">
+    {{ field.help_text }}
+    <div>
+      {{ field.label_tag }} {{ field }}
+    </div>
+    <div id="{{ field.auto_id }}_errors">
+      {{ field.errors }}
+    </div>
+  </div>
+  {% endfor %}
+
+
+  <div class="row">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-4">
+      <input class="btn-primary btn-lg btn btn-block" type="submit" value="Update"\>
+    </div>
+    <div class="col-sm-4"></div>
+  </div>
+
+  
+</form>
+
+<a href="{% url 'profiles:password_reset' %}">Reset Password</a>
+
+<br>
+
+<a href="{% url 'social:begin' 'fitbit' %}?next={{ request.path }}">Login with FitBit</a>
+
+<br>
+
+<a href="{% url 'social:begin' 'strava' %}?next={{ request.path }}">Login with Strava</a>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+</div>
+{% endblock custombody_content %}
