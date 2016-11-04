@@ -1,5 +1,3 @@
-# from spirit.topic.models import Topic
-from spirit.topic.notification.models import TopicNotification
 
 from profiles.models import *
 # from activities.models import ZoneDefinition, CPnotification , PassiveActivityData
@@ -207,27 +205,27 @@ class DisconnectSocialSerializer(serializers.Serializer):
     association_id = serializers.IntegerField(required = False, allow_null = True)
 
 
-view_names_base = {
-  # 'UserSearchSerializer' : 'usersearch',
-  'UserProfileSerializer' : 'userprofile',
-  'UserSerializer' : 'user',
-  'GroupSerializer': 'group',
-  'GroupMemberRelationSerializer': 'groupmemberrelation',
-  'GroupMemberRelationSimpleSerializer': 'groupmemberrelationsimple',
-  'GroupMemberRelationDashboardSerializer': 'groupmemberrelationdashboard',
-  # 'GroupMemberAsTraineeSerializer': 'groupmemberastrainee',
-  'SuperExpertExpertRelationSerializer': 'superexpertexpertrelation',
-  'SuperExpertExpertRelation_asSubExpert_Serializer': 'superexpertexpertrelation_assubexpert',
-  'SuperExpertExpertRelation_asSuperExpert_Serializer': 'superexpertexpertrelation_assuperexpert',
-  'TraineeExpertRelationSerializer':'traineeexpertrelation',
-  'TraineeExpertRelation_asExpert_Serializer': 'traineeexpertrelation_asexpert',
-  'TraineeExpertRelation_asTrainee_Serializer': 'traineeexpertrelation_astrainee',
-  'MeSerializer': 'me',
-  'InviteSerializer': 'invite',
-  'DisconnectSocialSerializer':'disconnectsocial',
+# view_names_base = {
+#   # 'UserSearchSerializer' : 'usersearch',
+#   'UserProfileSerializer' : 'userprofile',
+#   'UserSerializer' : 'user',
+#   'GroupSerializer': 'group',
+#   'GroupMemberRelationSerializer': 'groupmemberrelation',
+#   'GroupMemberRelationSimpleSerializer': 'groupmemberrelationsimple',
+#   'GroupMemberRelationDashboardSerializer': 'groupmemberrelationdashboard',
+#   # 'GroupMemberAsTraineeSerializer': 'groupmemberastrainee',
+#   'SuperExpertExpertRelationSerializer': 'superexpertexpertrelation',
+#   'SuperExpertExpertRelation_asSubExpert_Serializer': 'superexpertexpertrelation_assubexpert',
+#   'SuperExpertExpertRelation_asSuperExpert_Serializer': 'superexpertexpertrelation_assuperexpert',
+#   'TraineeExpertRelationSerializer':'traineeexpertrelation',
+#   'TraineeExpertRelation_asExpert_Serializer': 'traineeexpertrelation_asexpert',
+#   'TraineeExpertRelation_asTrainee_Serializer': 'traineeexpertrelation_astrainee',
+#   'MeSerializer': 'me',
+#   'InviteSerializer': 'invite',
+#   'DisconnectSocialSerializer':'disconnectsocial',
 
 
-}
+# }
 
 
 from allauth.account.models import EmailConfirmation
@@ -248,9 +246,9 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
-    url = serializers.HyperlinkedIdentityField(
-        view_name='{}-detail'.format(view_names_base['UserProfileSerializer']),
-    )
+    # url = serializers.HyperlinkedIdentityField(
+    #     view_name='{}-detail'.format('userprofile'),
+    # )
 
     # userURL = serializers.HyperlinkedIdentityField(
     #     view_name='{}-detail'.format(view_names_base['UserSerializer']),
@@ -277,9 +275,9 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
             )
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-    url = serializers.HyperlinkedIdentityField(
-        view_name='{}-detail'.format(view_names_base['UserSerializer'])
-    )
+    # url = serializers.HyperlinkedIdentityField(
+    #     view_name='{}-detail'.format(view_names_base['UserSerializer'])
+    # )
 
     is_email_verified = serializers.SerializerMethodField(method_name = '_get_email_verification')
 
@@ -301,5 +299,19 @@ class UserSimpleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ('name', 'profile_picture_url' )
+
+class GuardianStudentRelationSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = GuardianStudentRelation
+
+class SchoolSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = School
+
+class UserSchoolRelationSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = UserSchoolRelation
+
+
 
 

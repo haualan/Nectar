@@ -9,7 +9,6 @@ autoregister('app1', 'app2', 'app3', ...)
 
 """
 
-from django.db.models import get_models, get_app
 from django.apps import apps
 from django.contrib import admin
 from authtools.admin import UserAdmin

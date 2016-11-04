@@ -56,7 +56,6 @@ DEBUG = True
 # change to True if pushing to production
 remoteHost = False
 
-TEMPLATE_DEBUG = True
 
 if remoteHost:
     ALLOWED_HOSTS = [
@@ -91,31 +90,32 @@ INSTALLED_APPS.extend([
     'rest_framework.authtoken',
     'rest_auth',
 
-    # registration does not work unless allauth is in place
+    # # registration does not work unless allauth is in place
     'allauth',
     'allauth.account',
     'rest_auth.registration',
 
-    # 'spirit',
+    # # 'spirit',
 
-    # django-storages to store uploaded files to s3
+    # # django-storages to store uploaded files to s3
     'storages',
 
     'profiles',
-    # 'activities',
-    # 'sccalendar',
-    # 'streamView',
+    # # 'activities',
+    # # 'sccalendar',
+    # # 'streamView',
     'djfrontend',
     'djfrontend.skeleton',
     'import_export',
 
-    # social auth apps
+    # # social auth apps
     'oauth2_provider',
+
     'social.apps.django_app.default',
     'rest_framework_social_oauth2',
 
     'authtools',
-    # for the love of debugging
+    # # for the love of debugging
     'debug_toolbar',
     'django_extensions',
 ])
@@ -174,13 +174,16 @@ MIDDLEWARE_CLASSES.extend([
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ])
 
 if 'TEMPLATES' not in globals():
     TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'APP_DIRS': True,
+        'APP_DIRS': (
+            os.path.join(BASE_DIR, 'templates/account/em'),
+        ),
         'OPTIONS': {
             'context_processors': [],
             },
@@ -197,9 +200,6 @@ TEMPLATES[0]['OPTIONS']['context_processors'].extend([
     'django.template.context_processors.request',
 ])
 
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'templates/account/em'),
-)
 
 LOGGING = {
     'version': 1,
@@ -282,9 +282,9 @@ AUTHENTICATION_BACKENDS.extend([
     'social.backends.google.GoogleOpenId',
     'social.backends.google.GoogleOAuth2',
     'social.backends.google.GoogleOAuth',
-    'social.backends.fitbit.FitbitOAuth',
-    'social.backends.strava.StravaOAuth',
-    'profiles.socialbackends.garmin.GarminOAuth',
+    # 'social.backends.fitbit.FitbitOAuth',
+    # 'social.backends.strava.StravaOAuth',
+    # 'profiles.socialbackends.garmin.GarminOAuth',
     # 'social.backends.twitter.TwitterOAuth',
     # 'social.backends.yahoo.YahooOpenId',
 
@@ -412,13 +412,21 @@ STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'FCADB',
-        'USER': 'djangomysql',
-        'PASSWORD': 'djangomysql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'fcadb',
+        'USER': 'djangouser',
+        'PASSWORD': '1q2w3e4r',
         'HOST': '127.0.0.1',
-        'PORT': '3306',
-    }
+        'PORT': '5432',
+    },
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'FCADB',
+    #     'USER': 'djangomysql',
+    #     'PASSWORD': 'djangomysql',
+    #     'HOST': '127.0.0.1',
+    #     'PORT': '3306',
+    # }
 }
 
 # Internationalization

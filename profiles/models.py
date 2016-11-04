@@ -11,7 +11,6 @@ from rest_framework.authtoken.models import Token
 from authtools.models import AbstractEmailUser
 
 
-from jsonfield import JSONField
 from datetime import timedelta
 import dateutil.parser
 
@@ -24,6 +23,10 @@ gender_choices = (
       ('F', 'female'),
   )
 
+role_choices = (
+      ('G', 'guardian'),
+      ('S', 'student'),
+  )
 import pytz
 tzName_choices = set((i, i) for i in pytz.all_timezones)
 
@@ -36,20 +39,23 @@ def get_default_age():
 DEFAULT_PROFILE_PICTURE_URL = 'http://placehold.it/350x350'
 
 class User(AbstractEmailUser):
-  profile_picture_url = models.URLField('profile_picture_url',blank=True, default=DEFAULT_PROFILE_PICTURE_URL)
+  avatar_url = models.URLField('avatar_url',blank=True, default=DEFAULT_PROFILE_PICTURE_URL)
   birth_date = models.DateField('birth_date', blank=True, default=get_default_age)
   gender = models.CharField('gender', max_length=1, default='M', choices = gender_choices)
-  name = models.CharField('name', max_length=255, blank=True)
-  height_in_meters = models.FloatField('height_in_meters', default=1.60)
-  weight_in_kg = models.FloatField('weight_in_kg', default= 70.0)
-  is_group_activity_anon = models.BooleanField('is_group_activity_anon', default = True)
+  firstname = models.CharField('firstname', max_length=255, blank=True)
+  lastname = models.CharField('lastname', max_length=255, blank=True)
+
   username = models.CharField('username', max_length=255, blank=True)
 
-  login_log = JSONField(default = "[]")
   # timezone offset relative to UTC
-  tzName = models.CharField(max_length=100, default = 'America/New_York',  choices = tzName_choices)
+  tzName = models.CharField(max_length=100, default = 'Hongkong',  choices = tzName_choices)
   phoneNumber = models.CharField(max_length=50, blank=True, null=True)
   location = models.CharField(max_length=100, blank=True, null=True)
+
+  lon = models.DecimalField(max_digits=9, decimal_places=6, null=True)
+  lat = models.DecimalField(max_digits=9, decimal_places=6, null=True)
+
+
   isSearchable = models.BooleanField(default = True)
 
   # controls whether email notifications are sent.
@@ -57,6 +63,10 @@ class User(AbstractEmailUser):
 
   # controls whether paywall is active for user
   showPayWall = models.BooleanField(default = False)
+
+  # user roles: can be a parent or coach
+  role = models.CharField(max_length=1, default='G', choices = role_choices)
+
 
 
   def save(self, *args, **kwargs):
@@ -92,33 +102,33 @@ class User(AbstractEmailUser):
     return self.name
 
   # @new-thread
-  def record_login(self):
-    """
-    used to record a user's logging in
-    """
-    # print 'self.login_log', self.login_log , type(self.login_log)
-    nd = timezone.now().date()
-    if not isinstance(self.login_log, list):
-      print 'self.login_log is str'
-      self.login_log = []
+  # def record_login(self):
+  #   """
+  #   used to record a user's logging in
+  #   """
+  #   # print 'self.login_log', self.login_log , type(self.login_log)
+  #   nd = timezone.now().date()
+  #   if not isinstance(self.login_log, list):
+  #     print 'self.login_log is str'
+  #     self.login_log = []
 
-    # exit function if date is repeated
-    # if format(nd) in self.login_log:
-    #   return False
+  #   # exit function if date is repeated
+  #   # if format(nd) in self.login_log:
+  #   #   return False
 
-    # clean up old logins
-    cuttoff = timezone.now().date() - timedelta(14)
+  #   # clean up old logins
+  #   cuttoff = timezone.now().date() - timedelta(14)
 
-    for i, v in enumerate(self.login_log):
-      try:
-        if dateutil.parser.parse(v).date() < cuttoff:
-          self.login_log.pop(i)
-      except:
-        self.login_log.pop(i)
+  #   for i, v in enumerate(self.login_log):
+  #     try:
+  #       if dateutil.parser.parse(v).date() < cuttoff:
+  #         self.login_log.pop(i)
+  #     except:
+  #       self.login_log.pop(i)
 
-    self.login_log.append(nd)
-    self.login_log = list(set(self.login_log))
-    self.save()
+  #   self.login_log.append(nd)
+  #   self.login_log = list(set(self.login_log))
+  #   self.save()
 
   # def get_defaultPlan(self):
   #   isGroup = False
@@ -144,10 +154,48 @@ class User(AbstractEmailUser):
   def __unicode__(self):              
     return self.email
 
+  @property
+  def name(self):
+    return '{} {}'.format(self.firstname, self.lastname)
+
+
 class UserForm(ModelForm):
   """
   This is the form fields showing fields a user is allowed to change
   """
   class Meta:
     model = User
-    fields = ['email', 'username', 'name', 'profile_picture_url', 'birth_date', 'gender', 'height_in_meters', 'isSearchable']
+    fields = ['email', 'username', 'firstname','lastname', 'avatar_url', 'birth_date', 'gender', 'isSearchable']
+
+
+class GuardianStudentRelation(models.Model):
+  guardian = models.ForeignKey('User')
+  student = models.ForeignKey('User', related_name='TraineeExpertRelation_trainee')  
+
+  def __unicode__(self):
+    return u'Expert: %s Trainee: %s' % (self.expertUser, self.traineeUser)
+
+  class Meta:
+    unique_together = ('guardian', 'student',)
+
+class School(models.Model):
+  avatar_url = models.URLField('avatar_url',blank=True, default=DEFAULT_PROFILE_PICTURE_URL)
+  name = models.CharField(max_length=255, blank=False)
+  lon = models.DecimalField(max_digits=9, decimal_places=6)
+  lat = models.DecimalField(max_digits=9, decimal_places=6)
+
+  class Meta:
+    # schools must be unique
+    unique_together = ('name',)
+
+
+
+class UserSchoolRelation(models.Model):
+  user = models.ForeignKey('User')
+  school = models.ForeignKey('School')
+
+  class Meta:
+    # each user can be associated to multiple schools but only once
+    unique_together = ('user','school',)
+
+

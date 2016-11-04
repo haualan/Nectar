@@ -28,7 +28,7 @@ class MeView(viewsets.ReadOnlyModelViewSet):
     \n notification_id_topic_id: the first item is the notfication_id, the second is the topic_id, when showing stream to user, if topic_id matches this list...
     \n then for each notification_id, send a PUT to the /topicnotification/'notification_id'/ endpoint to signify a read action
     """
-    api_name = view_names_base['MeSerializer']
+    api_name = 'me'
 
     queryset = User.objects.all()
     serializer_class = MeSerializer
@@ -44,8 +44,8 @@ class MeView(viewsets.ReadOnlyModelViewSet):
         #     print i 
 
 
-        self.request.user.record_login()
-        getSegment(self.request, 'identify')
+        # self.request.user.record_login()
+        # getSegment(self.request, 'identify')
 
         
         return self.queryset.filter(email=self.request.user)
@@ -68,11 +68,11 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     DELETE to delete the current user
 
     """
-    api_name = view_names_base['UserProfileSerializer']
+    api_name = 'userprofile'
 
     queryset = User.objects.all()
     serializer_class = UserProfileSerializer
-    # permission_classes = (IsAuthenticated,IsOwnerOrReadOnly,)
+    permission_classes = (IsAuthenticated,IsOwnerOrReadOnly,)
     # http_method_names = ['get','put', 'delete']
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', 'email')
@@ -96,15 +96,36 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
         u = serializer.save()
 
-        # check if user saved has an existing threshold pace
-        # if so, running zones must be refreshed 
-        if origUser.birth_date != u.birth_date:
-            ftp = u.PassiveActivityData.filter(measurementType='FTPace')
-            if ftp:
-                dur = get_10K_duration_from_FTP(ftp.first().value)
-                u.setRunningZone(distanceMeter=10000, timeSecond=dur)
 
 
+class GuardianStudentRelationViewSet(viewsets.ModelViewSet):
+    """
+    defines the relationship between students and guardians, each field is a user
+    """
+    api_name = 'guardianstudentrelation'
+    queryset = GuardianStudentRelation.objects.all()
+    serializer_class = GuardianStudentRelationSerializer
+    permission_classes = (IsAuthenticated,)
+
+
+
+class SchoolViewSet(viewsets.ModelViewSet):
+    """
+    defines the School objects that could be associated with a user under UserSchoolRelation
+    """
+    api_name = 'school'
+    queryset = School.objects.all()
+    serializer_class = SchoolSerializer
+    permission_classes = (IsAuthenticated,)
+
+class UserSchoolRelation(viewsets.ModelViewSet):
+    """
+    defines the School objects that could be associated with a user under UserSchoolRelation
+    """
+    api_name = 'userschoolrelation'
+    queryset = UserSchoolRelation.objects.all()
+    serializer_class = UserSchoolRelationSerializer
+    permission_classes = (IsAuthenticated,)
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -115,7 +136,7 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     \n - this will include all the group coaches of the subscribed groups of the user
 
     """
-    api_name = view_names_base['UserSerializer']
+    api_name = 'user'
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -165,7 +186,7 @@ class InviteView(views.APIView):
 \n    expertUser is an optional <int>, put in the User ID  of the expert you want this new user to be a part of
     """
 
-    api_name = view_names_base['InviteSerializer']
+    api_name = 'invite'
     serializer_class = InviteSerializer
 
     # this endpoint should be public so anyone can sign up
@@ -224,7 +245,7 @@ class DisconnectSocialView(views.APIView):
 
     """
 
-    api_name = view_names_base['DisconnectSocialSerializer']
+    api_name = 'disconnectsocial'
     serializer_class = DisconnectSocialSerializer
     permission_classes = (IsAuthenticated, )
     http_method_names = ['post']
