@@ -59,8 +59,9 @@ remoteHost = False
 
 if remoteHost:
     ALLOWED_HOSTS = [
-        '.sixcycle.com', # Allow domain and subdomains
-        '.sixcycle.com.', # Also allow FQDN and subdomains
+        '.firstcodeacademy.com', # Allow domain and subdomains
+        '.firstcodeacademy.com.', # Also allow FQDN and subdomains
+        '52.220.123.222',
     ]
 
 
