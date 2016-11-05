@@ -3,6 +3,8 @@ from rest_framework.exceptions import APIException, ParseError, PermissionDenied
 from profiles.serializers import MeSerializer
 
 import analytics
+
+# prepare api key for FCA?
 analytics.write_key = settings.SEGMENT_KEY
 
 from threading import Thread

@@ -20,7 +20,7 @@ from django.utils import timezone
 
 # rest framework Endpoints
 
-from .segment import *
+# from .segment import *
 class MeView(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that shows all the links open to the current user for a navigation bar, this is read-Only
