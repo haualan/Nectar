@@ -55,6 +55,9 @@ class User(AbstractEmailUser):
   lon = models.DecimalField(max_digits=9, decimal_places=6, null=True)
   lat = models.DecimalField(max_digits=9, decimal_places=6, null=True)
 
+  # controls whether front end should trigger onboarding when logged in.
+  hasOnboarded = models.BooleanField(default = False)
+
 
   isSearchable = models.BooleanField(default = True)
 
