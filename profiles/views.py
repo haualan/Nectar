@@ -196,9 +196,11 @@ def custom_password_reset_complete(request,
     "redirectURL": settings.SC_APP_URL
     })
 
-  r = password_reset_complete(request,
-                            template_name,
-                            current_app, extra_context)
+  r = password_reset_complete(
+    request = request,
+    template_name = template_name,
+    extra_context = extra_context
+  )
   return r
 
 from django.contrib.sites.shortcuts import get_current_site

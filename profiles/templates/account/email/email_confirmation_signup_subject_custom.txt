@@ -1,4 +1,4 @@
 {% load i18n %}
 {% autoescape off %}
-{% blocktrans %} Sixcycle Invitation {% endblocktrans %}
+{% blocktrans %} First Code Academy Registration {% endblocktrans %}
 {% endautoescape %}
