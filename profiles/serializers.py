@@ -89,12 +89,7 @@ class CustomLoginSerializer(serializers.Serializer):
 class CustomTokenSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializer for Token model.
-    since login is not performed very often, we check braintree to see if user can indeed login
     """
-
-    isExpert = serializers.SerializerMethodField(method_name = '_isExpert')
-    showPayWall = serializers.SerializerMethodField(method_name = '_showPayWall')
-
     user = serializers.SerializerMethodField(method_name = '_get_userURL')
 
     def _get_userURL(self, obj):
@@ -107,25 +102,9 @@ class CustomTokenSerializer(serializers.HyperlinkedModelSerializer):
         s = '{}api/v1/user/{}/'.format(settings.SC_API_URL, u.id)
         return s
 
-    def _showPayWall(self, obj):
-        """
-        poll braintree for customer info, and see if user should be redirected to paywall
-        """
-        u = obj.user
-        has_active_sub(user = u)
-        u.showPayWall = validatePayWall(u = u)
-        u.save()
-
-        return u.showPayWall
-    
-    def _isExpert(self, obj):
-        return obj.user.isCoach
-        # return True if len(obj.user.get_trainees()) > 0 else False
-
-
     class Meta:
         model = Token
-        fields = ('key','isExpert', 'showPayWall', 'user')
+        fields = ('key', 'user')
 
 class CustomPasswordResetSerializer(serializers.Serializer):
     """
