@@ -90,21 +90,15 @@ class CustomTokenSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializer for Token model.
     """
-    user = serializers.SerializerMethodField(method_name = '_get_userURL')
+    uid = serializers.SerializerMethodField(method_name = '_get_userid')
 
-    def _get_userURL(self, obj):
+    def _get_userid(self, obj):
         u = obj.user
-
-        # the context is simply not passed, so this does not work
-        # request = self.context['request']
-
-        # assemble URL manually
-        s = '{}api/v1/user/{}/'.format(settings.SC_API_URL, u.id)
-        return s
+        return uid
 
     class Meta:
         model = Token
-        fields = ('key', 'user')
+        fields = ('key', 'uid')
 
 class CustomPasswordResetSerializer(serializers.Serializer):
     """
