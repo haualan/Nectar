@@ -94,7 +94,7 @@ class CustomTokenSerializer(serializers.HyperlinkedModelSerializer):
 
     def _get_userid(self, obj):
         u = obj.user
-        return uid
+        return u.id
 
     class Meta:
         model = Token
