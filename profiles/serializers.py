@@ -263,9 +263,9 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ('url', 'id' ,'name', 'email', 'profile_picture_url', 
+        fields = ('url', 'id' ,'name', 'email', 
 
-            'is_email_verified', 'location', 'isSearchable' 
+            'is_email_verified', 'location', 
             )
 
 class UserSimpleSerializer(serializers.HyperlinkedModelSerializer):
