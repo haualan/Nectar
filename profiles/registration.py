@@ -10,6 +10,9 @@ try:
 except ImportError:
     raise ImportError('allauth needs to be added to INSTALLED_APPS.')
 
+from allauth.account.models import EmailAddress, EmailConfirmation
+from rest_framework.authtoken.models import Token
+
 from rest_framework import serializers
 from requests.exceptions import HTTPError
 from django.contrib.auth import get_user_model
