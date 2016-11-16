@@ -115,7 +115,15 @@ class InviteSerializer(serializers.Serializer):
         # send user confirmation email
         # but email will not resend if user is confirmed already, weird
         print 'InviteSerializer, send_email_confirmation for', user, user.id
-        send_email_confirmation(request._request, user, signup=True)
+        # send_email_confirmation(request._request, user, signup=True)
+
+
+        # grab email address set of this user, if it doesn't exist, create one
+        ea, _ = u.emailaddress_set.update_or_create(email = user.email, defaults = {'verified': False, 'primary': True})
+
+        # create a new ec to guarantee a new key
+        ec = EmailConfirmation.create(ea)
+        ec.send( signup=True)
         
 
 
