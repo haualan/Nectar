@@ -13,6 +13,9 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from django.utils import timezone
+from django.conf import settings
+from allauth.account.models import EmailAddress, EmailConfirmation
+from rest_framework.authtoken.models import Token
 
 # from activities.statistics.jackdaniels import get_10K_duration_from_FTP
 
@@ -276,6 +279,55 @@ class DisconnectSocialView(views.APIView):
 
         return Response({'message':'disconnect successful', 'backend': serializer.validated_data.get('backend')})
 
+
+class EmailConfirmView(views.APIView):
+    """
+    POST to confirm the email for registration / invite link
+
+    """
+
+    api_name = 'emailconfirm'
+    # serializer_class = DisconnectSocialSerializer
+    permission_classes = (AllowAny, )
+    http_method_names = ['post']
+
+    def post(self, request, format=None, *args, **kwargs):
+        # serializer = self.serializer_class(data=request.data)
+        # serializer.is_valid(raise_exception=True)
+
+        # response = {}
+        # response['userkey'] = key
+
+        # response['resetPassword'] = resetPassword
+
+        confirmed = EmailConfirmation.objects.filter(key = key, sent__gte = timezone.now() - timezone.datetime.timedelta(days = settings.ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS) )
+        
+        if not confirmed:
+          raise PermissionDenied('invalid or expired key')
+        confirmed = confirmed.first()
+
+        user = User.objects.filter(email = confirmed.email_address.user)
+
+        if not user:
+          raise PermissionDenied('User does not exists')
+        user = user.first()
+
+        token = Token.objects.filter(user = user)
+        if not token:
+          token, _ = Token.objects.get_or_create(user=user)
+        else:
+          token = token.first()
+
+        # response['token'] = token.key
+
+        # verify email
+        confirmed.email_address.verified = True
+        confirmed.email_address.set_as_primary(conditional=True)
+        confirmed.email_address.save()
+
+
+
+        return Response({ 'token': token.key })
 
 
 
