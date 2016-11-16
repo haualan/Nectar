@@ -300,6 +300,8 @@ class EmailConfirmView(views.APIView):
 
         # response['resetPassword'] = resetPassword
 
+        key = request.data.get('key')
+
         confirmed = EmailConfirmation.objects.filter(key = key, sent__gte = timezone.now() - timezone.datetime.timedelta(days = settings.ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS) )
         
         if not confirmed:
