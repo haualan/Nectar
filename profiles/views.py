@@ -288,6 +288,7 @@ class AccountConfirmCompleteView(views.APIView):
 # class AccountConfirmCompleteView(generic.View):
   """ some blank view that user gets sent to on registration email, perhaps it should redirect to a more formal page on frontend """
 
+  template_name = 'AccountConfirmCompleteView'
   # exempt from auth, must be open to public
   permission_classes = (permissions.AllowAny,)
   # @throttle to avoid hack
