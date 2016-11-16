@@ -241,7 +241,11 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ('url', 'id', 'userURL', 
+        fields = ('url', 'id', 'avatar_url', 'birth_date', 'gender', 'firstname', 'lastname', 'tzName', 'phoneNumber', 
+            'location', 'lon', 'lat',
+            'hasOnboarded',
+            'isSearchable',
+            
             # 'username', 
             'email', 
             
