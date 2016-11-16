@@ -176,7 +176,7 @@ class GuardianStudentRelation(models.Model):
   student = models.ForeignKey('User', related_name='TraineeExpertRelation_trainee')  
 
   def __unicode__(self):
-    return u'Expert: %s Trainee: %s' % (self.expertUser, self.traineeUser)
+    return u'Guardian: %s Student: %s' % (self.guardian, self.student)
 
   class Meta:
     unique_together = ('guardian', 'student',)

@@ -207,11 +207,13 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ('url',
-            'id',
+        fields = ('url', 'id', 'avatar_url', 'birth_date', 'gender', 'firstname', 'lastname', 'tzName', 'phoneNumber', 
+            'location', 'lon', 'lat',
+            'hasOnboarded',
+            'isSearchable',
+            
             # 'username', 
             'email', 
-            'date_joined',
         
             )
         read_only_fields = ()
@@ -245,7 +247,7 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
             'location', 'lon', 'lat',
             'hasOnboarded',
             'isSearchable',
-            
+
             # 'username', 
             'email', 
             
@@ -269,13 +271,13 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ('url', 'id' ,'name', 'email', 
 
-            'is_email_verified', 'location', 
+            'is_email_verified', 'location', 'avatar_url'
             )
 
 class UserSimpleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ('name', 'profile_picture_url' )
+        fields = ('name', 'avatar_url' )
 
 class GuardianStudentRelationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
