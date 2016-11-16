@@ -119,7 +119,7 @@ class InviteSerializer(serializers.Serializer):
 
 
         # grab email address set of this user, if it doesn't exist, create one
-        ea, _ = u.emailaddress_set.update_or_create(email = user.email, defaults = {'verified': False, 'primary': True})
+        ea, _ = user.emailaddress_set.update_or_create(email = user.email, defaults = {'verified': False, 'primary': True})
 
         # create a new ec to guarantee a new key
         ec = EmailConfirmation.create(ea)
