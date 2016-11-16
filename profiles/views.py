@@ -282,13 +282,18 @@ def custom_password_reset(request,
 
     return TemplateResponse(request, template_name, context)
 
+from rest_framework.authentication import SessionAuthentication 
+class CsrfExemptSessionAuthentication(SessionAuthentication):
 
+    def enforce_csrf(self, request):
+        return  # To not perform the csrf check previously happening
 
 class AccountConfirmCompleteView(views.APIView):
 # class AccountConfirmCompleteView(generic.View):
   """ some blank view that user gets sent to on registration email, perhaps it should redirect to a more formal page on frontend """
 
-  template_name = 'AccountConfirmCompleteView'
+  authentication_classes = (CsrfExemptSessionAuthentication)
+  # template_name = 'AccountConfirmCompleteView'
   # exempt from auth, must be open to public
   permission_classes = (permissions.AllowAny,)
   # @throttle to avoid hack
