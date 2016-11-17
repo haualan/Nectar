@@ -101,6 +101,18 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
 
 
+class UserFileViewSet(viewsets.ModelViewSet):
+    """
+    defines the relationship between students and guardians, each field is a user
+    """
+    api_name = 'userfile'
+    queryset = UserFile.objects.all()
+    serializer_class = UserFileSerializer
+    permission_classes = (IsAuthenticated,)
+
+
+
+
 class GuardianStudentRelationViewSet(viewsets.ModelViewSet):
     """
     defines the relationship between students and guardians, each field is a user

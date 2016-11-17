@@ -13,6 +13,7 @@ from authtools.models import AbstractEmailUser
 
 from datetime import timedelta
 import dateutil.parser
+import uuid, os
 
 # from activities.statistics.heartratemodel.utils import *
 # from activities.statistics.jackdaniels import calc_JD_pace_heartrate
@@ -200,5 +201,105 @@ class UserSchoolRelation(models.Model):
   class Meta:
     # each user can be associated to multiple schools but only once
     unique_together = ('user','school',)
+
+
+
+def get_file_path(instance, filename):
+    try:
+      spl = filename.split('.')
+      ext = spl[-1]
+      orig_name = spl[-2][0:20]
+    except:
+      orig_name = ''
+      ext = filename.split('.')[-1]
+
+    filename = "%s_%s.%s" % (orig_name, uuid.uuid4(), ext)
+    return os.path.join('userFiles', filename)
+
+
+from boto.s3.connection import S3Connection, Bucket, Key
+
+s3conn = S3Connection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+s3b = Bucket(s3conn, settings.AWS_STORAGE_BUCKET_NAME)
+
+from threading import Thread
+def postpone(function):
+  def decorator(*args, **kwargs):
+    t = Thread(target = function, args=args, kwargs=kwargs)
+    t.daemon = True
+    t.start()
+  return decorator
+
+@postpone
+def deleteS3File(filename):
+  s3k = Key(s3b)
+  s3k.key = filename
+  s3b.delete_key(s3k)
+
+def getS3contentType(filename, instance):
+  # grabs file contentType from S3 
+  # to be saved in db via instance
+
+  k = s3b.get_key(filename)
+  contentType = k.content_type
+
+  # preserve original filename
+  if len(instance.origFileName) > 0 and contentType.split('/')[0].lower() != 'image':
+    k.set_remote_metadata(
+      metadata_plus ={},
+      metadata_minus ={},
+      preserve_acl = True, 
+      headers = {'Content-Disposition': 'attachment; filename="{}"'.format(instance.origFileName)})
+
+  instance.contentType = contentType
+  instance.save()
+
+  return contentType
+
+from django.contrib.postgres.fields import JSONField
+
+def metadata_default():
+    return {}
+
+class UserFile(models.Model):
+  user = models.ForeignKey('User')
+  file  =  models.FileField(upload_to=get_file_path, blank = False )
+  createdDate = models.DateTimeField(default=timezone.now)
+
+  # this is the original filename before it is saved into AWS S3
+  # filename length limit for windows is 260 chars, mac is 31
+  origFileName = models.CharField(max_length = 260, blank=True, default="")
+  metadata = JSONField(default = metadata_default)
+  contentType = models.CharField(max_length = 100, blank=True, null=True)
+
+  def set_origFileName(self):
+    """
+    set a deafult original file name that uses the S3 filename as a proxy
+    """
+    # skip function if origFileName is already set
+
+    if len(self.origFileName) > 0:
+      return
+    fname = str(self.file).split('/')[-1]
+    self.origFileName = fname
+    self.save()
+
+  def save(self, *args, **kwargs):
+    # self.origFileName =  str(self.file)
+    super(UserFile, self).save()
+
+    # print str(self.file)
+    # after initial save, the file should now be in S3, 
+    # make a request to see what the assigned metadata is and save it back to DB
+    if self.contentType is None:
+      self.contentType = getS3contentType(str(self.file), self)
+
+
+
+  def delete(self, *args, **kwargs):
+    deleteS3File(self.file.name)
+    super(UserFile, self).delete()
+
+
 
 

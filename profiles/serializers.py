@@ -282,15 +282,23 @@ class UserSimpleSerializer(serializers.HyperlinkedModelSerializer):
 class GuardianStudentRelationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = GuardianStudentRelation
+        fields = '__all__' 
 
 class SchoolSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = School
+        fields = '__all__' 
 
 class UserSchoolRelationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = UserSchoolRelation
+        fields = '__all__' 
 
+
+class UserFileSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = UserFile
+        fields = '__all__' 
 
 
 
