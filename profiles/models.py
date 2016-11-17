@@ -131,8 +131,8 @@ class GuardianStudentRelation(models.Model):
 class School(models.Model):
   avatar_url = models.URLField('avatar_url',blank=True, default=DEFAULT_PROFILE_PICTURE_URL)
   name = models.CharField(max_length=255, blank=False)
-  lon = models.DecimalField(max_digits=9, decimal_places=6)
-  lat = models.DecimalField(max_digits=9, decimal_places=6)
+  lon = models.DecimalField(max_digits=9, decimal_places=6, null=True)
+  lat = models.DecimalField(max_digits=9, decimal_places=6, null=True)
 
   class Meta:
     # schools must be unique
@@ -143,7 +143,8 @@ class School(models.Model):
 class UserSchoolRelation(models.Model):
   user = models.ForeignKey('User')
   school = models.ForeignKey('School')
-  enrollmentDate = models.DateField(blank=True, default=timezone.now())
+  enrollmentDate = models.DateField(blank=True, default=timezone.now)
+
 
   class Meta:
     # each user can be associated to multiple schools but only once
