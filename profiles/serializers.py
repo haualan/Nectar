@@ -211,6 +211,7 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
             'location', 'lon', 'lat',
             'hasOnboarded',
             'isSearchable',
+            'role',
             
             # 'username', 
             'email', 
