@@ -76,14 +76,14 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserProfileSerializer
     permission_classes = (IsAuthenticated,IsOwnerOrReadOnly,)
-    # http_method_names = ['get','put', 'delete']
+    # http_method_names = ['get','put', 'patch', 'delete']
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', 'email')
 
 
     def get_queryset(self):
         # print 'UserProfileViewSet query_params', self.request.query_params
-        print 'self.request.build_absolute_uri()', self.request.build_absolute_uri()
+        # print 'self.request.build_absolute_uri()', self.request.build_absolute_uri()
         myself = self.request.query_params.get('myself', None)
         if myself:
             return self.queryset.filter(email=self.request.user)

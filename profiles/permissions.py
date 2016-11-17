@@ -14,7 +14,9 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
             return True
 
         # Write permissions are only allowed to the owner of the snippet.
-        if isinstance(obj, User): return obj.email == request.user
+        if isinstance(obj, User): 
+            # print 'USer obj perm', obj.email, request.user,  obj == request.user
+            return obj == request.user
         return obj.user == request.user
 
 class IsStaffOrReadOnly(permissions.BasePermission):
