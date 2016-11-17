@@ -82,21 +82,14 @@ class User(AbstractEmailUser):
 
     super(User, self).save(*args, **kwargs) # Call the "real" save() method.
   
-  # @classmethod
-  # def truncate_urls(cls):
-  #   users = cls.objects.all()
-  #   for u in users:
-  #     u.save()
 
-
-
-  def get_profile_picture_url_for_email(self):
+  @property
+  def get_mySchools(self):
     """
-    @alan, as per @kristo provide user image for email purpose but return None if it is using the default
+    returns groups of which this user is a member of
     """
-    if DEFAULT_PROFILE_PICTURE_URL == self.profile_picture_url:
-      return None
-    return self.profile_picture_url
+    return School.objects.filter(userschoolrelation__user = self).order_by('name')
+
 
   def get_age(self):
     today = datetime.now()
@@ -105,54 +98,7 @@ class User(AbstractEmailUser):
   def get_full_name(self):
     return self.name
 
-  # @new-thread
-  # def record_login(self):
-  #   """
-  #   used to record a user's logging in
-  #   """
-  #   # print 'self.login_log', self.login_log , type(self.login_log)
-  #   nd = timezone.now().date()
-  #   if not isinstance(self.login_log, list):
-  #     print 'self.login_log is str'
-  #     self.login_log = []
 
-  #   # exit function if date is repeated
-  #   # if format(nd) in self.login_log:
-  #   #   return False
-
-  #   # clean up old logins
-  #   cuttoff = timezone.now().date() - timedelta(14)
-
-  #   for i, v in enumerate(self.login_log):
-  #     try:
-  #       if dateutil.parser.parse(v).date() < cuttoff:
-  #         self.login_log.pop(i)
-  #     except:
-  #       self.login_log.pop(i)
-
-  #   self.login_log.append(nd)
-  #   self.login_log = list(set(self.login_log))
-  #   self.save()
-
-  # def get_defaultPlan(self):
-  #   isGroup = False
-  #   planId = None
-
-  #   g_list = self.GroupMemberRelation.values('group').annotate(Count('group__GroupPlanCalendar__GroupCycleCalendar')).filter(
-  #               group__GroupPlanCalendar__GroupCycleCalendar__count__gt = 0,
-  #               is_admin = False)
-  #   g_list = [i['group'] for i in g_list ]
-
-  #   if len(g_list) > 0:
-  #     return {
-  #       'isGroup': True
-  #       'planId': g_list[0]['group']
-  #     }
-
-  #   return {
-  #     'isGroup': False,
-  #     'planId': None
-  #   }
 
 
   def __unicode__(self):              
@@ -197,6 +143,7 @@ class School(models.Model):
 class UserSchoolRelation(models.Model):
   user = models.ForeignKey('User')
   school = models.ForeignKey('School')
+  enrollmentDate = models.DateField(blank=True, default=timezone.now())
 
   class Meta:
     # each user can be associated to multiple schools but only once

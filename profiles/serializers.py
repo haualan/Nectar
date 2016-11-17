@@ -203,21 +203,7 @@ class DisconnectSocialSerializer(serializers.Serializer):
 
 from allauth.account.models import EmailConfirmation
 # plain model serializers above, complex ones on the bottom so they may refer to classes above
-class MeSerializer(serializers.HyperlinkedModelSerializer):
 
-    class Meta:
-        model = User
-        fields = ('url', 'id', 'avatar_url', 'birth_date', 'gender', 'firstname', 'lastname', 'tzName', 'phoneNumber', 
-            'location', 'lon', 'lat',
-            'hasOnboarded',
-            'isSearchable',
-            'role',
-            
-            # 'username', 
-            'email', 
-        
-            )
-        read_only_fields = ()
 
 
 
@@ -302,5 +288,26 @@ class UserFileSerializer(serializers.HyperlinkedModelSerializer):
         model = UserFile
         fields = '__all__' 
 
+class MeSerializer(serializers.HyperlinkedModelSerializer):
 
+    mySchools = SchoolSerializer(many= True, 
+                            source = 'get_mySchools',
+                            read_only= True)
+
+
+    class Meta:
+        model = User
+        fields = ('url', 'id', 'avatar_url', 'birth_date', 'gender', 'firstname', 'lastname', 'tzName', 'phoneNumber', 
+            'location', 'lon', 'lat',
+            'hasOnboarded',
+            'isSearchable',
+            'role',
+
+            'mySchools',
+            
+            # 'username', 
+            'email', 
+        
+            )
+        read_only_fields = ()
 
