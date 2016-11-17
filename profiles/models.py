@@ -143,7 +143,7 @@ class School(models.Model):
 class UserSchoolRelation(models.Model):
   user = models.ForeignKey('User')
   school = models.ForeignKey('School')
-  enrollmentDate = models.DateField(blank=True, default=timezone.now)
+  enrollmentDate = models.DateField(blank=True, auto_now_add=True)
 
 
   class Meta:
