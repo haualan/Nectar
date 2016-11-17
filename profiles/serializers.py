@@ -205,6 +205,16 @@ from allauth.account.models import EmailConfirmation
 # plain model serializers above, complex ones on the bottom so they may refer to classes above
 
 
+def get_model_concrete_fields(MyModel):
+    return [
+        f.name
+        for f in MyModel._meta.get_fields()
+        if f.concrete and (
+            not f.is_relation
+            or f.one_to_one
+            or (f.many_to_one and f.related_model)
+        )
+    ]
 
 
 class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
@@ -270,23 +280,26 @@ class UserSimpleSerializer(serializers.HyperlinkedModelSerializer):
 class GuardianStudentRelationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = GuardianStudentRelation
-        fields = '__all__' 
+        # fields = '__all__' 
+        fields = get_model_concrete_fields(model) + ['url']
 
 class SchoolSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = School
-        fields = '__all__' 
+        fields = get_model_concrete_fields(model) + ['url']
 
 class UserSchoolRelationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = UserSchoolRelation
-        fields = '__all__' 
+        fields = get_model_concrete_fields(model) + ['url']
+        # fields = '__all__' 
 
 
 class UserFileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = UserFile
-        fields = '__all__' 
+        fields = get_model_concrete_fields(model) + ['url']
+        # fields = '__all__' 
 
 class MeSerializer(serializers.HyperlinkedModelSerializer):
 
