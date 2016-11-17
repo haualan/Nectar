@@ -133,7 +133,48 @@ class SchoolViewSet(viewsets.ModelViewSet):
     serializer_class = SchoolSerializer
     permission_classes = (IsAuthenticated,)
 
-class UserSchoolRelation(viewsets.ModelViewSet):
+
+
+
+# class UserSchoolRelationUpdateOrCreate(views.APIView):
+#     """
+#     defines the School objects that could be associated with a user under UserSchoolRelation
+#     \n use post to update or create the newest relationship
+#     """
+#     api_name = 'userschoolrelationupdateorcreate'
+#     queryset = UserSchoolRelation.objects.all()
+#     serializer_class = UserSchoolRelationSerializer
+#     permission_classes = (IsAuthenticated,)
+#     http_method_names= ('post', 'options')
+
+#     def post(self, request, format=None, *args, **kwargs):
+#         serializer = self.serializer_class(data=request.data, context={'request': request})
+
+        
+
+#         serializer.is_valid(raise_exception=False)
+
+
+#         school = serializer.validated_data.get('school')
+#         print 'post validation', school
+
+
+#         usr, created = UserSchoolRelation.objects.update_or_create(
+#             # followAnnouncement = announcement,
+
+#             # if an extremely similar activity already exists, then don't copy
+#             school = school,
+
+#             user = self.request.user,
+#             # defaults = defaults
+#         )
+
+#         return Response(r, status=status.HTTP_201_CREATED)
+
+
+
+
+class UserSchoolRelationViewSet(viewsets.ModelViewSet):
     """
     defines the School objects that could be associated with a user under UserSchoolRelation
     """
@@ -141,6 +182,13 @@ class UserSchoolRelation(viewsets.ModelViewSet):
     queryset = UserSchoolRelation.objects.all()
     serializer_class = UserSchoolRelationSerializer
     permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+
+        return self.queryset.filter( user=self.request.user)
+
+
+
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
