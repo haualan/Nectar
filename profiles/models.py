@@ -27,6 +27,8 @@ gender_choices = (
 role_choices = (
       ('G', 'guardian'),
       ('S', 'student'),
+      # instructor is a role set by system only
+      ('I', 'instructor'),
   )
 import pytz
 tzName_choices = set((i, i) for i in pytz.all_timezones)
@@ -90,6 +92,13 @@ class User(AbstractEmailUser):
     """
     return School.objects.filter(userschoolrelation__user = self).order_by('name')
 
+  @property
+  def get_myStudents(self):
+    """
+    returns students affiliated with current user, regardless of role
+    """
+    return User.objects.filter(id__in =  self.guardianstudentrelation_set.values('student'))
+
 
   def get_age(self):
     today = datetime.now()
@@ -108,6 +117,9 @@ class User(AbstractEmailUser):
   def name(self):
     return '{} {}'.format(self.firstname, self.lastname)
 
+  # class Meta:
+    # unique_together = ('username',)
+
 
 class UserForm(ModelForm):
   """
@@ -116,6 +128,12 @@ class UserForm(ModelForm):
   class Meta:
     model = User
     fields = ['email', 'username', 'firstname','lastname', 'avatar_url', 'birth_date', 'gender', 'isSearchable']
+
+
+
+
+
+
 
 
 class GuardianStudentRelation(models.Model):

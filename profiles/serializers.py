@@ -21,7 +21,6 @@ import datetime, json
 
 from rest_framework.fields import empty
 
-import metrics.utils as mt
 
 class JSONSerializerField(serializers.Field):
     """ Serializer for JSONField -- required to make field writable"""
@@ -307,6 +306,10 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
                             source = 'get_mySchools',
                             read_only= True)
 
+    myStudents = UserSerializer(many= True, 
+                            source = 'get_myStudents',
+                            read_only= True)
+
 
     class Meta:
         model = User
@@ -317,8 +320,9 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
             'role',
 
             'mySchools',
+            'myStudents',
             
-            # 'username', 
+            'username', 
             'email', 
         
             )

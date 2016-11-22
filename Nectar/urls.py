@@ -12,22 +12,22 @@ from profiles.views import AccountConfirmCompleteView, CustomPasswordChangeView
 # from sccalendar.apiviews import SetRosterView
 from profiles.apiviews import MeView, InviteView, EmailConfirmView
 # , DisconnectSocialView, GeneratePaymentTokenView, CheckoutView, GetPaymentCustView, PaymentListenerView, PaymentBatchProcess, GetOrgMonthEndSummaryView, CancelSubscriptionView
-
+from feed.apiviews import FeedView
 
 
 from rest_framework import routers
 # from .routers import SC_Router
 from profiles.apiviews import clsmembers as profiles_clsmembers
-# from streamView.apiviews import clsmembers as streamView_clsmembers
-# from sccalendar.apiviews import clsmembers as sccalendar_clsmembers
+from course.apiviews import clsmembers as course_clsmembers
+from feed.apiviews import clsmembers as feed_clsmembers
 # from activities.apiviews import clsmembers as activities_clsmembers
 
 router = routers.DefaultRouter()
 # router = SC_Router()
 # print 'profiles_clsmembers:', profiles_clsmembers
 clsmembers = profiles_clsmembers
-# clsmembers += streamView_clsmembers
-# clsmembers += activities_clsmembers
+clsmembers += course_clsmembers
+clsmembers += feed_clsmembers
 # clsmembers += sccalendar_clsmembers
 
 for apiview in clsmembers:

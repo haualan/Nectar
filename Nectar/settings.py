@@ -101,10 +101,11 @@ INSTALLED_APPS.extend([
     # # django-storages to store uploaded files to s3
     'storages',
 
+
     'profiles',
-    # # 'activities',
-    # # 'sccalendar',
-    # # 'streamView',
+    'course',
+    'feed',
+
     'djfrontend',
     'djfrontend.skeleton',
     'import_export',
