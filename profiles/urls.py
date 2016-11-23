@@ -48,7 +48,7 @@ urlpatterns += [
         password_reset_done,
         {
             'template_name': 'profiles/password_reset_done.html',
-            'extra_email_context': {
+            'extra_context': {
                 'appUrl': settings.SC_APP_URL,
                 },
         }),
