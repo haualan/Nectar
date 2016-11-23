@@ -1,4 +1,8 @@
+from __future__ import unicode_literals
+
 from django.db import models
+
+# Create your models here.
 from django.db.models.signals import post_save
 from django.utils import timezone
 from django.conf import settings

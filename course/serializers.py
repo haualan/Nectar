@@ -1,5 +1,5 @@
 
-from .model import *
+from course.models import *
 
 from rest_framework import serializers
 

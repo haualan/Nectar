@@ -1,5 +1,5 @@
-from .model import *
-from .serializers import *
+from course.models import *
+from course.serializers import *
 
 from rest_framework import viewsets, filters, generics, views
 
