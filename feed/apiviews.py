@@ -21,11 +21,10 @@ from django.conf import settings
 
 class FeedView(views.APIView):
     """
-    POST to disconnect a social backend, association_id is an optional integer passed to selectively delete social associations of the same backend (i.e. if our account is associated with 2 facebook accounts...)
-    \n sample payload:
-    {
-        'backend': 'strava',
-    }
+    GET only view for a users's dashboard to see:
+    - other user's achievements
+    - other classes going on
+    - promotions... etc
 
     """
 
@@ -37,7 +36,7 @@ class FeedView(views.APIView):
 
     def get(self, request, format=None, *args, **kwargs):
 
-        return Response({})
+        return Response([])
 
 
 

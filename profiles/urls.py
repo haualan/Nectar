@@ -48,6 +48,9 @@ urlpatterns += [
         password_reset_done,
         {
             'template_name': 'profiles/password_reset_done.html',
+            'extra_email_context': {
+                'appUrl': settings.SC_APP_URL,
+                },
         }),
     # (?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$
     url(r'^user/password/reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', 

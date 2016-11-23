@@ -55,8 +55,7 @@ def peek_kwargs(backend, user, response, details, strategy, *args, **kwargs):
 def get_user_from_session_key(backend, user, response, details, strategy, *args, **kwargs):
     """
     overwrites the user from the previous session key if passed along with login request.
-    - problem is if user is somehow logged into stg.sixcycle.com, then the user is retrieved from there instead, which we do not want
-
+    
 
     """
     print 'prev user:', user

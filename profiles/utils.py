@@ -14,7 +14,7 @@ def get_username(strategy, details, user=None, *args, **kwargs):
   return result
 
 def send_email(to, subject, text, *args, **kw):
-    # to = 'alan@sixcycle.com'
+    # to = 'alan@firstcodeacademy.com'
     print 'sending mail to {}'.format(to)
     return requests.post(
         settings.MAILGUN_API_URL,
@@ -41,10 +41,3 @@ class MinimalMetadata(BaseMetadata):
             'description': view.get_view_description()
         }
 
-# from allauth.account.forms import SignupForm
-
-# class CustomSignupForm(SignupForm):
-#   """docstring for CustomSignupForm, for SixCycle, we want to be able to """
-#   def __init__(self, arg):
-#     super(CustomSignupForm, self).__init__()
-#     self.arg = arg

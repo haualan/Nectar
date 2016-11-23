@@ -10,7 +10,7 @@ from .celeryconfig import *
 # export PYTHONPATH=$PYTHONPATH:$PWD
 
 # to start local worker on debug, go to directory of project (where manage.py lives):
-# celery -A SixCycle worker --loglevel=info
+# celery -A Nectar worker --loglevel=info
 
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Nectar.settings')

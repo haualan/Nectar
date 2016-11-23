@@ -238,15 +238,7 @@ from allauth.account.utils import complete_signup
 # from rest_auth.models import TokenModel
 class InviteView(views.APIView):
     """
-\n    1. POST to https://stg.sixcycle.com/api/v1/invite/ 
-\n    which takes a payload like this:
-\n
-\n    The new user is implicitly created in the backend at this moment without password and therefore inaccessible
-\n
-\n    group is an optional <int>, put in the group ID if you want this new user to be associated to a group right away
-\n    otherwise it is just a regular invite with no group associations
-\n
-\n    expertUser is an optional <int>, put in the User ID  of the expert you want this new user to be a part of
+\n    1. POST a payload with name and email to invite a user 
     """
 
     api_name = 'invite'

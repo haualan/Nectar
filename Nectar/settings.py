@@ -1,7 +1,7 @@
 
 
 """
-Django settings for SixCycle project.
+Django settings for Nectar project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.7/topics/settings/
@@ -455,18 +455,6 @@ STATIC_URL = '/static/'
 MEDIA_ROOT= BASE_DIR +'/media/'
 MEDIA_URL='/'
 
-# how long is our trial period?
-TRIAL_DAYS_COUNT = 30
-
-# batch process report key:
-# this is a key used by AWS Lambda to trigger audit trail reports so for each day we know how many users are charged for a coaches' account
-BATCH_KEY = '914323845992263367956002804331259466'
-
-WENZEL_COACHING_EMAIL = 'matt@sixcycle.com'
-
-# TP import url from AWS Lambda
-TP_IMPORT_URL = 'https://ctnno6a43m.execute-api.us-east-1.amazonaws.com/prod/importFromTP'
-SC_LAMBDA_KEY = 'U7Z5C8pOX72D30aXXXXlZ7GKgyl1y5tsA3Yfhkc1'
 
 
 

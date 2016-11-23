@@ -1,5 +1,5 @@
 """
-WSGI config for SixCycle project.
+WSGI config for Nectar project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
