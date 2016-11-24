@@ -49,14 +49,36 @@ from django.contrib.postgres.fields import JSONField
 def awardDefinition_default():
     return {}
 
+
+
 class Challenge(models.Model):
   name = models.CharField(max_length=255, blank=False)
+  # newcomers quiz
   order = models.IntegerField(blank = True, default = 0)
   createdDate = models.DateTimeField(default=timezone.now)
 
   # ruleDefinition: will determine what kind of challenges will load
+  ruleDefinition = JSONField(default = awardDefinition_default)
+
+  # {
+  # 	'type': 'multipleChoice'
+  # 	'question': 'What is our company name?'
+  # 	'topic': 'randomness',
+
+  # 	'foo': 'bar',
+
+  # 	'choices': [
+  # 	'first code academy',
+  # 	'second code academy',
+  # 	'something',
+  # 	]
+  # 	'answer:'
+
+
+  # }
 
   # this determines what kind of awards are given when challenge is completed
+
   awardDefinition = JSONField(default = awardDefinition_default)
 
   # each challenge when completed results in a ChallengeRecord, to mark that the challenge is completed
