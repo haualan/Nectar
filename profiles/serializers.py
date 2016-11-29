@@ -310,6 +310,26 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
                             source = 'get_myStudents',
                             read_only= True)
 
+    displayName = serializers.SerializerMethodField(method_name = '_get_displayName')
+
+    def _get_displayName(self, obj):
+        fname = obj.firstname
+        lname = obj.lastname
+        email = obj.email
+
+        # if avatar name exists, should be returned here
+
+        if len(fname) > 0 and len(lname) > 0:
+            return '{} {}'.format(fname, lname)
+
+        if len(fname) > 0:
+            return fname
+
+        if len(lname) > 0:
+            return lname
+
+        # email is always the fallback for name display
+        return email
 
     class Meta:
         model = User

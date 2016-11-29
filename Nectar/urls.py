@@ -16,11 +16,12 @@ from feed.apiviews import FeedView
 
 
 from rest_framework import routers
-# from .routers import SC_Router
+
 from profiles.apiviews import clsmembers as profiles_clsmembers
 from course.apiviews import clsmembers as course_clsmembers
 from feed.apiviews import clsmembers as feed_clsmembers
-# from activities.apiviews import clsmembers as activities_clsmembers
+from uploadApp.apiviews import clsmembers as uploadapp_clsmembers
+
 
 router = routers.DefaultRouter()
 # router = SC_Router()
@@ -28,7 +29,7 @@ router = routers.DefaultRouter()
 clsmembers = profiles_clsmembers
 clsmembers += course_clsmembers
 clsmembers += feed_clsmembers
-# clsmembers += sccalendar_clsmembers
+clsmembers += uploadapp_clsmembers
 
 for apiview in clsmembers:
   print 'registering:', apiview[1].api_name, apiview[1], apiview[1].api_name

@@ -104,6 +104,7 @@ INSTALLED_APPS.extend([
 
     'profiles',
     'course',
+    'uploadApp',
     'feed',
 
     'djfrontend',
