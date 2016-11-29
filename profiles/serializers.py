@@ -344,6 +344,7 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
             
             'username', 
             'email', 
+            'displayName',
         
             )
         read_only_fields = ()
