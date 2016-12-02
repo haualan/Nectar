@@ -30,8 +30,8 @@ class Project(models.Model):
 
     language = models.CharField( max_length=20, default='PYTHON', choices = language_choices)
 
-    class Meta:
-        unique_together = ('user','name',)
+    # if true, then it is shown to the world
+    isPublic = models.BooleanField(default = False)
 
 class ProjectScreenshot(models.Model):
     # screenshots that belong to a project
