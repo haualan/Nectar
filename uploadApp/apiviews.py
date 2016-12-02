@@ -35,7 +35,7 @@ class ProjectScreenshotViewSet(viewsets.ModelViewSet):
     queryset = ProjectScreenshot.objects.all()
     serializer_class = ProjectScreenshotSerializer
     permission_classes = (IsAuthenticated,)
-	filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('project',)
 
 
@@ -47,7 +47,7 @@ class ProjectPackageFileViewSet(viewsets.ModelViewSet):
     queryset = ProjectPackageFile.objects.all()
     serializer_class = ProjectPackageFileSerializer
     permission_classes = (IsAuthenticated,)
-	filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('project',)
 
 
