@@ -6,7 +6,7 @@ from rest_framework import viewsets, filters, generics, views
 from .serializers import *
 import sys, inspect, itertools
 from rest_framework.exceptions import APIException, ParseError, PermissionDenied
-from rest_framework import status
+from rest_framework import status, filters
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -24,6 +24,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = (IsAuthenticated,)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('user',)
 
 class ProjectScreenshotViewSet(viewsets.ModelViewSet):
     """
@@ -33,6 +35,8 @@ class ProjectScreenshotViewSet(viewsets.ModelViewSet):
     queryset = ProjectScreenshot.objects.all()
     serializer_class = ProjectScreenshotSerializer
     permission_classes = (IsAuthenticated,)
+	filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('project',)
 
 
 class ProjectPackageFileViewSet(viewsets.ModelViewSet):
@@ -43,6 +47,9 @@ class ProjectPackageFileViewSet(viewsets.ModelViewSet):
     queryset = ProjectPackageFile.objects.all()
     serializer_class = ProjectPackageFileSerializer
     permission_classes = (IsAuthenticated,)
+	filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('project',)
+
 
 class ProjectIconFileViewSet(viewsets.ModelViewSet):
     """
@@ -52,6 +59,8 @@ class ProjectIconFileViewSet(viewsets.ModelViewSet):
     queryset = ProjectIconFile.objects.all()
     serializer_class = ProjectIconFileSerializer
     permission_classes = (IsAuthenticated,)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('project',)
 
 
 
@@ -63,6 +72,8 @@ class ProjectSourceFileViewSet(viewsets.ModelViewSet):
     queryset = ProjectSourceFile.objects.all()
     serializer_class = ProjectSourceFileSerializer
     permission_classes = (IsAuthenticated,)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('project',)
 
 # collect all ModelViewSet class members of this module, must be at end of file
 clsmembers = inspect.getmembers(sys.modules[__name__], inspect.isclass)
