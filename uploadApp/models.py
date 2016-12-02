@@ -23,6 +23,8 @@ class Project(models.Model):
     name = models.CharField(max_length=255, blank=False)
     description = models.TextField(blank=True)
 
+    updated = models.DateTimeField(auto_now=True)
+
     # icon for the app
     avatar_url = models.URLField('avatar_url',blank=True, default=DEFAULT_PROFILE_PICTURE_URL)
 
@@ -45,7 +47,15 @@ class ProjectPackageFile(models.Model):
     userFile = models.ForeignKey('profiles.UserFile')
 
     class Meta:
-        unique_together = ('project','userFile',)
+        unique_together = ('project',)
+
+class ProjectIconFile(models.Model):
+    # multiple files that can be saved along with the project
+    project = models.ForeignKey('Project')
+    userFile = models.ForeignKey('profiles.UserFile')
+
+    class Meta:
+        unique_together = ('project',)
 
 class ProjectSourceFile(models.Model):
     # multiple files that can be saved along with the project

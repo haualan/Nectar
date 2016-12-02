@@ -44,6 +44,16 @@ class ProjectPackageFileViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectPackageFileSerializer
     permission_classes = (IsAuthenticated,)
 
+class ProjectIconFileViewSet(viewsets.ModelViewSet):
+    """
+    defines the School objects that could be associated with a user under UserSchoolRelation
+    """
+    api_name = 'projecticonfile'
+    queryset = ProjectIconFile.objects.all()
+    serializer_class = ProjectIconFileSerializer
+    permission_classes = (IsAuthenticated,)
+
+
 
 class ProjectSourceFileViewSet(viewsets.ModelViewSet):
     """

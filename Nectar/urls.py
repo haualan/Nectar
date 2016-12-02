@@ -61,7 +61,7 @@ urlpatterns = [
 
     # url(r'^api/v1/usernotification/$', UserNotificationView.as_view() , name = 'usernotification-list'),
     url(r'^api/v1/invite/$', InviteView.as_view() , name = 'invite-list'),
-    url(r'^api/v1/emailconfirm/$', EmailConfirmView.as_view() , name = 'emailconfirm-list'),
+    # url(r'^api/v1/emailconfirm/$', EmailConfirmView.as_view() , name = 'emailconfirm-list'),
 
     # url(r'^api/v1/feed/$', FeedView.as_view({'get': 'list'}) , name = 'feed-list'),
 

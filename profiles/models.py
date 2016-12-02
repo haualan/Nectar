@@ -99,6 +99,14 @@ class User(AbstractEmailUser):
     """
     return User.objects.filter(id__in =  self.guardianstudentrelation_set.values('student'))
 
+  @property
+  def get_myProjects(self):
+    """
+    returns this user's uploaded apps
+    """
+    return self.project_set.all().order_by('updated')
+
+
 
   def get_age(self):
     today = datetime.now()

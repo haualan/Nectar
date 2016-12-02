@@ -76,6 +76,12 @@ class ProjectPackageFileSerializer(serializers.HyperlinkedModelSerializer):
         # fields = '__all__' 
         fields = get_model_concrete_fields(model) + ['url']
 
+class ProjectIconFileSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = ProjectIconFile
+        # fields = '__all__' 
+        fields = get_model_concrete_fields(model) + ['url']
+
 class ProjectSourceFileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ProjectSourceFile

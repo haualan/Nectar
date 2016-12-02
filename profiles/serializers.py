@@ -300,6 +300,8 @@ class UserFileSerializer(serializers.HyperlinkedModelSerializer):
         fields = get_model_concrete_fields(model) + ['url']
         # fields = '__all__' 
 
+
+from uploadApp.serializers import ProjectSerializer
 class MeSerializer(serializers.HyperlinkedModelSerializer):
 
     mySchools = SchoolSerializer(many= True, 
@@ -308,6 +310,10 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
 
     myStudents = UserSerializer(many= True, 
                             source = 'get_myStudents',
+                            read_only= True)
+
+    myProjects = ProjectSerializer(many= True, 
+                            source = 'get_myProjects',
                             read_only= True)
 
     displayName = serializers.SerializerMethodField(method_name = '_get_displayName')
@@ -341,6 +347,7 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
 
             'mySchools',
             'myStudents',
+            'myProjects',
             
             'username', 
             'email', 
