@@ -57,6 +57,7 @@ def get_model_concrete_fields(MyModel):
     ]
 
 
+from profiles.serializers import UserFileSerializer
 
 class ProjectScreenshotSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -71,11 +72,16 @@ class ProjectPackageFileSerializer(serializers.HyperlinkedModelSerializer):
         fields = get_model_concrete_fields(model) + ['url']
 
 class ProjectIconFileSerializer(serializers.HyperlinkedModelSerializer):
-
+    userFileDetail = UserFileSerializer(
+        many = True,
+        source = 'userfile_set',
+        allow_null = True,
+        required = False
+        )
     class Meta:
         model = ProjectIconFile
         # fields = '__all__' 
-        fields = get_model_concrete_fields(model) + ['url']
+        fields = get_model_concrete_fields(model) + ['url', 'userFileDetail']
 
 class ProjectSourceFileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
