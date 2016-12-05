@@ -31,7 +31,7 @@ class ProjectScreenshotViewSet(viewsets.ModelViewSet):
     """
     defines the relationship between students and guardians, each field is a user
     """
-    api_name = 'projectsreenshot'
+    api_name = 'projectscreenshot'
     queryset = ProjectScreenshot.objects.all()
     serializer_class = ProjectScreenshotSerializer
     permission_classes = (IsAuthenticated,)
