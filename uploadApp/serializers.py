@@ -86,6 +86,13 @@ from profiles.serializers import UserFileSerializer
 #         fields = get_model_concrete_fields(model) + ['url', 'userFileDetail']
 
 class ProjectSourceFileSerializer(serializers.HyperlinkedModelSerializer):
+    userFileDetail = UserFileSerializer(
+        many = False,
+        source = 'userFile',
+        allow_null = True,
+        required = False,
+        read_only= True,
+        )
     class Meta:
         model = ProjectSourceFile
         # fields = '__all__' 
