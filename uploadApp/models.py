@@ -72,7 +72,7 @@ class ProjectSourceFile(models.Model):
     # multiple files that can be saved along with the project
     project = models.ForeignKey('Project')
     userFile = models.ForeignKey('profiles.UserFile')
-    purpose = models.CharField(max_length=1, default='G', choices = purpose_choices)
+    purpose = models.CharField(max_length=15, default='icon', choices = purpose_choices)
 
     class Meta:
         unique_together = ('project','userFile',)
