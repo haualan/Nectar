@@ -27,40 +27,40 @@ class ProjectViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('user',)
 
-class ProjectScreenshotViewSet(viewsets.ModelViewSet):
-    """
-    defines the relationship between students and guardians, each field is a user
-    """
-    api_name = 'projectscreenshot'
-    queryset = ProjectScreenshot.objects.all()
-    serializer_class = ProjectScreenshotSerializer
-    permission_classes = (IsAuthenticated,)
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('project',)
+# class ProjectScreenshotViewSet(viewsets.ModelViewSet):
+#     """
+#     defines the relationship between students and guardians, each field is a user
+#     """
+#     api_name = 'projectscreenshot'
+#     queryset = ProjectScreenshot.objects.all()
+#     serializer_class = ProjectScreenshotSerializer
+#     permission_classes = (IsAuthenticated,)
+#     filter_backends = (filters.DjangoFilterBackend,)
+#     filter_fields = ('project',)
 
 
-class ProjectPackageFileViewSet(viewsets.ModelViewSet):
-    """
-    defines the School objects that could be associated with a user under UserSchoolRelation
-    """
-    api_name = 'projectpackagefile'
-    queryset = ProjectPackageFile.objects.all()
-    serializer_class = ProjectPackageFileSerializer
-    permission_classes = (IsAuthenticated,)
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('project',)
+# class ProjectPackageFileViewSet(viewsets.ModelViewSet):
+#     """
+#     defines the School objects that could be associated with a user under UserSchoolRelation
+#     """
+#     api_name = 'projectpackagefile'
+#     queryset = ProjectPackageFile.objects.all()
+#     serializer_class = ProjectPackageFileSerializer
+#     permission_classes = (IsAuthenticated,)
+#     filter_backends = (filters.DjangoFilterBackend,)
+#     filter_fields = ('project',)
 
 
-class ProjectIconFileViewSet(viewsets.ModelViewSet):
-    """
-    defines the School objects that could be associated with a user under UserSchoolRelation
-    """
-    api_name = 'projecticonfile'
-    queryset = ProjectIconFile.objects.all()
-    serializer_class = ProjectIconFileSerializer
-    permission_classes = (IsAuthenticated,)
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('project',)
+# class ProjectIconFileViewSet(viewsets.ModelViewSet):
+#     """
+#     defines the School objects that could be associated with a user under UserSchoolRelation
+#     """
+#     api_name = 'projecticonfile'
+#     queryset = ProjectIconFile.objects.all()
+#     serializer_class = ProjectIconFileSerializer
+#     permission_classes = (IsAuthenticated,)
+#     filter_backends = (filters.DjangoFilterBackend,)
+#     filter_fields = ('project',)
 
 
 

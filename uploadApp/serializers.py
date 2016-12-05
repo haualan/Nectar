@@ -59,60 +59,60 @@ def get_model_concrete_fields(MyModel):
 
 from profiles.serializers import UserFileSerializer
 
-class ProjectScreenshotSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = ProjectScreenshot
-        # fields = '__all__' 
-        fields = get_model_concrete_fields(model) + ['url']
+# class ProjectScreenshotSerializer(serializers.HyperlinkedModelSerializer):
+#     class Meta:
+#         model = ProjectScreenshot
+#         # fields = '__all__' 
+#         fields = get_model_concrete_fields(model) + ['url']
 
-class ProjectPackageFileSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = ProjectPackageFile
-        # fields = '__all__' 
-        fields = get_model_concrete_fields(model) + ['url']
+# class ProjectPackageFileSerializer(serializers.HyperlinkedModelSerializer):
+#     class Meta:
+#         model = ProjectPackageFile
+#         # fields = '__all__' 
+#         fields = get_model_concrete_fields(model) + ['url']
 
-class ProjectIconFileSerializer(serializers.HyperlinkedModelSerializer):
-    userFileDetail = UserFileSerializer(
-        many = False,
-        source = 'userFile',
-        allow_null = True,
-        required = False,
-        read_only= True,
-        )
+# class ProjectIconFileSerializer(serializers.HyperlinkedModelSerializer):
+#     userFileDetail = UserFileSerializer(
+#         many = False,
+#         source = 'userFile',
+#         allow_null = True,
+#         required = False,
+#         read_only= True,
+#         )
 
-    class Meta:
-        model = ProjectIconFile
-        # fields = '__all__' 
-        fields = get_model_concrete_fields(model) + ['url', 'userFileDetail']
+#     class Meta:
+#         model = ProjectIconFile
+#         # fields = '__all__' 
+#         fields = get_model_concrete_fields(model) + ['url', 'userFileDetail']
 
 class ProjectSourceFileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ProjectSourceFile
         # fields = '__all__' 
-        fields = get_model_concrete_fields(model) + ['url']
+        fields = get_model_concrete_fields(model) + ['url', 'userFileDetail']
 
 
 class ProjectSerializer(serializers.HyperlinkedModelSerializer):
-    projectIconFiles = ProjectIconFileSerializer(
-        many = True,
-        source = 'projecticonfile_set',
-        allow_null = True,
-        required = False
-        )
+    # projectIconFiles = ProjectIconFileSerializer(
+    #     many = True,
+    #     source = 'projecticonfile_set',
+    #     allow_null = True,
+    #     required = False
+    #     )
 
-    projectScreenshots = ProjectScreenshotSerializer(
-        many = True,
-        source = 'projectscreenshot_set',
-        allow_null = True,
-        required = False
-        )
+    # projectScreenshots = ProjectScreenshotSerializer(
+    #     many = True,
+    #     source = 'projectscreenshot_set',
+    #     allow_null = True,
+    #     required = False
+    #     )
 
-    projectPackageFiles = ProjectPackageFileSerializer(
-        many = True,
-        source = 'projectpackagefile_set',
-        allow_null = True,
-        required = False
-        )
+    # projectPackageFiles = ProjectPackageFileSerializer(
+    #     many = True,
+    #     source = 'projectpackagefile_set',
+    #     allow_null = True,
+    #     required = False
+    #     )
 
     projectSourceFiles = ProjectSourceFileSerializer(
         many = True,
@@ -124,9 +124,9 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
         model = Project
         # fields = '__all__' 
         fields = get_model_concrete_fields(model) + ['url', 
-        'projectIconFiles', 
-        'projectScreenshots', 
-        'projectPackageFiles', 
+        # 'projectIconFiles', 
+        # 'projectScreenshots', 
+        # 'projectPackageFiles', 
         'projectSourceFiles',
         ]
 

@@ -33,34 +33,52 @@ class Project(models.Model):
     # if true, then it is shown to the world
     isPublic = models.BooleanField(default = False)
 
-class ProjectScreenshot(models.Model):
-    # screenshots that belong to a project
-    project = models.ForeignKey('Project')
-    userFile = models.ForeignKey('profiles.UserFile')
+# class ProjectScreenshot(models.Model):
+#     # screenshots that belong to a project
+#     project = models.ForeignKey('Project')
+#     userFile = models.ForeignKey('profiles.UserFile')
 
-    class Meta:
-        unique_together = ('project','userFile',)
+#     class Meta:
+#         unique_together = ('project','userFile',)
 
-class ProjectPackageFile(models.Model):
-    # multiple files that can be saved along with the project
-    project = models.ForeignKey('Project')
-    userFile = models.ForeignKey('profiles.UserFile')
+# class ProjectPackageFile(models.Model):
+#     # multiple files that can be saved along with the project
+#     project = models.ForeignKey('Project')
+#     userFile = models.ForeignKey('profiles.UserFile')
 
-    class Meta:
-        unique_together = ('project',)
+#     class Meta:
+#         unique_together = ('project',)
 
-class ProjectIconFile(models.Model):
-    # multiple files that can be saved along with the project
-    project = models.ForeignKey('Project')
-    userFile = models.ForeignKey('profiles.UserFile')
+# class ProjectIconFile(models.Model):
+#     # multiple files that can be saved along with the project
+#     project = models.ForeignKey('Project')
+#     userFile = models.ForeignKey('profiles.UserFile')
 
-    class Meta:
-        unique_together = ('project',)
+#     class Meta:
+#         unique_together = ('project',)
+
+
+purpose_choices = (
+    ('screenshot', 'screenshot'),
+    ('icon', 'icon'),
+    # instructor is a role set by system only
+    ('package', 'package'),
+    ('source', 'source'),
+
+)
+
 
 class ProjectSourceFile(models.Model):
     # multiple files that can be saved along with the project
     project = models.ForeignKey('Project')
     userFile = models.ForeignKey('profiles.UserFile')
+    purpose = models.CharField(max_length=1, default='G', choices = purpose_choices)
 
     class Meta:
         unique_together = ('project','userFile',)
+
+
+
+
+
+
