@@ -73,11 +73,13 @@ class ProjectPackageFileSerializer(serializers.HyperlinkedModelSerializer):
 
 class ProjectIconFileSerializer(serializers.HyperlinkedModelSerializer):
     userFileDetail = UserFileSerializer(
-        many = True,
-        source = 'userfile_set',
+        many = False,
+        source = 'userFile',
         allow_null = True,
-        required = False
+        required = False,
+        read_only= True,
         )
+
     class Meta:
         model = ProjectIconFile
         # fields = '__all__' 
