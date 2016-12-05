@@ -75,6 +75,20 @@ class ProjectSourceFileViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('project',)
 
+    def perform_create(self, serializer):
+        user = self.request.user
+
+        # if the payload is for an icon or package, they should be unique, and kill all other icons or package on here
+        purpose = serializer.validated_data['purpose']
+        project = serializer.validated_data['project']
+
+        if purpose in ('icon', 'package') :
+            # delete all other icons of this project
+            project.projectsourcefile_set.filter(purpose = purpose).delete()
+        
+        serializer.save()
+
+
 # collect all ModelViewSet class members of this module, must be at end of file
 clsmembers = inspect.getmembers(sys.modules[__name__], inspect.isclass)
 clsmembers = filter(lambda x: issubclass(x[1], viewsets.ModelViewSet )  \
