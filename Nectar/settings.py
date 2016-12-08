@@ -147,7 +147,7 @@ REST_FRAMEWORK = {
 # https://github.com/pennersr/django-allauth/blob/master/allauth/account/forms.py
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_SUBJECT_PREFIX = '[FirstCodeAcademy] '
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 30
@@ -292,8 +292,8 @@ AUTHENTICATION_BACKENDS.extend([
     # 'social.backends.yahoo.YahooOpenId',
 
     'rest_framework_social_oauth2.backends.DjangoOAuth2',
-    'django.contrib.auth.backends.ModelBackend',
-    # 'allauth.account.auth_backends.AuthenticationBackend',
+    # 'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 ])
 
 

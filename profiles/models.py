@@ -125,8 +125,8 @@ class User(AbstractEmailUser):
   def name(self):
     return '{} {}'.format(self.firstname, self.lastname)
 
-  # class Meta:
-    # unique_together = ('username',)
+  class Meta:
+    unique_together = ('username',)
 
 
 class UserForm(ModelForm):

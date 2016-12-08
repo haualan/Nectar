@@ -16,6 +16,8 @@ from django.utils import timezone
 from django.conf import settings
 from allauth.account.models import EmailAddress, EmailConfirmation
 from rest_framework.authtoken.models import Token
+from django.db import IntegrityError
+
 
 # from activities.statistics.jackdaniels import get_10K_duration_from_FTP
 
@@ -61,6 +63,86 @@ class MeView(viewsets.ReadOnlyModelViewSet):
 #     serializer = UserSerializer
 #     filter_backends = (filters.SearchFilter,)
 #     search_fields = ('username', 'email')
+
+class UserValidateView(views.APIView):
+    """
+\n    POST a payload with username and returns status: true if available for use 
+
+        {
+        "username":"alan"
+        }
+
+    """
+
+    api_name = 'uservalidate'
+
+    # this endpoint should be public so anyone can sign up / create user
+    permission_classes = (AllowAny, )
+    http_method_names =['post']
+
+    def post(self, request, format=None, *args, **kwargs):
+        username = request.data.get('username')
+
+        if username is None:
+            raise ParseError('username cannot be blank')
+
+        status = not User.objects.filter(username__iexact=username).exists()
+
+        return Response({
+            'status': status,
+        })
+
+
+
+class UserCreateView(views.APIView):
+    """
+\n    1. POST a payload with username , password1, password2 to create a user 
+\n token is returned upon successful creation
+        {
+        "username":"alan",
+        "password1":"1q2w3e4r",
+        "password2":"1q2w3e4r"
+        }
+
+    """
+
+    api_name = 'usercreate'
+
+    # this endpoint should be public so anyone can sign up / create user
+    permission_classes = (AllowAny, )
+    http_method_names =['post']
+
+    def post(self, request, format=None, *args, **kwargs):
+        # serializer = self.serializer_class(data=request.data)
+        # serializer.is_valid(raise_exception=True)
+        # user = self.perform_create(serializer)
+
+        username = request.data.get('username')
+        password1 = request.data.get('password1')
+        password2 = request.data.get('password2')
+
+        if username is None or password1 is None or password2 is None:
+            raise ParseError('one or more required fields are missing')
+
+        if password1 != password2:
+            raise ParseError('password1 does not match password2')
+
+        try:
+            user = User.objects.create(username=username,)
+        except IntegrityError as e:
+            raise ParseError('username is not unique')
+
+        user.set_password(password1)
+
+        token, _ = Token.objects.get_or_create(user=user)
+
+        # print request.data
+
+        r = {'id': user.id, 'key': token.key}
+
+        return Response(r, status=status.HTTP_201_CREATED)
+
+
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
