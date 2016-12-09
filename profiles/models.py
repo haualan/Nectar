@@ -15,6 +15,8 @@ from datetime import timedelta
 import dateutil.parser
 import uuid, os
 
+from django.utils.translation import ugettext_lazy as _
+
 # from activities.statistics.heartratemodel.utils import *
 # from activities.statistics.jackdaniels import calc_JD_pace_heartrate
 
@@ -49,6 +51,7 @@ class User(AbstractEmailUser):
   lastname = models.CharField('lastname', max_length=255, blank=True)
 
   username = models.CharField('username', max_length=255, blank=True)
+  email = models.EmailField(_('email address'), max_length=255, unique=True, null=True, blank=False)
 
   # timezone offset relative to UTC
   tzName = models.CharField(max_length=100, default = 'Hongkong',  choices = tzName_choices)
