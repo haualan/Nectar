@@ -365,6 +365,7 @@ class UserFileSerializer(serializers.HyperlinkedModelSerializer):
 
 
 from uploadApp.serializers import ProjectSerializer
+from course.serializers import TrophySerializer
 class MeSerializer(serializers.HyperlinkedModelSerializer):
 
     mySchools = SchoolSerializer(many= True, 
@@ -377,6 +378,10 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
 
     myProjects = ProjectSerializer(many= True, 
                             source = 'get_myProjects',
+                            read_only= True)
+
+    myTrophyRecords = TrophySerializer(many= True, 
+                            source = 'get_myTrophyRecords',
                             read_only= True)
 
     displayName = serializers.SerializerMethodField(method_name = '_get_displayName')
@@ -411,10 +416,12 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
             'mySchools',
             'myStudents',
             'myProjects',
+            'myTrophyRecords',
             
             'username', 
             'email', 
             'displayName',
+
         
             )
         read_only_fields = ()

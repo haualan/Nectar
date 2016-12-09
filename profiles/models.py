@@ -106,6 +106,13 @@ class User(AbstractEmailUser):
     """
     return self.project_set.all().order_by('updated')
 
+  @property
+  def get_myTrophyRecords(self):
+    """
+    returns this user's trophy records
+    """
+    return self.trophyrecord_set.all()
+
 
 
   def get_age(self):
