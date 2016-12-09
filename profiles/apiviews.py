@@ -130,7 +130,7 @@ class UserCreateView(views.APIView):
         try:
             user = User.objects.create(username=username,)
         except IntegrityError as e:
-            raise ParseError('username is not unique')
+            raise ParseError('username is not unique: {}'.format(e))
 
         user.set_password(password1)
 
