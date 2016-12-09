@@ -76,9 +76,9 @@ class User(AbstractEmailUser):
 
 
   def save(self, *args, **kwargs):
-    if self.email == "":
-      self.email = 'alan+temp{}@firstcodeacademy.com'.format(self.id)
     super(User, self).save(*args, **kwargs) # Call the "real" save() method.
+    self.email = 'alan+temp{}@firstcodeacademy.com'.format(self.id)
+    self.save()
 
 
 
