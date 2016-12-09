@@ -76,13 +76,13 @@ class User(AbstractEmailUser):
 
 
   def save(self, *args, **kwargs):
-    # truncate any query params on the url @jon issue with s3 temporary validation links 02/27/2016
-    # try:
-    #   self.profile_picture_url = self.profile_picture_url.split('?')[0]
-    # except:
-    #   pass
-
+    if self.email == "":
+      self.email = 'alan+temp{}@firstcodeacademy.com'.format(self.id)
     super(User, self).save(*args, **kwargs) # Call the "real" save() method.
+
+
+
+
   
 
   @property
