@@ -4,34 +4,43 @@ from django.db import models
 
 
 language_choices = (
-    ('PYTHON', 'Python'),
-    ('MINECRAFT', 'Minecraft'),
-    ('3DPRINTING', '3DPrinting'),
-    ('APPINVENTOR', 'AppInventor'),
-    ('SCRATCH', 'Scratch'),
-    ('JAVA', 'Java'),
-    ('JS', 'JavaScript'),
+  ('PYTHON', 'Python'),
+  ('MINECRAFT', 'Minecraft'),
+  ('3DPRINTING', '3DPrinting'),
+  ('APPINVENTOR', 'AppInventor'),
+  ('SCRATCH', 'Scratch'),
+  ('JAVA', 'Java'),
+  ('JS', 'JavaScript'),
 )
 
 
 DEFAULT_PROFILE_PICTURE_URL = 'http://placehold.it/350x350'
-  
+
+
+from course.utils import updateTrophyRecord
+
 # Create your models here.
 class Project(models.Model):
-    # who does this project belong to
-    user = models.ForeignKey('profiles.User')
-    name = models.CharField(max_length=255, blank=False)
-    description = models.TextField(blank=True)
+  # who does this project belong to
+  user = models.ForeignKey('profiles.User')
+  name = models.CharField(max_length=255, blank=False)
+  description = models.TextField(blank=True)
 
-    updated = models.DateTimeField(auto_now=True)
+  updated = models.DateTimeField(auto_now=True)
 
-    # icon for the app
-    avatar_url = models.URLField('avatar_url',blank=True, default=DEFAULT_PROFILE_PICTURE_URL)
+  # icon for the app
+  avatar_url = models.URLField('avatar_url',blank=True, default=DEFAULT_PROFILE_PICTURE_URL)
 
-    language = models.CharField( max_length=20, default='PYTHON', choices = language_choices)
+  language = models.CharField( max_length=20, default='PYTHON', choices = language_choices)
 
-    # if true, then it is shown to the world
-    isPublic = models.BooleanField(default = False)
+  # if true, then it is shown to the world
+  isPublic = models.BooleanField(default = False)
+
+  def save(self, *args, **kwargs):
+    super(Project, self).save(*args, **kwargs) # Call the "real" save() method.
+    # update trophies right now
+    updateTrophyRecord(user = self.user)
+
 
 # class ProjectScreenshot(models.Model):
 #     # screenshots that belong to a project
@@ -59,23 +68,23 @@ class Project(models.Model):
 
 
 purpose_choices = (
-    ('screenshot', 'screenshot'),
-    ('icon', 'icon'),
-    # instructor is a role set by system only
-    ('package', 'package'),
-    ('source', 'source'),
+  ('screenshot', 'screenshot'),
+  ('icon', 'icon'),
+  # instructor is a role set by system only
+  ('package', 'package'),
+  ('source', 'source'),
 
 )
 
 
 class ProjectSourceFile(models.Model):
-    # multiple files that can be saved along with the project
-    project = models.ForeignKey('Project')
-    userFile = models.ForeignKey('profiles.UserFile')
-    purpose = models.CharField(max_length=15, default='icon', choices = purpose_choices)
+  # multiple files that can be saved along with the project
+  project = models.ForeignKey('Project')
+  userFile = models.ForeignKey('profiles.UserFile')
+  purpose = models.CharField(max_length=15, default='icon', choices = purpose_choices)
 
-    class Meta:
-        unique_together = ('project','userFile',)
+  class Meta:
+      unique_together = ('project','userFile',)
 
 
 
