@@ -133,6 +133,7 @@ class UserCreateView(views.APIView):
             raise ParseError('username is not unique: {}'.format(e))
 
         user.set_password(password1)
+        user.save()
 
         token, _ = Token.objects.get_or_create(user=user)
 

@@ -365,7 +365,7 @@ class UserFileSerializer(serializers.HyperlinkedModelSerializer):
 
 
 from uploadApp.serializers import ProjectSerializer
-from course.serializers import TrophySerializer
+from course.serializers import TrophyRecordSerializer
 class MeSerializer(serializers.HyperlinkedModelSerializer):
 
     mySchools = SchoolSerializer(many= True, 
@@ -380,11 +380,27 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
                             source = 'get_myProjects',
                             read_only= True)
 
-    myTrophyRecords = TrophySerializer(many= True, 
+    myTrophyRecords = TrophyRecordSerializer(many= True, 
                             source = 'get_myTrophyRecords',
                             read_only= True)
 
     displayName = serializers.SerializerMethodField(method_name = '_get_displayName')
+
+    isPasswordSet = serializers.SerializerMethodField(method_name = '_get_isPasswordSet')
+
+    isEmailVerified = serializers.SerializerMethodField(method_name = '_get_email_verification')
+
+    def _get_email_verification(self, obj):
+        try:
+            r = EmailAddress.objects.get(user = obj.user).verified
+        except:
+            r = False
+        return r
+
+    def _get_isPasswordSet(self, obj):
+        if len(obj.password) > 0:
+            return True
+        return False
 
     def _get_displayName(self, obj):
         fname = obj.firstname
@@ -421,6 +437,9 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
             'username', 
             'email', 
             'displayName',
+
+            'isPasswordSet',
+            'isEmailVerified',
 
         
             )
