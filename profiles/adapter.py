@@ -141,6 +141,8 @@ def manual_send_confirmation_mail(u):
     - u is expected to be a user instance
     """
 
+    print 'manual_send_confirmation_mail triggered'
+
     # grab email address set of this user, if it doesn't exist, create one
     ea, _ = u.emailaddress_set.update_or_create(email = u.email, defaults = {'verified': False, 'primary': True})
 

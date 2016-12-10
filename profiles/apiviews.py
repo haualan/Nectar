@@ -372,6 +372,7 @@ class InviteView(views.APIView):
         return user
 
 # from rest_auth.models import TokenModel
+from profiles.adapter import manual_send_confirmation_mail
 class SendConfirmationView(views.APIView):
     """
 \n    1. POST a payload with name and email to invite a user 
@@ -386,9 +387,13 @@ class SendConfirmationView(views.APIView):
     def post(self, request, format=None, *args, **kwargs):
         user = request.user
 
-        complete_signup(self.request._request, user,
-            True,
-            None)
+        print 'sendconfirmation...', user.email
+
+        manual_send_confirmation_mail(user)
+
+        # complete_signup(self.request._request, user,
+        #     True,
+        #     None)
 
         r = {'id': user.id, 'email': user.email}
 
