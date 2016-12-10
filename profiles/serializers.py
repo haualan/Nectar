@@ -396,7 +396,7 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
     isEmailVerified = serializers.SerializerMethodField(method_name = '_get_email_verification')
 
     def _get_email_verification(self, obj):
-        ea = EmailAddress.objects.filter(user = obj.user)
+        ea = EmailAddress.objects.filter(user = obj)
 
         if ea.exists():
             return ea.first().verified
