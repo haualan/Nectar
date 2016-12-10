@@ -168,13 +168,13 @@ class UserProfileViewSet(viewsets.ModelViewSet):
         # print 'self.request.build_absolute_uri()', self.request.build_absolute_uri()
         myself = self.request.query_params.get('myself', None)
         if myself:
-            return self.queryset.filter(email=self.request.user)
+            return self.queryset.filter(id=self.request.user.id)
         else:
             return self.queryset.filter(
-                Q(isSearchable=True) | Q(email=self.request.user))
+                Q(isSearchable=True) | Q(id=self.request.user.id))
 
     def perform_update(self, serializer):
-        # print "serializer.initial_data", serializer.initial_data 
+        print "serializer.initial_data", serializer.initial_data 
         # if serializer.validated_data.get('email') == self.request.user.email:
         #     print 'same email', self.request.user.email
         origUser = self.get_object()
