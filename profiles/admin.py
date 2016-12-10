@@ -39,6 +39,7 @@ def autoregister(app):
       pass
 
 autoregister('profiles')
+autoregister('course')
 # autoregister('spirit_topic_private')
 # autoregister('spirit_topic')
 # autoregister('core')
