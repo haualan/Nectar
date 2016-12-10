@@ -13,6 +13,9 @@ from django.db.models import Max, Min
 from rest_framework import serializers, exceptions
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ValidationError
+from allauth.account.models import EmailAddress, EmailConfirmation
+
+
 
 from django.db.models import Avg, Count, F, Max, Min, Sum, Q, Prefetch
 
@@ -321,11 +324,13 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     is_email_verified = serializers.SerializerMethodField(method_name = '_get_email_verification')
 
     def _get_email_verification(self, obj):
-        try:
-            r = EmailAddress.objects.get(user = obj.user).verified
-        except:
-            r = False
-        return r
+        ea = EmailAddress.objects.filter(user = obj)
+
+        if ea.exists():
+            return ea.first().verified
+
+        return False
+
 
     class Meta:
         model = User
@@ -391,11 +396,12 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
     isEmailVerified = serializers.SerializerMethodField(method_name = '_get_email_verification')
 
     def _get_email_verification(self, obj):
-        try:
-            r = EmailAddress.objects.get(user = obj.user).verified
-        except:
-            r = False
-        return r
+        ea = EmailAddress.objects.filter(user = obj.user)
+
+        if ea.exists():
+            return ea.first().verified
+
+        return False
 
     def _get_isPasswordSet(self, obj):
         if len(obj.password) > 0:
