@@ -157,7 +157,7 @@ class UserForm(ModelForm):
 
 class GuardianStudentRelation(models.Model):
   guardian = models.ForeignKey('User')
-  student = models.ForeignKey('User', related_name='TraineeExpertRelation_trainee')  
+  student = models.ForeignKey('User', related_name='GuardianStudentRelation_student')  
 
   def __unicode__(self):
     return u'Guardian: %s Student: %s' % (self.guardian, self.student)

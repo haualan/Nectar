@@ -371,6 +371,33 @@ class InviteView(views.APIView):
 
         return user
 
+# from rest_auth.models import TokenModel
+class SendConfirmationView(views.APIView):
+    """
+\n    1. POST a payload with name and email to invite a user 
+    """
+
+    api_name = 'sendconfirmation'
+
+    # this endpoint should be public so anyone can sign up
+    permission_classes = (IsAuthenticated, )
+    http_method_names =['post']
+
+    def post(self, request, format=None, *args, **kwargs):
+        user = request.user
+
+        complete_signup(self.request._request, user,
+            True,
+            None)
+
+        r = {'id': user.id, 'email': user.email}
+
+        return Response(r)
+
+
+
+
+
 from social.actions import do_disconnect
 class DisconnectSocialView(views.APIView):
     """
