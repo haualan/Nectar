@@ -174,7 +174,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
                 Q(isSearchable=True) | Q(email=self.request.user))
 
     def perform_update(self, serializer):
-        print "serializer.initial_data", serializer.initial_data 
+        # print "serializer.initial_data", serializer.initial_data 
         # if serializer.validated_data.get('email') == self.request.user.email:
         #     print 'same email', self.request.user.email
         origUser = self.get_object()
