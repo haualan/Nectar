@@ -1,6 +1,5 @@
-from course.models import Trophy
 from uploadApp.models import *
-
+from course.models import *
 
 languages = [i[0] for i in language_choices]
 
