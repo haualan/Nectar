@@ -1,4 +1,4 @@
-from course.models import *
+from course.models import Trophy
 from uploadApp.models import *
 
 
