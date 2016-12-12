@@ -1,5 +1,5 @@
 from course.models import *
-from uploadApp.models import language_choices
+from uploadApp.models import *
 
 
 languages = [i[0] for i in language_choices]
