@@ -22,7 +22,23 @@ class User(UserAdmin):
     # add custom profile related attributes here
     UserAdmin.fieldsets += (
         ('Profile', {
-            'fields': ('name', 'username', 'profile_picture_url', 'birth_date', 'gender', 'height_in_meters', 'isSearchable', 'isCoach'),
+            'fields': (
+              'avatar_url',
+              'birth_date',
+              'gender',
+              'firstname',
+              'lastname',
+              'username',
+              'email',
+              'tzName',
+              'phoneNumber',
+              'location',
+              'lon',
+              'lat',
+              'hasOnboarded',
+              'isSearchable',
+              'role',
+            ),
         }),
     )
 

@@ -28,7 +28,7 @@ def updateTrophyRecord(user):
 		if p.language in languagesPoints:
 			languagesPoints[p.language] += 1
 		else:
-			languagesPoints[p.language] = 0
+			languagesPoints[p.language] = 1
 
 	print languagesPoints
 
