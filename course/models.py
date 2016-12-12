@@ -96,7 +96,7 @@ class Challenge(models.Model):
   # each challenge when completed results in a ChallengeRecord, to mark that the challenge is completed
   # point = models.IntegerField(blank = False, default = 10)
 
-
+from uploadApp.models import language_choices
 
 class Trophy(models.Model):
   name = models.CharField(max_length=255, blank=False)
@@ -104,6 +104,8 @@ class Trophy(models.Model):
 
   # describes how many points are required to attain trophy
   threshold = models.IntegerField(blank = False, default = 100)
+
+  language = models.CharField( max_length=20, default=None, choices = language_choices, null=True)
 
 
 class ChallengeRecord(models.Model):
