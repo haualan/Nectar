@@ -3,16 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 
 
-language_choices = (
-  ('PYTHON', 'Python'),
-  ('MINECRAFT', 'Minecraft'),
-  ('3DPRINTING', '3DPrinting'),
-  ('APPINVENTOR', 'AppInventor'),
-  ('SCRATCH', 'Scratch'),
-  ('JAVA', 'Java'),
-  ('JS', 'JavaScript'),
-)
-
+from statics import language_choices
 
 DEFAULT_PROFILE_PICTURE_URL = 'http://placehold.it/350x350'
 

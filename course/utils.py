@@ -1,5 +1,8 @@
+
 from uploadApp.models import *
 from course.models import *
+
+# from course.models import UserCourseRelationship
 
 languages = [i[0] for i in language_choices]
 

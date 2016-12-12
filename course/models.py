@@ -17,6 +17,16 @@ import dateutil.parser
 import uuid, os
 
 DEFAULT_PROFILE_PICTURE_URL = 'http://placehold.it/350x350'
+# from uploadApp.models import language_choices
+language_choices = (
+  ('PYTHON', 'Python'),
+  ('MINECRAFT', 'Minecraft'),
+  ('3DPRINTING', '3DPrinting'),
+  ('APPINVENTOR', 'AppInventor'),
+  ('SCRATCH', 'Scratch'),
+  ('JAVA', 'Java'),
+  ('JS', 'JavaScript'),
+)
 
 role_UserCourseRelationship_choices = (
     ('S', 'student'),
@@ -96,7 +106,7 @@ class Challenge(models.Model):
   # each challenge when completed results in a ChallengeRecord, to mark that the challenge is completed
   # point = models.IntegerField(blank = False, default = 10)
 
-from uploadApp.models import language_choices
+
 
 class Trophy(models.Model):
   name = models.CharField(max_length=255, blank=False)
