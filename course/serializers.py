@@ -61,5 +61,5 @@ class ChallengeRecordSerializer(serializers.HyperlinkedModelSerializer):
 class TrophyRecordSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = TrophyRecord
-        # fields = get_model_concrete_fields(model) + ['url']
-        fields = ['createdDate', 'trophy', 'url']
+        fields = get_model_concrete_fields(model) + ['url']
+        # fields = ['createdDate', 'trophy', 'user', 'url']
