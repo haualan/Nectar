@@ -19,6 +19,7 @@ import uuid, os
 DEFAULT_PROFILE_PICTURE_URL = 'http://placehold.it/350x350'
 # from uploadApp.models import language_choices
 language_choices = (
+  ('', 'None'),
   ('PYTHON', 'Python'),
   ('MINECRAFT', 'Minecraft'),
   ('3DPRINTING', '3DPrinting'),
@@ -115,7 +116,7 @@ class Trophy(models.Model):
   # describes how many points are required to attain trophy
   threshold = models.IntegerField(blank = False, default = 100)
 
-  language = models.CharField( max_length=20, default=None, choices = language_choices, null=True)
+  language = models.CharField( max_length=20, default=None, choices = language_choices)
 
 
 class ChallengeRecord(models.Model):

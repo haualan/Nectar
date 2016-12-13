@@ -33,7 +33,7 @@ def updateTrophyRecord(user):
 	print languagesPoints
 
 	# compare the projected points against the trophy thresholds for those particular langues
-	languageTrophies = Trophy.objects.filter(language__isnull=False)
+	languageTrophies = Trophy.objects.filter(language='')
 
 	# expected language trophies
 	expectedLangTrophies = set()
@@ -58,7 +58,7 @@ def updateTrophyRecord(user):
 		TrophyRecord.objects.create(user = user, trophy_id=int(i) )
 
 	# take care of challenge records now
-	challengeTrophies = Trophy.objects.filter(language__isnull=True)
+	challengeTrophies = Trophy.objects.exclude(language='')
 
 
 
