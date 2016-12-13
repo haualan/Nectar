@@ -13,7 +13,7 @@ def updateTrophyRecord(user):
 
 	print 'updateTrophyRecord', user.id, user.email
 
-	currentTrophies = Trophy.objects.all()
+	# currentTrophies = Trophy.objects.all()
 
 	# record all active apps uploaded and points awarded 
 	activeProjects = user.project_set.annotate(
@@ -34,6 +34,33 @@ def updateTrophyRecord(user):
 
 	# compare the projected points against the trophy thresholds for those particular langues
 	languageTrophies = Trophy.objects.filter(language__isnull=False)
+
+	# expected language trophies
+	expectedLangTrophies = set()
+
+	for l in languageTrophies:
+		# for each language trophy see if the threshold is met or exceeded
+		if l.language in languagesPoints and languagesPoints[l.language] >= l.threshold:
+			# if it is met or exceeded, show trophies that are earned, keep a list of earned trophies
+			expectedLangTrophies.add(l.id)
+
+
+	# compare the expectedLangTrophyRecs with the current trophy record of the user
+	currentTrophyRec = set([i.trophy.id for i in user.trophyrecord_set.filter(trophy__in = expectedLangTrophies)])
+
+	# find the set of missing trophies that are expected but not in currentTrophyRec
+	missingTrophies = expectedLangTrophies.difference(currentTrophyRec)
+
+
+	# iterate and add these missingTrophies
+	for i in missingTrophies:
+		# i is a trophy_id
+		TrophyRecord.objects.create(user = user, trophy_id=int(i) )
+
+	# take care of challenge records now
+	challengeTrophies = Trophy.objects.filter(language__isnull=True)
+
+
 
 	# these are the earned points already in trophy record
 	# languageChallengeRecords = user.challengerecord_set.filter(language_isnull = False)
