@@ -381,13 +381,13 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
                             source = 'get_myStudents',
                             read_only= True)
 
-    myProjects = ProjectSerializer(many= True, 
-                            source = 'get_myProjects',
-                            read_only= True)
+    # myProjects = ProjectSerializer(many= True, 
+    #                         source = 'get_myProjects',
+    #                         read_only= True)
 
-    myTrophyRecords = TrophyRecordSerializer(many= True, 
-                            source = 'get_myTrophyRecords',
-                            read_only= True)
+    # myTrophyRecords = TrophyRecordSerializer(many= True, 
+    #                         source = 'get_myTrophyRecords',
+    #                         read_only= True)
 
     displayName = serializers.SerializerMethodField(method_name = '_get_displayName')
 
@@ -437,8 +437,8 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
 
             'mySchools',
             'myStudents',
-            'myProjects',
-            'myTrophyRecords',
+            # 'myProjects',
+            # 'myTrophyRecords',
             
             'username', 
             'email', 

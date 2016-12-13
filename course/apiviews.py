@@ -64,6 +64,8 @@ class ChallengeRecordViewSet(viewsets.ModelViewSet):
     queryset = ChallengeRecord.objects.all()
     serializer_class = ChallengeRecordSerializer
     permission_classes = (IsAuthenticated,)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('user',)
 
 
 class TrophyRecordViewSet(viewsets.ModelViewSet):
@@ -74,6 +76,8 @@ class TrophyRecordViewSet(viewsets.ModelViewSet):
     queryset = TrophyRecord.objects.all()
     serializer_class = TrophyRecordSerializer
     permission_classes = (IsAuthenticated,)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('user',)
 
 
 
