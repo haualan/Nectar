@@ -118,6 +118,9 @@ class Trophy(models.Model):
 
   language = models.CharField( max_length=20, default='', choices = language_choices)
 
+  def __unicode__(self):
+        return unicode(self.name)
+
 
 class ChallengeRecord(models.Model):
   """ 
@@ -142,6 +145,9 @@ class TrophyRecord(models.Model):
   createdDate = models.DateTimeField(default=timezone.now)
   trophy = models.ForeignKey('trophy')
   user = models.ForeignKey('profiles.User')
+
+  def __unicode__(self):
+        return unicode(self.trophy.name)
 
   class Meta:
     unique_together = ('user', 'trophy',)
