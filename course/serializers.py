@@ -59,6 +59,7 @@ class ChallengeRecordSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class TrophyRecordSerializer(serializers.HyperlinkedModelSerializer):
+    trophy = TrophySerializer()
     class Meta:
         model = TrophyRecord
         fields = get_model_concrete_fields(model) + ['url']
