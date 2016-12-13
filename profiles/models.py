@@ -130,11 +130,11 @@ class User(AbstractEmailUser):
 
 
   def __unicode__(self):
-    return self.id
-    # if self.email is not None:              
-    #   return self.email
-
     # return self.id
+    if self.email is not None:              
+      return self.email
+
+    return str(self.id)
 
   @property
   def name(self):
