@@ -387,7 +387,7 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
                     )
 
     myTrophyRecordsCount = serializers.IntegerField(
-                        source='trophyrecords_set.count', 
+                        source='trophyrecord_set.count', 
                         read_only=True
                     )
 
