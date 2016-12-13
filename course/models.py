@@ -116,7 +116,7 @@ class Trophy(models.Model):
   # describes how many points are required to attain trophy
   threshold = models.IntegerField(blank = False, default = 100)
 
-  language = models.CharField( max_length=20, default=None, choices = language_choices)
+  language = models.CharField( max_length=20, default='', choices = language_choices)
 
 
 class ChallengeRecord(models.Model):
