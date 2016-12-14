@@ -455,6 +455,7 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
             'myStudents',
             'myProjectsCount',
             'myTrophyRecordsCount',
+            'myTrophyRecordActionsCount',
             
             'username', 
             'email', 
@@ -462,6 +463,7 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
 
             'isPasswordSet',
             'isEmailVerified',
+
 
         
             )
