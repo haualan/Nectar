@@ -117,7 +117,12 @@ class User(AbstractEmailUser):
     """
     return self.trophyrecord_set.all()
 
-
+  @property
+  def get_myReactions(self):
+    """
+    returns this user's recieved reactions / loves / likes by other users
+    """
+    return self.trophyrecordaction_set.model.objects.filter(trophyRecord__user = self)
 
   def get_age(self):
     today = datetime.now()
