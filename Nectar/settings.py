@@ -84,6 +84,9 @@ INSTALLED_APPS.extend([
 
     'sslserver',
     'corsheaders',
+
+    # for creating and editing challenges
+    'jsoneditor',
     
 
 
@@ -106,6 +109,7 @@ INSTALLED_APPS.extend([
     'course',
     'uploadApp',
     'feed',
+    'action',
 
     'djfrontend',
     'djfrontend.skeleton',
@@ -151,6 +155,11 @@ ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_SUBJECT_PREFIX = '[FirstCodeAcademy] '
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 30
+
+
+# controls jsoneditor styling
+JSON_EDITOR_JS = 'https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/4.2.1/jsoneditor.js'
+JSON_EDITOR_CSS = 'https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/4.2.1/jsoneditor.css'
 
 
 

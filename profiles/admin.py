@@ -51,11 +51,12 @@ def autoregister(app):
       class ModAdmin(ImportExportModelAdmin):
         list_display = list(map(lambda x: x.name ,model._meta.fields))[1:]
       admin.site.register(model, ModAdmin)
+      
     except AlreadyRegistered:
       pass
 
 autoregister('profiles')
-autoregister('course')
+# autoregister('course')
 # autoregister('spirit_topic_private')
 # autoregister('spirit_topic')
 # autoregister('core')

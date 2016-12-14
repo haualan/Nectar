@@ -391,6 +391,11 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
                         read_only=True
                     )
 
+    # myTrophyRecordActionsCount = serializers.IntegerField(
+    #                     source='trophyrecordaction_set.count', 
+    #                     read_only=True
+    #                 )
+
     displayName = serializers.SerializerMethodField(method_name = '_get_displayName')
 
     isPasswordSet = serializers.SerializerMethodField(method_name = '_get_isPasswordSet')

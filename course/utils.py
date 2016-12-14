@@ -1,6 +1,7 @@
 
 from uploadApp.models import *
 from course.models import *
+from django.db.models import Avg, Case, Count, F, Max, Min, Prefetch, Q, Sum, When
 
 # from course.models import UserCourseRelationship
 
@@ -19,6 +20,7 @@ def updateTrophyRecord(user):
 	activeProjects = user.project_set.annotate(
 		Count('projectsourcefile')
 	).filter(
+		Q(projectsourcefile__purpose = 'package') | Q(projectsourcefile__purpose = 'source'),
 		projectsourcefile__count__gte = 1
 	)
 
@@ -73,6 +75,56 @@ def updateTrophyRecord(user):
 	# 		if p.language == l:
 				# if the languages match, assign trophy model
 				# assume every active projects earns 1 point for that language
+
+
+def sampleChallenge():
+	"""
+	generates a skeleton for challenges
+	"""
+
+	p = {
+		'topic':'Postcard',
+		'media':[
+			# artwork for this challenge or group of questions
+			'https://media.kahoot.it/5e1a14b6-6aa5-4c3c-8ba8-069c4336becd',
+			
+		], 
+		'questions':[
+			{
+				'type': 'multipleChoice',
+				'answerKey': 'a',
+				'media': [
+					'https://media.kahoot.it/1f160791-6512-4f8a-af33-5ed49d23711a',
+				],
+				'choices': {
+					'a':"It clears our app of drawn lines",
+					'b':"It doesn't do anything",
+					'c':"it clears our variable",
+					'd':"It clears our pen color",
+				}
+			},
+			{
+				'type': 'multipleChoice',
+				'answerKey': 'a',
+				'choices': {
+					'a':"A procedure",
+					'b':"An event",
+					'c':"A loop",
+					'd':"A motion block",
+				}
+			},
+
+
+		]
+
+	}
+
+	return p
+
+
+
+
+
 
 
 
