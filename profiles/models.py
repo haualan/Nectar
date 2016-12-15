@@ -145,6 +145,26 @@ class User(AbstractEmailUser):
   def name(self):
     return '{} {}'.format(self.firstname, self.lastname)
 
+  @property
+  def displayName(self):
+    fname = self.firstname
+    lname = self.lastname
+    email = self.email
+
+    # if avatar name exists, should be returned here
+
+    if len(fname) > 0 and len(lname) > 0:
+        return '{} {}'.format(fname, lname)
+
+    if len(fname) > 0:
+        return fname
+
+    if len(lname) > 0:
+        return lname
+
+    # email is always the fallback for name display
+    return email
+
   class Meta:
     unique_together = ('username',)
 

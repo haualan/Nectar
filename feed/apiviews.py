@@ -86,12 +86,34 @@ class FeedView(mixins.ListModelMixin, viewsets.GenericViewSet):
             'type' : 'ChallengeRecord',
             'id' : i.id,
             'user_avatar': i.user_avatar,
-            'user_name': "{} {}".format(i.user_fname, i.user_lname)
+            'user_name':i.displayName,
+            # 'user_name': "{} {}".format(i.user_fname, i.user_lname)
 
         } for i in cr]
 
     def injectUploads(self):
-        return []
+        u = self.request.user
+        p = u.project_set.model.objects.filter(
+            # leave empty to select all
+        ).annotate(
+            date = F('updated'),
+            user_fname = F('user__firstname'),
+            user_lname = F('user__lastname'),
+            user_avatar = F('user__avatar_url'),
+
+
+        ).prefetch_related('user')
+
+        return [{
+            'date': i.date,
+            'type' : 'ChallengeRecord',
+            'id' : i.id,
+            'user_avatar': i.user_avatar,
+            'user_name': i.displayName,
+
+        } for i in p]
+
+      
 
 
 
