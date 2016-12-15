@@ -106,7 +106,7 @@ class FeedView(mixins.ListModelMixin, viewsets.GenericViewSet):
 
         return [{
             'date': i.date,
-            'type' : 'ChallengeRecord',
+            'type' : 'Project',
             'id' : i.id,
             'user_avatar': i.user_avatar,
             'user_name': i.user.displayName,
