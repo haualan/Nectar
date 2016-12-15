@@ -109,7 +109,7 @@ class FeedView(mixins.ListModelMixin, viewsets.GenericViewSet):
             'type' : 'Project',
             'id' : i.id,
             'name': i.name,
-            'url': i.url,
+            # 'url': i.url,
             'user_avatar': i.user_avatar,
             'user_name': i.user.displayName,
 
