@@ -386,10 +386,10 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
                         read_only=True
                     )
 
-    myTrophyRecordsCount = serializers.IntegerField(
-                        source='trophyrecord_set.count', 
-                        read_only=True
-                    )
+    # myTrophyRecordsCount = serializers.IntegerField(
+    #                     source='trophyrecord_set.count', 
+    #                     read_only=True
+    #                 )
 
     # myTrophyRecordActionsCount = serializers.IntegerField(
     #                     source='trophyrecordaction_set.count', 
@@ -454,7 +454,7 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
             'mySchools',
             'myStudents',
             'myProjectsCount',
-            'myTrophyRecordsCount',
+            # 'myTrophyRecordsCount',
             'myTrophyRecordActionsCount',
             
             'username', 
