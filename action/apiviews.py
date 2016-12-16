@@ -23,6 +23,14 @@ class TrophyRecordActionViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
 
 
+class ProjectActionViewSet(viewsets.ModelViewSet):
+    """
+    defines the relationship between Instructor user and courses
+    """
+    api_name = 'projectaction'
+    queryset = ProjectAction.objects.all()
+    serializer_class = ProjectActionSerializer
+    permission_classes = (IsAuthenticated,)
 
 
 

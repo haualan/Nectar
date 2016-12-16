@@ -32,5 +32,10 @@ class TrophyRecordActionSerializer(serializers.HyperlinkedModelSerializer):
         model = TrophyRecordAction
         fields = get_model_concrete_fields(model) + ['url']
 
+class ProjectActionSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = ProjectAction
+        fields = get_model_concrete_fields(model) + ['url']
+
 
 
