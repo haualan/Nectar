@@ -34,3 +34,41 @@ class TrophyRecordAction(models.Model):
   class Meta:
   	# each user can only love an item once
     unique_together = ('user', 'trophyRecord', 'action')
+
+
+class ProjectAction(models.Model):
+  """
+  each project / uploaded app can be loved by a user
+  """
+  user = models.ForeignKey('profiles.User')
+  project = models.ForeignKey('uploadApp.Project')
+  action = models.IntegerField(default=0, choices = action_choices)
+
+  class Meta:
+    # each user can only love an item once
+    unique_together = ('user', 'project', 'action')
+
+
+# may not be necessary, just have the trophies be linked to challenges may be more approps
+
+# class ChallengeAction(models.Model):
+#   """
+#   each project / uploaded app can be loved by a user
+#   """
+#   user = models.ForeignKey('profiles.User')
+#   project = models.ForeignKey('uploadApp.Project')
+#   action = models.IntegerField(default=0, choices = action_choices)
+
+#   class Meta:
+#     # each user can only love an item once
+#     unique_together = ('user', 'project', 'action')
+
+
+
+
+
+
+
+
+
+
