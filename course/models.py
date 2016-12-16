@@ -53,6 +53,10 @@ class Course(models.Model):
   course_icon_url = models.URLField(blank=True, default=DEFAULT_PROFILE_PICTURE_URL)
   eventbrite_tag = models.CharField(max_length=255, blank=True)
 
+  class Meta:
+    # course code must be unique
+    unique_together = ('course_code',)
+
 
 
 from django.contrib.postgres.fields import JSONField
