@@ -29,10 +29,6 @@ def get_model_concrete_fields(MyModel):
         )
     ]
 
-class UserCourseRelationshipSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = UserCourseRelationship
-        fields = get_model_concrete_fields(model) + ['url']
 
 class CourseSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -45,6 +41,11 @@ class LessonSerializer(serializers.HyperlinkedModelSerializer):
         model = Course
         fields = get_model_concrete_fields(model) + ['url']
 
+class UserCourseRelationshipSerializer(serializers.HyperlinkedModelSerializer):
+    course = CourseSerializer
+    class Meta:
+        model = UserCourseRelationship
+        fields = get_model_concrete_fields(model) + ['url']
 
 
 class ChallengeSerializer(serializers.HyperlinkedModelSerializer):
