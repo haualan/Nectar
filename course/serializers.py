@@ -40,6 +40,13 @@ class CourseSerializer(serializers.HyperlinkedModelSerializer):
         fields = get_model_concrete_fields(model) + ['url']
 
 
+class LessonSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Course
+        fields = get_model_concrete_fields(model) + ['url']
+
+
+
 class ChallengeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Challenge

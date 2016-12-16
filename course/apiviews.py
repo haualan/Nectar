@@ -35,6 +35,15 @@ class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
     permission_classes = (IsAuthenticated,)
 
+class LessonViewSet(viewsets.ModelViewSet):
+    """
+    defines the Course objects 
+    """
+    api_name = 'lesson'
+    queryset = Lesson.objects.all()
+    serializer_class = LessonSerializer
+    permission_classes = (IsAuthenticated,)
+
 
 class ChallengeViewSet(viewsets.ModelViewSet):
     """
