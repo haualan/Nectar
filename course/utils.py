@@ -93,6 +93,7 @@ def sampleChallenge():
 			{
 				'type': 'multipleChoice',
 				'answerKey': 'a',
+				'question': 'What does the "clear" block do?',
 				'media': [
 					'https://media.kahoot.it/1f160791-6512-4f8a-af33-5ed49d23711a',
 				],
@@ -106,6 +107,7 @@ def sampleChallenge():
 			{
 				'type': 'multipleChoice',
 				'answerKey': 'a',
+				'question': 'What is drawSquare?',
 				'choices': {
 					'a':"A procedure",
 					'b':"An event",
@@ -113,8 +115,17 @@ def sampleChallenge():
 					'd':"A motion block",
 				}
 			},
-
-
+			{
+				'type': 'multipleChoice',
+				'answerKey': 'a',
+				'question': 'Why do we turn 90 degrees 4 times?',
+				'choices': {
+					'a':"A procedure",
+					'b':"An event",
+					'c':"A loop",
+					'd':"A motion block",
+				}
+			},
 		]
 
 	}
