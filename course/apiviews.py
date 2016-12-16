@@ -23,6 +23,8 @@ class UserCourseRelationshipViewSet(viewsets.ModelViewSet):
     queryset = UserCourseRelationship.objects.all()
     serializer_class = UserCourseRelationshipSerializer
     permission_classes = (IsAuthenticated,)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('user',)
 
 
 
