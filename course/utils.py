@@ -82,6 +82,7 @@ def sampleChallenge():
 	generates a skeleton for challenges
 	"""
 
+
 	p = {
 		'topic':'Postcard',
 		'media':[
