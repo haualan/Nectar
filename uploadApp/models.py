@@ -19,6 +19,9 @@ class Project(models.Model):
 
   updated = models.DateTimeField(auto_now=True)
 
+  # project link for urls
+  externalURL = models.URLField(blank=True, default="")
+
   # icon for the app
   avatar_url = models.URLField('avatar_url',blank=True, default=DEFAULT_PROFILE_PICTURE_URL)
 

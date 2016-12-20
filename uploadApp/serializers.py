@@ -121,12 +121,21 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
     #     required = False
     #     )
 
+    language_display = serializers.SerializerMethodField()
+
+
+
+
     projectSourceFiles = ProjectSourceFileSerializer(
         many = True,
         source = 'projectsourcefile_set',
         allow_null = True,
         required = False
         )
+
+    def get_language_display(self, obj):
+        return obj.get_language_display()
+
     class Meta:
         model = Project
         # fields = '__all__' 
