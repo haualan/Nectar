@@ -111,26 +111,30 @@ class UserCreateView(views.APIView):
     # this endpoint should be public so anyone can sign up / create user
     permission_classes = (AllowAny, )
     http_method_names =['post']
+    serializer_class = UserCreateSerializer
 
     def post(self, request, format=None, *args, **kwargs):
-        # serializer = self.serializer_class(data=request.data)
-        # serializer.is_valid(raise_exception=True)
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
         # user = self.perform_create(serializer)
 
-        username = request.data.get('username')
-        password1 = request.data.get('password1')
-        password2 = request.data.get('password2')
+        print serializer.validated_data
 
-        if username is None or password1 is None or password2 is None:
+        email = serializer.validated_data.get('email')
+        username = serializer.validated_data.get('username')
+        password1 = serializer.validated_data.get('password1')
+        password2 = serializer.validated_data.get('password2')
+
+        if username is None or password1 is None or password2 is None or email is None:
             raise ParseError('one or more required fields are missing')
 
         if password1 != password2:
             raise ParseError('password1 does not match password2')
 
         try:
-            user = User.objects.create(username=username,)
+            user = User.objects.create(username=username, email=email)
         except IntegrityError as e:
-            raise ParseError('username is not unique: {}'.format(e))
+            raise ParseError('username is not unique or email incorrect: {}'.format(e))
 
         user.set_password(password1)
         user.save()

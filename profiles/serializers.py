@@ -282,6 +282,17 @@ def get_model_concrete_fields(MyModel):
     ]
 
 
+class UserCreateSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    username = serializers.CharField(max_length=200)
+    password1 = serializers.CharField(max_length=200)
+    password2 = serializers.CharField(max_length=200)
+
+    class Meta:
+        model = User
+        fields = ('email', 'username', 'password1' ,'password2')
+        extra_kwargs = {'password1': {'write_only': True}, 'password2': {'write_only': True}}
+
 class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
     # url = serializers.HyperlinkedIdentityField(
     #     view_name='{}-detail'.format('userprofile'),
