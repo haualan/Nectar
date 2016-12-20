@@ -144,5 +144,6 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
         # 'projectScreenshots', 
         # 'projectPackageFiles', 
         'projectSourceFiles',
+        'language_display',
         ]
 
