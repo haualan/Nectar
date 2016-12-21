@@ -41,7 +41,8 @@ def get_eighteen_yearoldDate():
 def get_default_age():
   return datetime((timezone.now().year - 30), 1, 1)
 
-DEFAULT_PROFILE_PICTURE_URL = 'http://placehold.it/350x350'
+# DEFAULT_PROFILE_PICTURE_URL = 'http://placehold.it/350x350'
+DEFAULT_PROFILE_PICTURE_URL = 'https://s3-ap-southeast-1.amazonaws.com/fcanectar/customMedia/defaultUserIcon.png'
 
 class User(AbstractEmailUser):
   avatar_url = models.URLField('avatar_url',blank=True, default=DEFAULT_PROFILE_PICTURE_URL)
