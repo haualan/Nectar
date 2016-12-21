@@ -124,15 +124,16 @@ class UserCreateView(views.APIView):
         username = serializer.validated_data.get('username')
         password1 = serializer.validated_data.get('password1')
         password2 = serializer.validated_data.get('password2')
+        role = serializer.validated_data.get('role')
 
-        if username is None or password1 is None or password2 is None or email is None:
+        if username is None or password1 is None or password2 is None or email is None or role is None:
             raise ParseError('one or more required fields are missing')
 
         if password1 != password2:
             raise ParseError('password1 does not match password2')
 
         try:
-            user = User.objects.create(username=username, email=email)
+            user = User.objects.create(username=username, email=email, role=role)
         except IntegrityError as e:
             raise ParseError('username is not unique or email incorrect: {}'.format(e))
 
