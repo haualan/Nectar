@@ -6,4 +6,5 @@ language_choices = (
   ('SCRATCH', 'Scratch'),
   ('JAVA', 'Java'),
   ('JS', 'JavaScript'),
+  ('UNITY', 'Unity'),
 )
