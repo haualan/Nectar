@@ -64,6 +64,54 @@ class MeView(viewsets.ReadOnlyModelViewSet):
 #     filter_backends = (filters.SearchFilter,)
 #     search_fields = ('username', 'email')
 
+    
+class UserPublicView(views.APIView):
+    """
+    \n    POST a payload with uid and slug and return user's public info, option to return more if user has relationship with student, or if role is instructor
+
+        {
+        "uid":"13"
+        "slug":"bla-bla"
+        }
+
+    """
+    api_name = 'userpublic'
+
+    # this endpoint should be public so anyone can ask for public profile
+    permission_classes = (AllowAny, )
+    http_method_names =['post']
+
+    def post(self, request, format=None, *args, **kwargs):
+        viewingUser = request.user
+
+        uid = request.data.get('uid')
+        slug = request.data.get('slug')
+
+        if uid is None or slug is None:
+            raise ParseError('uid or slug invalid')
+
+        u = None
+        isSlugValid = False
+        try:
+            u = User.objects.get(id = uid)
+        except:
+            raise ParseError('uid or slug invalid')
+
+        if (u.slugName == slug):
+            isSlugValid = True
+
+        if not isSlugValid:
+            raise ParseError('uid or slug invalid')
+
+        # if viewingUser has relationship with u return comprehensive profile views
+        # else return summary profile view
+
+        comprehensiveProfile = MeSerializer(u, context={'request': request}).data
+        return Response(comprehensiveProfile)
+
+
+
+
 class UserValidateView(views.APIView):
     """
 \n    POST a payload with username and returns status: true if available for use 

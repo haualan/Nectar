@@ -10,7 +10,7 @@ from profiles.views import AccountConfirmCompleteView, CustomPasswordChangeView
 # from activities.apiviews import LifeTimeCPView ,StravaSubView, GarminSubView, MobileSubView, RunningZoneView ,ChartingView, ActivitySummaryView, ActivityTimeSeriesView, ActivityMeanMaxView, UtilsView, FBShareView, PerfProUploadView, FBShareUnitsStressView, TPImportView
 # from streamView.apiviews import UserNotificationView, CatchMailView
 # from sccalendar.apiviews import SetRosterView
-from profiles.apiviews import MeView, InviteView, EmailConfirmView, UserCreateView, UserValidateView, SendConfirmationView
+from profiles.apiviews import MeView, InviteView, EmailConfirmView, UserCreateView, UserValidateView, SendConfirmationView, UserPublicView
 # , DisconnectSocialView, GeneratePaymentTokenView, CheckoutView, GetPaymentCustView, PaymentListenerView, PaymentBatchProcess, GetOrgMonthEndSummaryView, CancelSubscriptionView
 from feed.apiviews import FeedView
 
@@ -62,6 +62,8 @@ urlpatterns = [
 
 
     # url(r'^api/v1/usernotification/$', UserNotificationView.as_view() , name = 'usernotification-list'),
+    
+    url(r'^api/v1/userpublic/$', UserPublicView.as_view() , name = 'userpublic-list'),
     
     
     url(r'^api/v1/sendconfirmation/$', SendConfirmationView.as_view() , name = 'sendconfirmation-list'),

@@ -467,6 +467,7 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
             'username', 
             'email', 
             'displayName',
+            'slugName',
 
             'isPasswordSet',
             'isEmailVerified',
