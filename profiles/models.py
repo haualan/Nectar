@@ -16,6 +16,7 @@ import dateutil.parser
 import uuid, os
 
 from django.utils.translation import ugettext_lazy as _
+from django.utils.text import slugify
 
 # from activities.statistics.heartratemodel.utils import *
 # from activities.statistics.jackdaniels import calc_JD_pace_heartrate
@@ -163,11 +164,19 @@ class User(AbstractEmailUser):
     if len(lname) > 0:
         return lname
 
+    if email:
+      return email
     # email is always the fallback for name display
-    return email
+    return ''
+
+  @property
+  def slugName(self):
+    return slugify(self.displayName , allow_unicode=True)
 
   class Meta:
     unique_together = ('username',)
+
+
 
 
 class UserForm(ModelForm):
