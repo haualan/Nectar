@@ -111,11 +111,11 @@ class Challenge(models.Model):
   # each challenge when completed results in a ChallengeRecord, to mark that the challenge is completed
   # point = models.IntegerField(blank = False, default = 10)
 
-
+DEFAULT_TROPHY_PICTURE_URL = 'https://s3-ap-southeast-1.amazonaws.com/fcanectar/customMedia/trophIcon.png'
 
 class Trophy(models.Model):
   name = models.CharField(max_length=255, blank=False)
-  avatar_url = models.URLField('avatar_url',blank=True, default=DEFAULT_PROFILE_PICTURE_URL)
+  avatar_url = models.URLField('avatar_url',blank=True, default=DEFAULT_TROPHY_PICTURE_URL)
 
   # describes how many points are required to attain trophy
   threshold = models.IntegerField(blank = False, default = 100)
