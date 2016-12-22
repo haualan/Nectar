@@ -27,6 +27,7 @@ language_choices = (
   ('SCRATCH', 'Scratch'),
   ('JAVA', 'Java'),
   ('JS', 'JavaScript'),
+  ('UNITY', 'Unity'),
 )
 
 role_UserCourseRelationship_choices = (
