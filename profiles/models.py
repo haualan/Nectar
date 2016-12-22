@@ -204,8 +204,10 @@ class GuardianStudentRelation(models.Model):
   class Meta:
     unique_together = ('guardian', 'student',)
 
+
+DEFAULT_SCHOOL_PICTURE_URL = 'https://s3-ap-southeast-1.amazonaws.com/fcanectar/customMedia/schoolIcon.png'
 class School(models.Model):
-  avatar_url = models.URLField('avatar_url',blank=True, default=DEFAULT_PROFILE_PICTURE_URL)
+  avatar_url = models.URLField('avatar_url',blank=True, default=DEFAULT_SCHOOL_PICTURE_URL)
   name = models.CharField(max_length=255, blank=False)
   lon = models.DecimalField(max_digits=9, decimal_places=6, null=True)
   lat = models.DecimalField(max_digits=9, decimal_places=6, null=True)
