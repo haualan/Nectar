@@ -123,6 +123,8 @@ class Trophy(models.Model):
 
   language = models.CharField( max_length=20, default='', choices = language_choices)
 
+  description = models.TextField(blank=True)
+
   def __unicode__(self):
         return unicode(self.name)
 
