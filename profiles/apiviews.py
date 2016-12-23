@@ -310,18 +310,18 @@ class SchoolViewSet(viewsets.ModelViewSet):
 
 
 
-class UserSchoolRelationViewSet(viewsets.ModelViewSet):
-    """
-    defines the School objects that could be associated with a user under UserSchoolRelation
-    """
-    api_name = 'userschoolrelation'
-    queryset = UserSchoolRelation.objects.all()
-    serializer_class = UserSchoolRelationSerializer
-    permission_classes = (IsAuthenticated,)
+# class UserSchoolRelationViewSet(viewsets.ModelViewSet):
+#     """
+#     defines the School objects that could be associated with a user under UserSchoolRelation
+#     """
+#     api_name = 'userschoolrelation'
+#     queryset = UserSchoolRelation.objects.all()
+#     serializer_class = UserSchoolRelationSerializer
+#     permission_classes = (IsAuthenticated,)
 
-    def get_queryset(self):
+#     def get_queryset(self):
 
-        return self.queryset.filter( user=self.request.user)
+#         return self.queryset.filter( user=self.request.user)
 
 
 

@@ -78,6 +78,9 @@ class User(AbstractEmailUser):
   # user roles: can be a parent or coach
   role = models.CharField(max_length=1, default='G', choices = role_choices)
 
+  # the current school the user belongs to
+  school = models.ForeignKey('School', null=True, default=None)
+
 
 
   def save(self, *args, **kwargs):
@@ -218,15 +221,15 @@ class School(models.Model):
 
 
 
-class UserSchoolRelation(models.Model):
-  user = models.ForeignKey('User')
-  school = models.ForeignKey('School')
-  enrollmentDate = models.DateField(blank=True, auto_now_add=True)
+# class UserSchoolRelation(models.Model):
+#   user = models.ForeignKey('User')
+#   school = models.ForeignKey('School')
+#   enrollmentDate = models.DateField(blank=True, auto_now_add=True)
 
 
-  class Meta:
-    # each user can be associated to multiple schools but only once
-    unique_together = ('user','school',)
+#   class Meta:
+#     # each user can be associated to multiple schools but only once
+#     unique_together = ('user','school',)
 
 
 

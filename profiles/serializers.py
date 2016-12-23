@@ -322,6 +322,7 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
             'hasOnboarded',
             'isSearchable',
             'role',
+            'school',
 
             # 'username', 
             'email', 
@@ -367,11 +368,11 @@ class SchoolSerializer(serializers.HyperlinkedModelSerializer):
         model = School
         fields = get_model_concrete_fields(model) + ['url']
 
-class UserSchoolRelationSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = UserSchoolRelation
-        fields = get_model_concrete_fields(model) + ['url']
-        # fields = '__all__' 
+# class UserSchoolRelationSerializer(serializers.HyperlinkedModelSerializer):
+#     class Meta:
+#         model = UserSchoolRelation
+#         fields = get_model_concrete_fields(model) + ['url']
+#         # fields = '__all__' 
 
 
 class UserFileSerializer(serializers.HyperlinkedModelSerializer):
@@ -385,9 +386,9 @@ from uploadApp.serializers import ProjectSerializer
 from course.serializers import TrophyRecordSerializer
 class MeSerializer(serializers.HyperlinkedModelSerializer):
 
-    mySchools = SchoolSerializer(many= True, 
-                            source = 'get_mySchools',
-                            read_only= True)
+    # mySchools = SchoolSerializer(many= True, 
+    #                         source = 'get_mySchools',
+    #                         read_only= True)
 
     myStudents = UserSerializer(many= True, 
                             source = 'get_myStudents',
@@ -457,8 +458,9 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
             'hasOnboarded',
             'isSearchable',
             'role',
+            'school',
 
-            'mySchools',
+            # 'mySchools',
             'myStudents',
             'myProjectsCount',
             'myTrophyRecordsCount',
