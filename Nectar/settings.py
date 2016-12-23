@@ -111,6 +111,8 @@ INSTALLED_APPS.extend([
     'feed',
     'action',
 
+    'marketing',
+
     'djfrontend',
     'djfrontend.skeleton',
     'import_export',
@@ -134,6 +136,7 @@ REST_FRAMEWORK = {
     'DEFAULT_METADATA_CLASS': 'profiles.utils.MinimalMetadata',
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'DEFAULT_PAGINATION_CLASS': 'profiles.pagination.SC_PageNumberPagination',
+    # specifying the renderers
     'DEFAULT_AUTHENTICATION_CLASSES': (
         # consider shutting off Basic and Session Auth on production for API
         'rest_framework.authentication.TokenAuthentication',

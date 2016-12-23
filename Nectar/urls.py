@@ -22,6 +22,7 @@ from course.apiviews import clsmembers as course_clsmembers
 from feed.apiviews import clsmembers as feed_clsmembers
 from uploadApp.apiviews import clsmembers as uploadapp_clsmembers
 from action.apiviews import clsmembers as action_clsmembers
+from marketing.apiviews import clsmembers as marketing_clsmembers
 
 
 router = routers.DefaultRouter()
@@ -32,6 +33,7 @@ clsmembers += course_clsmembers
 clsmembers += feed_clsmembers
 clsmembers += uploadapp_clsmembers
 clsmembers += action_clsmembers
+clsmembers += marketing_clsmembers
 
 for apiview in clsmembers:
   print 'registering:', apiview[1].api_name, apiview[1], apiview[1].api_name
