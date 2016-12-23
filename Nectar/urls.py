@@ -14,6 +14,8 @@ from profiles.apiviews import MeView, InviteView, EmailConfirmView, UserCreateVi
 # , DisconnectSocialView, GeneratePaymentTokenView, CheckoutView, GetPaymentCustView, PaymentListenerView, PaymentBatchProcess, GetOrgMonthEndSummaryView, CancelSubscriptionView
 from feed.apiviews import FeedView
 
+from marketing.apiviews import MarketingCustomView
+
 
 from rest_framework import routers
 
@@ -72,6 +74,12 @@ urlpatterns = [
     url(r'^api/v1/uservalidate/$', UserValidateView.as_view() , name = 'uservalidate-list'),
     url(r'^api/v1/usercreate/$', UserCreateView.as_view() , name = 'usercreate-list'),
     url(r'^api/v1/invite/$', InviteView.as_view() , name = 'invite-list'),
+
+
+
+    
+    url(r'^api/v1/marketingcustom/$', MarketingCustomView.as_view() , name = 'marketingcustom-list'),
+
     # url(r'^api/v1/emailconfirm/$', EmailConfirmView.as_view() , name = 'emailconfirm-list'),
 
     # url(r'^api/v1/feed/$', FeedView.as_view({'get': 'list'}) , name = 'feed-list'),

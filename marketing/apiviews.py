@@ -22,7 +22,7 @@ from rest_framework_csv import renderers as r
 
 class MarketingViewSet(viewsets.ModelViewSet):
     """
-    defines the relationship between Instructor user and courses
+    the marketing view
     """
     api_name = 'marketing'
     queryset = Marketing.objects.all()
@@ -32,9 +32,31 @@ class MarketingViewSet(viewsets.ModelViewSet):
 
 
 
+class MarketingCustomView(views.APIView):
+    """
+\n    POST a payload with username and returns status: true if available for use 
 
+        {
+        "username":"alan"
+        }
 
+    """
 
+    api_name = 'marketingcustom'
+
+    # this endpoint should be public so anyone can sign up / create user
+    permission_classes = (AllowAny, )
+    http_method_names =['get']
+    renderer_classes = [r.CSVRenderer, ] + api_settings.DEFAULT_RENDERER_CLASSES
+    queryset = Marketing.objects.all()
+
+    def get(self, request, *args, **kwargs):
+    	return Response(list(self.queryset.values()))
+        
+        # return Response([
+        #     {'status': 123},
+        #     {'status': 323},
+        # ])
 
 
 
