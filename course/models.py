@@ -65,6 +65,55 @@ from django.contrib.postgres.fields import JSONField
 def awardDefinition_default():
   return {}
 
+def ruleDefinition_default():
+  return {
+    # 'topic':'Postcard',
+    'media':[
+      # artwork for this challenge or group of questions
+      'https://media.kahoot.it/5e1a14b6-6aa5-4c3c-8ba8-069c4336becd',
+      
+    ], 
+    'questions':[
+      {
+        'type': 'multipleChoice',
+        'answerKey': 'a',
+        'question': 'What does the "clear" block do?',
+        'media': [
+          'https://media.kahoot.it/1f160791-6512-4f8a-af33-5ed49d23711a',
+        ],
+        'choices': {
+          'a':"It clears our app of drawn lines",
+          'b':"It doesn't do anything",
+          'c':"it clears our variable",
+          'd':"It clears our pen color",
+        }
+      },
+      {
+        'type': 'multipleChoice',
+        'answerKey': 'a',
+        'question': 'What is drawSquare?',
+        'choices': {
+          'a':"A procedure",
+          'b':"An event",
+          'c':"A loop",
+          'd':"A motion block",
+        }
+      },
+      {
+        'type': 'multipleChoice',
+        'answerKey': 'c',
+        'question': 'Why do we turn 90 degrees 4 times?',
+        'choices': {
+          'a':"We need to turn the right way before pen down",
+          'b':"There is no reason",
+          'c':"We need ot draw four sides of a square",
+          'd':"We need to keep turning forever",
+        }
+      },
+    ]
+
+  }
+
 class Lesson(models.Model):
   name = models.CharField(max_length=255, blank=False)
   order = models.IntegerField(blank = False, default = 0)
@@ -86,7 +135,7 @@ class Challenge(models.Model):
 
 
   # ruleDefinition: will determine what kind of challenges will load
-  ruleDefinition = JSONField(default = awardDefinition_default)
+  ruleDefinition = JSONField(default = ruleDefinition_default)
 
   # {
   # 	'type': 'multipleChoice'
@@ -107,7 +156,7 @@ class Challenge(models.Model):
 
   # this determines what kind of awards are given when challenge is completed
   # there is a chance that completing a challenge yields multiple challenge records
-  awardDefinition = JSONField(default = awardDefinition_default)
+  # awardDefinition = JSONField(default = awardDefinition_default, null=True,)
 
   # each challenge when completed results in a ChallengeRecord, to mark that the challenge is completed
   # point = models.IntegerField(blank = False, default = 10)

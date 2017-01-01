@@ -77,14 +77,15 @@ def updateTrophyRecord(user):
 				# assume every active projects earns 1 point for that language
 
 
-def sampleChallenge():
+def createSampleChallenge():
 	"""
-	generates a skeleton for challenges
+	generates a skeleton JSON for challenges
+	ruleDefinition field in challenge model
 	"""
 
 
-	p = {
-		'topic':'Postcard',
+	r = {
+		# 'topic':'Postcard',
 		'media':[
 			# artwork for this challenge or group of questions
 			'https://media.kahoot.it/5e1a14b6-6aa5-4c3c-8ba8-069c4336becd',
@@ -118,20 +119,28 @@ def sampleChallenge():
 			},
 			{
 				'type': 'multipleChoice',
-				'answerKey': 'a',
+				'answerKey': 'c',
 				'question': 'Why do we turn 90 degrees 4 times?',
 				'choices': {
-					'a':"A procedure",
-					'b':"An event",
-					'c':"A loop",
-					'd':"A motion block",
+					'a':"We need to turn the right way before pen down",
+					'b':"There is no reason",
+					'c':"We need ot draw four sides of a square",
+					'd':"We need to keep turning forever",
 				}
 			},
 		]
 
 	}
 
-	return p
+	# Challenge.objects.create(
+	# 	name = "Postcard",
+	# 	order = 0,
+
+
+
+	# )
+
+	return r
 
 
 
