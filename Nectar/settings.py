@@ -161,10 +161,8 @@ ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 30
 
 
 # controls jsoneditor styling
-# JSON_EDITOR_JS = 'https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/4.2.1/jsoneditor.js'
+JSON_EDITOR_JS = 'https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/4.2.1/jsoneditor.js'
 JSON_EDITOR_CSS = 'https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/4.2.1/jsoneditor.css'
-
-JSON_EDITOR_JS = 'whatever-your-want.js'
 
 
 
@@ -463,6 +461,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 STATIC_URL = '/static/'
+
 
 
 
