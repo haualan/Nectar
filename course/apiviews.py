@@ -73,7 +73,7 @@ class TrophyViewSet(viewsets.ModelViewSet):
 
 class ChallengeRecordViewSet(viewsets.ModelViewSet):
     """
-    defines the School objects that could be associated with a user under UserSchoolRelation
+    defines the Challenge records to denote the progress of the user in the challenges, also used in determining earned trophies
     """
     api_name = 'challengerecord'
     queryset = ChallengeRecord.objects.all()
@@ -81,6 +81,18 @@ class ChallengeRecordViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('user',)
+
+class ChallengeProgressViewSet(viewsets.ModelViewSet):
+    """
+    defines the user's progress within a challenge which may have multiple questions. progress within a challenge is recognized by a signature
+    \n the MD5 signature can be generated using a question's text for example
+    """
+    api_name = 'challengeprogress'
+    queryset = ChallengeProgress.objects.all()
+    serializer_class = ChallengeProgressSerializer
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('user', 'challenge')
 
 
 class TrophyRecordViewSet(viewsets.ModelViewSet):

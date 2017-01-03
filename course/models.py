@@ -28,6 +28,8 @@ language_choices = (
   ('JAVA', 'Java'),
   ('JS', 'JavaScript'),
   ('UNITY', 'Unity'),
+  ('MBOT', 'mBot'),
+  ('SWIFT', 'Swift'),
 )
 
 role_UserCourseRelationship_choices = (
@@ -160,6 +162,17 @@ class Challenge(models.Model):
 
   # each challenge when completed results in a ChallengeRecord, to mark that the challenge is completed
   # point = models.IntegerField(blank = False, default = 10)
+
+class ChallengeProgress(models.Model):
+  challenge = models.ForeignKey('Challenge')
+  user = models.ForeignKey('profiles.User')
+  # just to store some MD5 hash to signify progress in a challenge
+  signature = models.CharField(max_length=32, blank=False)
+
+  class Meta:
+    # same progress can only occur once
+    unique_together = ('user', 'challenge', 'signature')
+
 
 DEFAULT_TROPHY_PICTURE_URL = 'https://s3-ap-southeast-1.amazonaws.com/fcanectar/customMedia/trophIcon.png'
 

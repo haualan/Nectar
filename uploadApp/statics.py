@@ -7,4 +7,6 @@ language_choices = (
   ('JAVA', 'Java'),
   ('JS', 'JavaScript'),
   ('UNITY', 'Unity'),
+  ('MBOT', 'mBot'),
+  ('SWIFT', 'Swift'),
 )
