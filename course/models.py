@@ -30,6 +30,8 @@ language_choices = (
   ('UNITY', 'Unity'),
   ('MBOT', 'mBot'),
   ('SWIFT', 'Swift'),
+  ('HOPSCOTCH', 'Hopscotch'),
+  ('ROBOTICS', 'Robotics'),
 )
 
 role_UserCourseRelationship_choices = (
