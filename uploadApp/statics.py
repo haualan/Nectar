@@ -11,5 +11,6 @@ language_choices = (
   ('SWIFT', 'Swift'),
   ('HOPSCOTCH', 'Hopscotch'),
   ('ROBOTICS', 'Robotics'),
+  ('SCRATCHX', 'ScratchX'),
   ('OTHER', 'Other'),
 )
