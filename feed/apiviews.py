@@ -101,8 +101,7 @@ class FeedView(mixins.ListModelMixin, viewsets.GenericViewSet):
             # we do not want apps that are not completed
             name__isnull = False,
         ).exclude(
-            name = 'untitled App',
-            name__exact = '',
+            Q(name='untitled App') | Q(name__exact='')
         ).annotate(
             date = F('updated'),
             user_fname = F('user__firstname'),
