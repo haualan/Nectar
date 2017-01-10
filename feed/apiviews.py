@@ -64,6 +64,7 @@ class FeedView(mixins.ListModelMixin, viewsets.GenericViewSet):
             'user_avatar': i.user_avatar,
             'user_name': i.user.displayName,
             'user_id': i.user.id,
+            'user_slugName': i.slugName,
             'trophy_avatar': i.trophy_avatar,
             'trophy_name': i.trophy_name
 
@@ -89,6 +90,7 @@ class FeedView(mixins.ListModelMixin, viewsets.GenericViewSet):
             'user_avatar': i.user_avatar,
             'user_name':i.user.displayName,
             'user_id': i.user.id,
+            'user_slugName': i.slugName,
             # 'user_name': "{} {}".format(i.user_fname, i.user_lname)
 
         } for i in cr]
@@ -114,6 +116,7 @@ class FeedView(mixins.ListModelMixin, viewsets.GenericViewSet):
             'user_avatar': i.user_avatar,
             'user_name': i.user.displayName,
             'user_id': i.user.id,
+            'user_slugName': i.slugName,
 
         } for i in p]
 
