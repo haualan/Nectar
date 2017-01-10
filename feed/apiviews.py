@@ -102,6 +102,7 @@ class FeedView(mixins.ListModelMixin, viewsets.GenericViewSet):
             name_isNull = False,
         ).exclude(
             name = 'untitled App',
+            name__exact = '',
         ).annotate(
             date = F('updated'),
             user_fname = F('user__firstname'),
