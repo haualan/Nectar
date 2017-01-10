@@ -148,7 +148,7 @@ class User(AbstractEmailUser):
 
   @property
   def name(self):
-    return '{} {}'.format(self.firstname, self.lastname)
+    return u'{} {}'.format(self.firstname, self.lastname)
 
   @property
   def displayName(self):
