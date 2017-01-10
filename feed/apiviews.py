@@ -99,7 +99,7 @@ class FeedView(mixins.ListModelMixin, viewsets.GenericViewSet):
         u = self.request.user
         p = u.project_set.model.objects.filter(
             # we do not want apps that are not completed
-            name__isNull = False,
+            name__isnull = False,
         ).exclude(
             name = 'untitled App',
             name__exact = '',
