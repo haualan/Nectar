@@ -159,7 +159,7 @@ class User(AbstractEmailUser):
     # if avatar name exists, should be returned here
 
     if len(fname) > 0 and len(lname) > 0:
-        return '{} {}'.format(fname, lname)
+        return u'{} {}'.format(fname, lname)
 
     if len(fname) > 0:
         return fname
