@@ -98,7 +98,10 @@ class FeedView(mixins.ListModelMixin, viewsets.GenericViewSet):
     def injectUploads(self):
         u = self.request.user
         p = u.project_set.model.objects.filter(
-            # leave empty to select all
+            # we do not want apps that are not completed
+            name_isNull = False,
+        ).exclude(
+            name = 'untitled App',
         ).annotate(
             date = F('updated'),
             user_fname = F('user__firstname'),
