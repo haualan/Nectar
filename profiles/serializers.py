@@ -283,12 +283,12 @@ def get_model_concrete_fields(MyModel):
 
 
 class UserCreateSerializer(serializers.Serializer):
-    email = serializers.EmailField()
+    email = serializers.EmailField(required=False)
     username = serializers.CharField(max_length=200)
     password1 = serializers.CharField(max_length=200)
     password2 = serializers.CharField(max_length=200)
     role = serializers.CharField(max_length=1)
-    verifyToken = serializers.CharField(max_length=200)
+    verifyToken = serializers.CharField(max_length=200, required=False)
 
     class Meta:
         model = User

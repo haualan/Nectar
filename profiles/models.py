@@ -144,6 +144,9 @@ class User(AbstractEmailUser):
     if self.email is not None:              
       return self.email
 
+    if self.username is not None:              
+      return self.username
+
     return str(self.id)
 
   @property
@@ -155,6 +158,7 @@ class User(AbstractEmailUser):
     fname = self.firstname
     lname = self.lastname
     email = self.email
+    username = self.username
 
     # if avatar name exists, should be returned here
 
@@ -166,6 +170,9 @@ class User(AbstractEmailUser):
 
     if len(lname) > 0:
         return lname
+
+    if username:
+      return username
 
     if email:
       return email

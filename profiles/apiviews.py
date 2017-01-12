@@ -170,7 +170,7 @@ class UserCreateView(views.APIView):
         serializer.is_valid(raise_exception=True)
         # user = self.perform_create(serializer)
 
-        print serializer.validated_data
+        # print serializer.validated_data
         # print request.META
 
         email = serializer.validated_data.get('email')
@@ -184,8 +184,8 @@ class UserCreateView(views.APIView):
         if verifyToken != settings.VERIFYTOKEN:
             raise PermissionDenied('Verification Token missing or invalid')
 
-        if username is None or password1 is None or password2 is None or email is None or role is None:
-            raise ParseError('one or more required fields are missing')
+        # if username is None or password1 is None or password2 is None or email is None or role is None:
+        #     raise ParseError('one or more required fields are missing')
 
         if password1 != password2:
             raise ParseError('password1 does not match password2')
