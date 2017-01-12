@@ -282,6 +282,18 @@ def get_model_concrete_fields(MyModel):
     ]
 
 
+class StudentResetPWSerializer(serializers.Serializer):
+    password1 = serializers.CharField(max_length=200)
+    password2 = serializers.CharField(max_length=200)
+    uid = serializers.IntegerField()
+
+    class Meta:
+        model = User
+        fields = ('password1' ,'password2', 'uid')
+        extra_kwargs = {'password1': {'write_only': True}, 'password2': {'write_only': True}}
+
+
+
 class UserCreateSerializer(serializers.Serializer):
     email = serializers.EmailField(required=False)
     username = serializers.CharField(max_length=200)

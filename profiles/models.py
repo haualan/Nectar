@@ -115,6 +115,10 @@ class User(AbstractEmailUser):
 
     return self.guardianstudentrelation_set.create(student = targetUser )
 
+
+  def isMyStudent(self, targetUser ):
+    return self.guardianstudentrelation_set.filter(student = targetUser ).exists()
+    
   @property
   def get_myProjects(self):
     """

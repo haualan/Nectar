@@ -140,6 +140,39 @@ class UserValidateView(views.APIView):
             'status': status,
         })
 
+class StudentResetPWView(views.APIView):
+    """
+    Endpoint for user to reset password for his/her student
+    {
+    "uid": "2",
+    "password1":"something",
+    "password2":"something"
+    }
+    """
+
+    api_name = 'studentresetpw'
+
+    # this endpoint should be public so anyone can sign up / create user
+    permission_classes = (IsAuthenticated,)
+    http_method_names =['post']
+    serializer_class = StudentResetPWSerializer
+
+
+    def post(self, request, format=None, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        password1 = serializer.validated_data.get('password1')
+        password2 = serializer.validated_data.get('password2')
+        uid = serializer.validated_data.get('uid')
+
+        if password1 != password2:
+            raise ParseError('password1 does not match password2')
+
+        if not request.user.isMyStudent(uid):
+            raise ParseError('uid: {} not your student'.format(uid))
+
+        return Response({'status': 'success'})
 
 
 class UserCreateView(views.APIView):
