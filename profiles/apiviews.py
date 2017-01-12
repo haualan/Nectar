@@ -166,6 +166,7 @@ class UserCreateView(views.APIView):
     # consider adding a token payload in the body to bar access from unwanted websites
 
     def post(self, request, format=None, *args, **kwargs):
+        # print 'isAnon?', request.user.is_anonymous()
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         # user = self.perform_create(serializer)
@@ -179,6 +180,7 @@ class UserCreateView(views.APIView):
         password2 = serializer.validated_data.get('password2')
         role = serializer.validated_data.get('role')
         verifyToken = serializer.validated_data.get('verifyToken')
+        isMyStudent = serializer.validated_data.get('isMyStudent')
 
         # confirm that frontend has a signature passed
         if verifyToken != settings.VERIFYTOKEN:
@@ -201,6 +203,12 @@ class UserCreateView(views.APIView):
         token, _ = Token.objects.get_or_create(user=user)
 
         # print request.data
+
+        # if isMyStudent is True and this user is logged in / not anonymous, then associate user with parent student relationship
+        if isMyStudent == True and request.user.is_anonymous() == False:
+            guardianUser = request.user
+            studentUser = user
+            guardianUser.createMyStudentRelation(studentUser)
 
         r = {'id': user.id, 'key': token.key}
 

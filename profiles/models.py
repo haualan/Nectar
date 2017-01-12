@@ -108,6 +108,13 @@ class User(AbstractEmailUser):
     """
     return User.objects.filter(id__in =  self.guardianstudentrelation_set.values('student'))
 
+  def createMyStudentRelation(self, targetUser):
+    """
+    forms a student relationship with another user
+    """
+
+    return self.guardianstudentrelation_set.create(student = targetUser )
+
   @property
   def get_myProjects(self):
     """

@@ -289,6 +289,7 @@ class UserCreateSerializer(serializers.Serializer):
     password2 = serializers.CharField(max_length=200)
     role = serializers.CharField(max_length=1)
     verifyToken = serializers.CharField(max_length=200, required=False)
+    isMyStudent = serializers.BooleanField(required = False)
 
     class Meta:
         model = User
@@ -351,6 +352,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'id' ,'name', 'email', 'role',
 
             'is_email_verified', 'location', 'avatar_url'
+            'displayName',
             )
 
 class UserSimpleSerializer(serializers.HyperlinkedModelSerializer):
