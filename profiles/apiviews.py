@@ -149,7 +149,9 @@ class UserCreateView(views.APIView):
         {
         "username":"alan",
         "password1":"1q2w3e4r",
-        "password2":"1q2w3e4r"
+        "password2":"1q2w3e4r",
+        "role": "S",
+        "verifyToken": "???"
         }
 
     """
@@ -161,18 +163,26 @@ class UserCreateView(views.APIView):
     http_method_names =['post']
     serializer_class = UserCreateSerializer
 
+    # consider adding a token payload in the body to bar access from unwanted websites
+
     def post(self, request, format=None, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         # user = self.perform_create(serializer)
 
-        print serializer.validated_data
+        # print serializer.validated_data
+        # print request.META
 
         email = serializer.validated_data.get('email')
         username = serializer.validated_data.get('username')
         password1 = serializer.validated_data.get('password1')
         password2 = serializer.validated_data.get('password2')
         role = serializer.validated_data.get('role')
+        verifyToken = serializer.validated_data.get('verifyToken')
+
+        # confirm that frontend has a signature passed
+        if verifyToken != settings.VERIFYTOKEN:
+            raise PermissionDenied('Verification Token missing or invalid')
 
         if username is None or password1 is None or password2 is None or email is None or role is None:
             raise ParseError('one or more required fields are missing')
