@@ -353,6 +353,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
             'is_email_verified', 'location', 'avatar_url',
             'displayName',
+            'username',
             )
 
 class UserSimpleSerializer(serializers.HyperlinkedModelSerializer):
