@@ -172,6 +172,12 @@ class StudentResetPWView(views.APIView):
         if not request.user.isMyStudent(uid):
             raise ParseError('uid: {} not your student'.format(uid))
 
+        targetUser = User.objects.get(id = uid)
+        # actual reset pw
+        targetUser.set_password(password1)
+        targetUser.save()
+
+
         return Response({'status': 'success'})
 
 
