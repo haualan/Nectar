@@ -170,7 +170,7 @@ class UserCreateView(views.APIView):
         serializer.is_valid(raise_exception=True)
         # user = self.perform_create(serializer)
 
-        # print serializer.validated_data
+        print serializer.validated_data
         # print request.META
 
         email = serializer.validated_data.get('email')
