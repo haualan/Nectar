@@ -351,7 +351,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ('url', 'id' ,'name', 'email', 'role',
 
-            'is_email_verified', 'location', 'avatar_url'
+            'is_email_verified', 'location', 'avatar_url',
             'displayName',
             )
 
