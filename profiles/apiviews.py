@@ -53,7 +53,7 @@ class MeView(viewsets.ReadOnlyModelViewSet):
         # getSegment(self.request, 'identify')
 
         
-        return self.queryset.filter(email=self.request.user)
+        return self.queryset.filter(id=self.request.user.id)
 
     # def get(self, request, format=None):
     #     return Response(self.queryset.filter(email=self.request.user))
