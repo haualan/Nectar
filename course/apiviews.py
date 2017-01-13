@@ -189,6 +189,8 @@ class CodeNinjaCacheUpdateView(views.APIView):
                         defaults = { 'course_code': c['course_code'], },
                     )
 
+        print 'course created', course.id, created
+
 
 
 
@@ -229,7 +231,7 @@ class CodeNinjaCacheUpdateView(views.APIView):
                 memo = {}
                 for c in obj.data.get('offerings'):
                     memo[c['course_code']] = c
-                    print 'offering', c
+                    # print 'offering', c
 
                     if c['course_code'] not in memo:
                         self.updateCourse(c)
