@@ -469,7 +469,10 @@ STATIC_URL = '/static/'
 MEDIA_ROOT= BASE_DIR +'/media/'
 MEDIA_URL='/'
 
-
+# all the endpoints with data from code ninja, must return json blob
+CODENINJACACHEENDPOINTS = [
+    'http://hk.firstcodeacademy.com/api/camps/4/offerings',
+]
 
 
 from config import *

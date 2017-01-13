@@ -16,6 +16,8 @@ from feed.apiviews import FeedView
 
 from marketing.apiviews import MarketingCustomView
 
+from course.apiviews import CodeNinjaCacheUpdateView
+
 
 from rest_framework import routers
 
@@ -82,7 +84,8 @@ urlpatterns = [
     url(r'^api/v1/invite/$', InviteView.as_view() , name = 'invite-list'),
 
 
-
+    
+    url(r'^api/v1/codeninjacacheupdate/$', CodeNinjaCacheUpdateView.as_view() , name = 'codeninjacacheupdate-list'),
     
     url(r'^api/v1/marketingcustom/$', MarketingCustomView.as_view() , name = 'marketingcustom-list'),
 

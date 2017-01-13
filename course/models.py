@@ -42,6 +42,24 @@ role_UserCourseRelationship_choices = (
     ('I', 'instructor'),
 )
 
+from django.contrib.postgres.fields import JSONField
+
+def codeNinjaCacheData_default():
+  return {}
+
+class CodeNinjaCache(models.Model):
+  """
+  long polling results from code Ninjas endpoint
+  """
+  endpoint = models.CharField(max_length=500, blank=False)
+  lastModified = models.DateTimeField(auto_now= True)
+  data = JSONField(default = codeNinjaCacheData_default)
+
+  class Meta:
+    unique_together = ('endpoint',)
+
+
+
 class UserCourseRelationship(models.Model):
   """
   this takes care of both student enrollment and instructor assignment
