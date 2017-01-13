@@ -38,7 +38,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     api_name = 'course'
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('course_code',)
 
