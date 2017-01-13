@@ -230,12 +230,13 @@ class CodeNinjaCacheUpdateView(views.APIView):
             if obj:
                 memo = {}
                 for c in obj.data.get('offerings'):
-                    memo[c['course_code']] = c
+                    
                     # print 'offering', c
 
                     if c['course_code'] not in memo:
                         self.updateCourse(c)
                     
+                    memo[c['course_code']] = c
 
 
 
