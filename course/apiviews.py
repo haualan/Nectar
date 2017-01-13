@@ -144,6 +144,56 @@ class CodeNinjaCacheUpdateView(views.APIView):
     # this endpoint should be public so anyone can sign up
     permission_classes = (AllowAny, )
     http_method_names =['post']
+    
+    def updateCourse(self, c):
+        """
+        suppose code ninja passes a payload of a course, update or create the records on nectar
+        ie:
+        c = {
+          "name": "Playful Discovery of Robotics",
+          "age_group": "6-8",
+          "course_icon_url": "https://firstcode-codeninjas-v3.s3.amazonaws.com/hk/uploads/course_module/50/course_icon_url/icon_robotics.jpg",
+          "course_code": "CC16-AT-RO-1219-SW",
+          "location": "Sheung Wan",
+          "start_date": "2016-12-19",
+          "end_date": "2016-12-23",
+          "start_time": "2000-01-01T10:00:00.000Z",
+          "end_time": "2000-01-01T12:00:00.000Z",
+          "capacity": 8,
+          "enrollment_count": 5,
+          "eventbrite_tag": "28953934999",
+          "active": true,
+          "remark": "5-day camp, 10 hours total."
+        }
+
+        """
+
+        if len(c['course_code']) == 0:
+            return None, False
+
+        course, created = Course.objects.update_or_create(
+                        name =  c['name'],
+                        age_group = c['age_group'],
+                        course_icon_url = c['course_icon_url'],
+                        location = c['location'],
+                        start_date = c['start_date'],
+                        end_date = c['end_date'],
+                        start_time = c['start_time'],
+                        end_time = c['end_time'],
+                        capacity = c['capacity'],
+                        enrollment_count = c['enrollment_count'],
+                        # eventbrite_tag = c['eventbrite_tag'],
+                        active = c['active'],
+                        remark = c['remark'],
+
+                        defaults = { 'course_code': c['course_code'], },
+                    )
+
+
+
+
+
+        return course, created
 
     def post(self, request, format=None, *args, **kwargs):
         verifyToken = request.data.get('verifyToken')
@@ -153,11 +203,14 @@ class CodeNinjaCacheUpdateView(views.APIView):
             raise PermissionDenied('Verification Token missing or invalid')
 
         # now we can start polling endpoint
+
         for i in settings.CODENINJACACHEENDPOINTS:
             # attempt to poll data from 
 
             # r = requests.get('http://hk.firstcodeacademy.com/api/camps/3/offerings')
-# print r.json()
+            # print r.json()
+
+            obj = None
 
             try:
                 r = requests.get(i)
@@ -170,6 +223,17 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
             except Exception as e: 
                 print 'CodeNinjaCacheUpdate', e
+
+
+            if obj:
+                memo = {}
+                for c in obj.data.get('offerings'):
+                    memo[c['course_code']] = c
+                    print 'offering', c
+
+                    if c['course_code'] not in memo:
+                        self.updateCourse(c)
+                    
 
 
 

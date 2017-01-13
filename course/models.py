@@ -79,6 +79,19 @@ class Course(models.Model):
   course_icon_url = models.URLField(blank=True, default=DEFAULT_PROFILE_PICTURE_URL)
   eventbrite_tag = models.CharField(max_length=255, blank=True)
 
+  age_group = models.CharField(max_length=255, blank=True)
+  location = models.CharField(max_length=255, blank=True)
+  start_date = models.DateTimeField(null=True)
+  end_date = models.DateTimeField(null=True)
+  start_time = models.DateTimeField(null=True)
+  end_time = models.DateTimeField(null=True)
+  capacity = models.IntegerField(default = 0)
+  enrollment_count = models.IntegerField(default = 0)
+  active = models.BooleanField(default = True)
+  remark = models.TextField(blank=True)
+
+  lastModified = models.DateTimeField(auto_now= True)
+
   class Meta:
     # course code must be unique
     unique_together = ('course_code',)
