@@ -411,7 +411,7 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
     #                         read_only= True)
 
     myStudents = UserSerializer(many= True, 
-                            source = 'get_myStudents',
+                            source = 'get_myActiveStudents',
                             read_only= True)
 
     myProjectsCount = serializers.IntegerField(

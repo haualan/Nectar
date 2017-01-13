@@ -108,6 +108,15 @@ class User(AbstractEmailUser):
     """
     return User.objects.filter(id__in =  self.guardianstudentrelation_set.values('student'))
 
+
+  @property
+  def get_myActiveStudents(self):
+    """
+    returns students affiliated with current user, regardless of role
+    """
+    return User.objects.filter(is_active = True, id__in =  self.guardianstudentrelation_set.values('student'))
+
+
   def createMyStudentRelation(self, targetUser):
     """
     forms a student relationship with another user
@@ -118,7 +127,7 @@ class User(AbstractEmailUser):
 
   def isMyStudent(self, targetUser ):
     return self.guardianstudentrelation_set.filter(student = targetUser ).exists()
-    
+
   @property
   def get_myProjects(self):
     """
