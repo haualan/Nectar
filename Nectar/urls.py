@@ -10,7 +10,7 @@ from profiles.views import AccountConfirmCompleteView, CustomPasswordChangeView
 # from activities.apiviews import LifeTimeCPView ,StravaSubView, GarminSubView, MobileSubView, RunningZoneView ,ChartingView, ActivitySummaryView, ActivityTimeSeriesView, ActivityMeanMaxView, UtilsView, FBShareView, PerfProUploadView, FBShareUnitsStressView, TPImportView
 # from streamView.apiviews import UserNotificationView, CatchMailView
 # from sccalendar.apiviews import SetRosterView
-from profiles.apiviews import MeView, InviteView, EmailConfirmView, UserCreateView, UserValidateView, SendConfirmationView, UserPublicView, StudentResetPWView
+from profiles.apiviews import MeView, InviteView, EmailConfirmView, UserCreateView, UserValidateView, SendConfirmationView, UserPublicView, StudentResetPWView, StudentDeactivateView
 # , DisconnectSocialView, GeneratePaymentTokenView, CheckoutView, GetPaymentCustView, PaymentListenerView, PaymentBatchProcess, GetOrgMonthEndSummaryView, CancelSubscriptionView
 from feed.apiviews import FeedView
 
@@ -74,6 +74,11 @@ urlpatterns = [
     url(r'^api/v1/uservalidate/$', UserValidateView.as_view() , name = 'uservalidate-list'),
     url(r'^api/v1/usercreate/$', UserCreateView.as_view() , name = 'usercreate-list'),
     url(r'^api/v1/studentresetpw/$', StudentResetPWView.as_view() , name = 'studentresetpw-list'),
+    url(r'^api/v1/studentdeactivate/$', StudentDeactivateView.as_view() , name = 'studentdeactivate-list'),
+
+    
+
+
     url(r'^api/v1/invite/$', InviteView.as_view() , name = 'invite-list'),
 
 

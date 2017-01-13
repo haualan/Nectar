@@ -292,6 +292,10 @@ class StudentResetPWSerializer(serializers.Serializer):
         fields = ('password1' ,'password2', 'uid')
         extra_kwargs = {'password1': {'write_only': True}, 'password2': {'write_only': True}}
 
+class StudentDeactivateSerializer(serializers.Serializer):
+    uid = serializers.IntegerField()
+    class Meta:
+        fields = ('uid')
 
 
 class UserCreateSerializer(serializers.Serializer):
