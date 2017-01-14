@@ -130,11 +130,18 @@ class UserValidateView(views.APIView):
 
     def post(self, request, format=None, *args, **kwargs):
         username = request.data.get('username')
+        email = request.data.get('email')
 
-        if username is None:
-            raise ParseError('username cannot be blank')
+        if username is None and email is None:
+            raise ParseError('username and email cannot be blank at least one must be filled')
 
-        status = not User.objects.filter(username__iexact=username).exists()
+        status = False
+
+        if username:
+            status = not User.objects.filter(username__iexact=username).exists()
+
+        if email:
+            status = not User.objects.filter(email=email).exclude(email__isnull = True).exists()
 
         return Response({
             'status': status,
@@ -214,6 +221,7 @@ class StudentDeactivateView(views.APIView):
 
 
         return Response({'status': 'success'})
+
 
 class UserCreateView(views.APIView):
     """
