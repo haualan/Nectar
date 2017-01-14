@@ -273,6 +273,9 @@ class UserCreateView(views.APIView):
         if password1 != password2:
             raise ParseError('password1 does not match password2')
 
+        if username is None and email is None:
+            raise ParseError('At least username or email must be filled')
+
         try:
             user = User.objects.create(username=username, email=email, role=role)
         except IntegrityError as e:

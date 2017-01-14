@@ -300,7 +300,7 @@ class StudentDeactivateSerializer(serializers.Serializer):
 
 class UserCreateSerializer(serializers.Serializer):
     email = serializers.EmailField(required=False)
-    username = serializers.CharField(max_length=200)
+    username = serializers.CharField(max_length=200, required=False)
     password1 = serializers.CharField(max_length=200)
     password2 = serializers.CharField(max_length=200)
     role = serializers.CharField(max_length=1)
