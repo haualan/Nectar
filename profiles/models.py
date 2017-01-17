@@ -52,7 +52,7 @@ class User(AbstractEmailUser):
   firstname = models.CharField('firstname', max_length=255, blank=True)
   lastname = models.CharField('lastname', max_length=255, blank=True)
 
-  username = models.CharField('username', max_length=255, blank=True)
+  username = models.CharField('username', max_length=255, blank=False, null=True)
   email = models.EmailField(_('email address'), max_length=255, unique=True, null=True, blank=False)
 
   # timezone offset relative to UTC
