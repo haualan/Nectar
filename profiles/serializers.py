@@ -355,11 +355,20 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     # )
 
     is_email_verified = serializers.SerializerMethodField(method_name = '_get_email_verification')
-    enrolledCourses = UserCourseRelationshipSerializer(
-        many= True, 
-        source = 'get_myEnrolledCourses',
-        read_only= True
-        )
+
+    enrolledCourses = serializers.SerializerMethodField(method_name = '_get_enrollment')
+
+    # overkill with too much data
+    # enrolledCourses = UserCourseRelationshipSerializer(
+    #     many= True, 
+    #     source = 'get_myEnrolledCourses',
+    #     read_only= True
+    #     )
+
+    def _get_enrollment(self, obj):
+        userCourses = self.get_myEnrolledCourses
+        return [i.course for i in userCourses]
+
 
     def _get_email_verification(self, obj):
         ea = EmailAddress.objects.filter(user = obj)
