@@ -63,22 +63,53 @@ class Marketing(models.Model):
 
   guessSchool = models.CharField(max_length=50, default=None, null=True)
 
-  def cleanSchool(self, validSchoolsList=[]):
+  def cleanSchool(self, validSchoolsList=None):
     """
     takes real school model and tries to map them to this messy db
     """
+
+    if validSchoolsList is None:
+      validSchoolsList = [ i['name'] for i in School.objects.all().values('name')]
+
     
     # given a valid school list, compute edit distance 
     validSchoolsScores = [(schoolName , nltk.edit_distance(schoolName, self.school  ) ) for schoolName in validSchoolsList ]
 
     # sort the scores
-    validSchoolsScores.sort(key=lambda x: x[0])
+    validSchoolsScores.sort(key=lambda x: x[1])
 
-    print 'validSchoolsScores'
-    print validSchoolsScores
+    print 'cleanSchool info for data id:', self.id, 
+    print 'original school input:', self.school
+    print '1: ', validSchoolsScores[0]
+    print '2: ', validSchoolsScores[1]
+    print '3: ', validSchoolsScores[2]
+    print '4: ', validSchoolsScores[3]
+    print '5: ', validSchoolsScores[4]
+    print '\n'
+    print '0: ', 'Other'
+
+
+
+
     # pick the top 5
 
 
     # give user choice to assign
+    choice = None
 
-    pass
+    validChoices = (0,1,2,3,4,5)
+
+    while choice not in validChoices:
+      if choice is not None:
+        print choice, 'is not a valid entry.'
+      choice = raw_input("Please enter a choice: ")
+      print "you entered", choice
+
+    if choice == 0:
+      self.guessSchool = None
+      return self.save()
+
+    self.guessSchool = validSchoolsScores[choice  - 1][0]
+    return self.save()
+
+    # return validSchoolsScores
