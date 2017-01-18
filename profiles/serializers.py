@@ -366,7 +366,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     #     )
 
     def _get_enrollment(self, obj):
-        userCourses = self.get_myEnrolledCourses
+        userCourses = obj.get_myEnrolledCourses
         return [i.course.course_code for i in userCourses]
 
 

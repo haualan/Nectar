@@ -28,6 +28,8 @@ def autoCleanSchoolsData():
 	validSchoolsList = [ i['name'] for i in School.objects.all().values('name')]
 
 	# only map empty ones
+	# for m in Marketing.objects.filter(autoGuessSchool__isnull = True):
+	# 	m.autoCleanSchool(validSchoolsList)
 
 	for m in Marketing.objects.all():
 		m.autoCleanSchool(validSchoolsList)
