@@ -11,6 +11,8 @@ from django.forms import ModelForm
 from datetime import datetime
 from django.db.models import Count
 
+from profiles.models import School
+
 
 from datetime import timedelta
 import dateutil.parser
@@ -63,22 +65,49 @@ class Marketing(models.Model):
 
   guessSchool = models.CharField(max_length=50, default=None, null=True)
 
-  def cleanSchool(self, validSchoolsList=None):
+  autoGuessSchool = models.CharField(max_length=50, default=None, null=True)
+
+  def autoCleanSchool(self, validSchoolsList=None):
+    """
+    same as clean school but have the computer just auto pick the best choice
+    """
+
+    return self.cleanSchool(validSchoolsList, auto=True)
+
+
+  def cleanSchool(self, validSchoolsList=None, auto=False):
     """
     takes real school model and tries to map them to this messy db
+mm = Marketing.objects.all().first()
+mm.cleanSchool()
+
     """
 
     if validSchoolsList is None:
       validSchoolsList = [ i['name'] for i in School.objects.all().values('name')]
 
-    
+    if self.school is None:
+      print 'None in original data can only be skipped'
+      return 
+
+
     # given a valid school list, compute edit distance 
     validSchoolsScores = [(schoolName , nltk.edit_distance(schoolName, self.school  ) ) for schoolName in validSchoolsList ]
 
     # sort the scores
     validSchoolsScores.sort(key=lambda x: x[1])
 
+    # if auto were true, choose the best
+    if auto:
+      schoolChoice = validSchoolsScores[0][0]
+      print 'Auto Assigned:', validSchoolsScores[0], 'mapped to', self.school
+      self.autoGuessSchool = schoolChoice
+      return self.save()
+
+
+    
     print 'cleanSchool info for data id:', self.id, 
+    print '\n'
     print 'original school input:', self.school
     print '1: ', validSchoolsScores[0]
     print '2: ', validSchoolsScores[1]
@@ -97,19 +126,26 @@ class Marketing(models.Model):
     # give user choice to assign
     choice = None
 
-    validChoices = (0,1,2,3,4,5)
+    validChoices = ("0","1","2","3","4","5")
 
     while choice not in validChoices:
       if choice is not None:
         print choice, 'is not a valid entry.'
       choice = raw_input("Please enter a choice: ")
+
+      # take out newline
+      # choice = choice[:-1]
+
       print "you entered", choice
 
-    if choice == 0:
+    if int(choice) == 0:
       self.guessSchool = None
+      print 'Assigned Other / None'
       return self.save()
 
-    self.guessSchool = validSchoolsScores[choice  - 1][0]
+    schoolChoice = validSchoolsScores[int(choice)  - 1][0]
+    print 'Assigned:', schoolChoice
+    self.guessSchool = schoolChoice
     return self.save()
 
     # return validSchoolsScores
