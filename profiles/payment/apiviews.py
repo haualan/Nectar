@@ -86,7 +86,7 @@ class PaymentChargeUserView(views.APIView):
     if guardianUser.stripeCustomerId is None:
       customer = stripe.Customer.create(
         email = guardianUser.email,
-        metadata = {'uid': guardianUser.id }
+        metadata = {'uid': guardianUser.id },
         source = token,
 
       )
