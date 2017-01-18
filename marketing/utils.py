@@ -1,5 +1,5 @@
 from marketing.models import *
-from profile.models import School
+from profiles.models import School
 
 import nltk
 
