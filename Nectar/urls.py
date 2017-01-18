@@ -10,7 +10,7 @@ from profiles.views import AccountConfirmCompleteView, CustomPasswordChangeView
 # from activities.apiviews import LifeTimeCPView ,StravaSubView, GarminSubView, MobileSubView, RunningZoneView ,ChartingView, ActivitySummaryView, ActivityTimeSeriesView, ActivityMeanMaxView, UtilsView, FBShareView, PerfProUploadView, FBShareUnitsStressView, TPImportView
 # from streamView.apiviews import UserNotificationView, CatchMailView
 # from sccalendar.apiviews import SetRosterView
-from profiles.apiviews import MeView, InviteView, EmailConfirmView, UserCreateView, UserValidateView, SendConfirmationView, UserPublicView, StudentResetPWView, StudentDeactivateView
+from profiles.apiviews import MeView, InviteView, EmailConfirmView, UserCreateView, UserValidateView, SendConfirmationView, UserPublicView, StudentResetPWView, StudentDeactivateView, PaymentChargeUserView
 # , DisconnectSocialView, GeneratePaymentTokenView, CheckoutView, GetPaymentCustView, PaymentListenerView, PaymentBatchProcess, GetOrgMonthEndSummaryView, CancelSubscriptionView
 from feed.apiviews import FeedView
 
@@ -89,68 +89,9 @@ urlpatterns = [
     
     url(r'^api/v1/marketingcustom/$', MarketingCustomView.as_view() , name = 'marketingcustom-list'),
 
-    # url(r'^api/v1/emailconfirm/$', EmailConfirmView.as_view() , name = 'emailconfirm-list'),
+    # payment views
+    url(r'^api/v1/paymentchargeuser/$', PaymentChargeUserView.as_view() , name = 'paymentchargeuser-list'),
 
-    # url(r'^api/v1/feed/$', FeedView.as_view({'get': 'list'}) , name = 'feed-list'),
-
-
-
-
-    # url(r'^api/v1/userschoolrelationupdateorcreate/$', UserSchoolRelationUpdateOrCreate.as_view(), name = 'userschoolrelationupdateorcreate-list'),
-
-    # url(r'^api/v1/runningzone/$', RunningZoneView.as_view() , name = 'runningzone-list'),
-
-    # url(r'^api/v1/disconnectsocial/$', DisconnectSocialView.as_view() , name = 'disconnectsocial-list'),
-
-    # # StravaSubView is a special endpoint for strava webhooks users
-    # url(r'^api/v1/strava/sub/$', StravaSubView.as_view() , name = 'stravasub-list'),
-
-    # # garmin's endpoint for push subscription
-    # url(r'^api/v1/garmin/sub/$', GarminSubView.as_view() , name = 'garmin-list'),
-
-    # # mobile endpoint to recieve data
-    # url(r'^api/v1/mobile/sub/$', MobileSubView.as_view() , name = 'mobilesub-list'),
-
-
-    # # setroster custom endpoint for rsvp roster
-    # url(r'^api/v1/setroster/$', SetRosterView.as_view() , name = 'setroster-list'),
-
-
-    # # utilsview for general get only items to assist front end
-    # url(r'^api/v1/utils/$', UtilsView.as_view() , name = 'utils-list'),
-
-    # # FBShareView for perfpro to post their data to our server
-    # url(r'^api/v1/fbshare/$', FBShareView.as_view() , name = 'fbshare-list'),
-
-    # # PerfProUploadView to get data for sharing activities on FB
-    # url(r'^api/v1/upload$', PerfProUploadView.as_view() , name = 'upload-list'),
-    # url(r'^api/v1/upload/$', PerfProUploadView.as_view() , name = 'upload-list'),
-
-    # # FBShare requires units
-    # url(r'^api/v1/fbshareunitsstress/$', FBShareUnitsStressView.as_view() , name = 'fbshareunitsstress-list'),
-
-    # # tp import view
-    # url(r'^api/v1/tpimport/$', TPImportView.as_view() , name = 'tpimport-list'),
-
-    # # payment views
-    
-    # url(r'^api/v1/getpaymentcust/$', GetPaymentCustView.as_view() , name = 'getpaymentcust-list'),
-    # url(r'^api/v1/generatepaymenttoken/$', GeneratePaymentTokenView.as_view() , name = 'generatepaymenttoken-list'),
-    # url(r'^api/v1/checkout/$', CheckoutView.as_view() , name = 'checkout-list'),
-    # url(r'^api/v1/cancelsubscription/$', CancelSubscriptionView.as_view() , name = 'cancelsubscription-list'),
-
-
-
-    # url(r'^api/v1/paymentlistener/$', PaymentListenerView.as_view() , name = 'paymentlistener-list'),
-    # url(r'^api/v1/paymentbatchprocess/$', PaymentBatchProcess.as_view() , name = 'paymentbatchprocess-list'),
-    # url(r'^api/v1/getorgmonthendsummary/$', GetOrgMonthEndSummaryView.as_view() , name = 'getorgmonthendsummary-list'),
-
-
-    # # catch mail from mailgun
-    # url(r'^api/v1/catchmail/$', CatchMailView.as_view() , name = 'catchmail-list'),
-
-
-    # url(r'^api/v1/me/$', MeView.as_view()),
 ]
 
 # rest framework URLs

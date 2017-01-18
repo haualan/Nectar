@@ -18,6 +18,8 @@ import uuid, os
 from django.utils.translation import ugettext_lazy as _
 from django.utils.text import slugify
 
+import stripe
+
 # from activities.statistics.heartratemodel.utils import *
 # from activities.statistics.jackdaniels import calc_JD_pace_heartrate
 
@@ -82,11 +84,37 @@ class User(AbstractEmailUser):
   school = models.ForeignKey('School', null=True, default=None)
 
 
+  # payment info
+  stripeCustomerId = models.CharField(max_length=50, blank=False, null=True)
+
+
 
   def save(self, *args, **kwargs):
     if self.email == '':
       self.email = None
+
+    if self.email and self.stripeCustomerId:
+      self.updateStripeCustomer()
+
     super(User, self).save(*args, **kwargs) # Call the "real" save() method.
+
+
+
+  def updateStripeCustomer(self):
+    """
+    updates customer attrbutes in Stripe
+    """
+    if not self.stripeCustomerId:
+      # if there is no stripe info, do nothing
+      return False
+
+    cu = stripe.Customer.retrieve(self.stripeCustomerId)
+    cu.metadata = { 'uid': self.id }
+    cu.email = self.email
+
+
+    cu.save()
+    return True
 
 
 

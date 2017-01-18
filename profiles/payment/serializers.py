@@ -1,8 +1,9 @@
 from rest_framework import serializers
 
+class PaymentChargeUserSerializer(serializers.Serializer):
+    token = serializers.CharField(max_length=200)
+    course_code = serializers.CharField(max_length=200)
+    studentID = serializers.IntegerField()
 
-
-class GetOrgMonthEndSummarySerializer(serializers.Serializer):
-    org_id = serializers.IntegerField()
-    dt = serializers.DateTimeField(required = False)
-    s = serializers.CharField(required = False)
+    class Meta:
+        extra_kwargs = {'token': {'write_only': True},}

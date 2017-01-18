@@ -660,7 +660,7 @@ class EmailConfirmView(views.APIView):
 
 
 
-# from profiles.payment.apiviews import *
+from profiles.payment.apiviews import *
 
 # collect all ModelViewSet class members of this module, must be at end of file
 clsmembers = inspect.getmembers(sys.modules[__name__], inspect.isclass)
