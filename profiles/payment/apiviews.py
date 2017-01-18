@@ -77,6 +77,10 @@ class PaymentChargeUserView(views.APIView):
 
     course = course.first()
 
+    # check if student is already registered to class. do not want to pay twice
+    if studentUser.usercourserelationship_set.filter(course = course).exists():
+      raise ParseError('Student already enrolled to course')
+
 
 
     # Create a Customer on stripe if needed :
@@ -120,6 +124,10 @@ class PaymentChargeUserView(views.APIView):
       customer = guardianUser.stripeCustomerId,
       metadata = metadata,
     )
+
+
+    # when charge is successful, add student to course
+    studentUser.usercourserelationship_set.create(course = course)
 
 
     return Response({'status': 'success'}, status=200)

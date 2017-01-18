@@ -164,6 +164,13 @@ class User(AbstractEmailUser):
     return self.project_set.all().order_by('updated')
 
   @property
+  def get_myEnrolledCourses(self):
+    """
+    returns this user's enrolled courses
+    """
+    return self.usercourserelationship_set.all()
+
+  @property
   def get_myTrophyRecords(self):
     """
     returns this user's trophy records

@@ -16,6 +16,7 @@ from datetime import timedelta
 import dateutil.parser
 import uuid, os
 
+import nltk
 
 class Marketing(models.Model):
   """
@@ -60,3 +61,24 @@ class Marketing(models.Model):
   eventBriteOrderDate = models.CharField(max_length=50, default=None, null=True)
   classLocation = models.CharField(max_length=50, default=None, null=True)
 
+  guessSchool = models.CharField(max_length=50, default=None, null=True)
+
+  def cleanSchool(self, validSchoolsList=[]):
+    """
+    takes real school model and tries to map them to this messy db
+    """
+    
+    # given a valid school list, compute edit distance 
+    validSchoolsScores = [(schoolName , nltk.edit_distance(schoolName, self.school  ) ) for schoolName in validSchoolsList ]
+
+    # sort the scores
+    validSchoolsScores.sort(key=lambda x: x[0])
+
+    print 'validSchoolsScores'
+    print validSchoolsScores
+    # pick the top 5
+
+
+    # give user choice to assign
+
+    pass

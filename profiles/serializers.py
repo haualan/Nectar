@@ -347,12 +347,19 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
             
             )
 
+
+from course.serializers import UserCourseRelationshipSerializer
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     # url = serializers.HyperlinkedIdentityField(
     #     view_name='{}-detail'.format(view_names_base['UserSerializer'])
     # )
 
     is_email_verified = serializers.SerializerMethodField(method_name = '_get_email_verification')
+    enrolledCourses = UserCourseRelationshipSerializer(
+        many= True, 
+        source = 'get_myEnrolledCourses',
+        read_only= True
+        )
 
     def _get_email_verification(self, obj):
         ea = EmailAddress.objects.filter(user = obj)
@@ -370,6 +377,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             'is_email_verified', 'location', 'avatar_url',
             'displayName',
             'username',
+            'enrolledCourses',
             )
 
 class UserSimpleSerializer(serializers.HyperlinkedModelSerializer):
