@@ -92,7 +92,8 @@ class PaymentChargeUserView(views.APIView):
       )
 
       # save info in hummingbird
-      guardianUser.save( stripeCustomerId = customer.id,  ) 
+      guardianUser.stripeCustomerId = customer.id
+      guardianUser.save() 
       guardianUser.refresh_from_db()
 
     # 
