@@ -20,6 +20,27 @@ import uuid, os
 
 import nltk
 
+
+class StudentDump(models.Model):
+  """
+  temp dump of students
+  """
+  fullName = models.CharField(max_length=200, default=None, null=True)
+  # poor formating exists
+  school = models.CharField(max_length=100, default=None, null=True)
+  email = models.CharField(max_length=200, default=None, null=True)
+
+
+class EventbriteDump(models.Model):
+  """
+  temp dump of students
+  """
+  fullName = models.CharField(max_length=200, default=None, null=True)
+  # poor formating exists
+  school = models.CharField(max_length=100, default=None, null=True)
+
+
+
 class Marketing(models.Model):
   """
   this takes care of both student enrollment and instructor assignment
