@@ -372,6 +372,44 @@ class SchoolViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
 
 
+class SchoolUpdateOrCreateView(views.APIView):
+    """
+    defines the School object, POST only
+    \n use post to update or create the newest School
+    """
+    api_name = 'schoolupdateorcreate'
+    # queryset = School.objects.all()
+    serializer_class = SchoolUpdateOrCreateSerializer
+    permission_classes = (IsAuthenticated,)
+    http_method_names= ('post', 'options')
+
+    def post(self, request, format=None, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data, context={'request': request})
+
+        
+
+        serializer.is_valid(raise_exception=True)
+
+
+        # school = serializer.validated_data.get('school')
+        print 'post validation', serializer.validated_data
+
+        place_id = serializer.validated_data.get('place_id')
+
+        sch, created = School.objects.update_or_create(
+            place_id = place_id,
+            # followAnnouncement = announcement,
+
+            # if an extremely similar activity already exists, then don't copy
+            
+            # defaults = defaults
+            defaults = serializer.validated_data
+        )
+
+        savedSchool = self.serializer_class(data=request.data, context={'request': request})
+
+        return Response({}, status=status.HTTP_201_CREATED)
+
 
 
 # class UserSchoolRelationUpdateOrCreate(views.APIView):

@@ -405,6 +405,16 @@ class SchoolSerializer(serializers.HyperlinkedModelSerializer):
         model = School
         fields = get_model_concrete_fields(model) + ['url']
 
+class SchoolUpdateOrCreateSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = School
+        fields = get_model_concrete_fields(model)
+
+# class UserSchoolRelationSerializer(serializers.HyperlinkedModelSerializer):
+#     place_id = 
+
+
+
 # class UserSchoolRelationSerializer(serializers.HyperlinkedModelSerializer):
 #     class Meta:
 #         model = UserSchoolRelation
@@ -419,6 +429,9 @@ class UserFileSerializer(serializers.HyperlinkedModelSerializer):
         # fields = '__all__' 
 
 
+# for i in User.objects.filter(school__isnull= False, school__place_id__isnull = True):
+#     print  i.school.id, i.school.place_id , i.school.name 
+
 from uploadApp.serializers import ProjectSerializer
 from course.serializers import TrophyRecordSerializer
 class MeSerializer(serializers.HyperlinkedModelSerializer):
@@ -428,7 +441,7 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
     #                         read_only= True)
 
     school = SchoolSerializer()
-    
+
     myStudents = UserSerializer(many= True, 
                             source = 'get_myActiveStudents',
                             read_only= True)
