@@ -395,6 +395,13 @@ class SchoolUpdateOrCreateView(views.APIView):
         print 'post validation', serializer.validated_data
 
         place_id = serializer.validated_data.get('place_id')
+        avatar_url = serializer.validated_data.get('avatar_url')
+        name = serializer.validated_data.get('name')
+        lon = serializer.validated_data.get('lon')
+        lat = serializer.validated_data.get('lat')
+        formatted_address = serializer.validated_data.get('formatted_address')
+
+
 
         sch, created = School.objects.update_or_create(
             place_id = place_id,
@@ -403,8 +410,27 @@ class SchoolUpdateOrCreateView(views.APIView):
             # if an extremely similar activity already exists, then don't copy
             
             # defaults = defaults
-            defaults = serializer.validated_data
+            defaults = {
+                'avatar_url': avatar_url,
+                'name': name,
+                'lon': lon,
+                'lat': lat,
+                'formatted_address': formatted_address
+            }
         )
+
+        # example:
+        # place_id = '"ChIJfTpQvOMBBDQRSu4cWMrwV_U"'
+        # sch, created = School.objects.update_or_create(
+        #     place_id = place_id,
+        #     defaults = {
+        #         'avatar_url': avatar_url,
+        #         'name': name,
+        #         'lon': lon,
+        #         'lat': lat,
+        #         'formatted_address': formatted_address
+        #     }
+        # )
 
         savedSchool = SchoolSerializer(data=sch, context={'request': request})
 
