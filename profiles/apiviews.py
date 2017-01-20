@@ -432,9 +432,9 @@ class SchoolUpdateOrCreateView(views.APIView):
         #     }
         # )
 
-        savedSchool = SchoolSerializer(data=sch, context={'request': request})
+        # savedSchool = SchoolSerializer(data=sch, context={'request': request})
 
-        return Response(savedSchool.data)
+        return Response({})
 
 
 
