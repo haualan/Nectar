@@ -406,9 +406,9 @@ class SchoolUpdateOrCreateView(views.APIView):
             defaults = serializer.validated_data
         )
 
-        savedSchool = self.serializer_class(data=request.data, context={'request': request})
+        savedSchool = SchoolSerializer(data=sch, context={'request': request})
 
-        return Response({}, status=status.HTTP_201_CREATED)
+        return Response(savedSchool.data)
 
 
 

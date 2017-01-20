@@ -408,7 +408,7 @@ class SchoolSerializer(serializers.HyperlinkedModelSerializer):
 class SchoolUpdateOrCreateSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = School
-        fields = get_model_concrete_fields(model)
+        fields = ('avatar_url', 'name', 'lat', 'lon', 'formatted_address', 'place_id')
 
 # class UserSchoolRelationSerializer(serializers.HyperlinkedModelSerializer):
 #     place_id = 
