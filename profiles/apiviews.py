@@ -384,7 +384,7 @@ class SchoolUpdateOrCreateView(views.APIView):
     http_method_names= ('post', 'options')
 
     def post(self, request, format=None, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data, context={'request': request})
+        serializer = self.serializer_class(data=request.data)
 
         
 
