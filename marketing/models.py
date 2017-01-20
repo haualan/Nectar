@@ -30,6 +30,21 @@ class StudentDump(models.Model):
   school = models.CharField(max_length=100, default=None, null=True)
   email = models.CharField(max_length=200, default=None, null=True)
 
+  
+class TransactionDump(models.Model):
+  """
+  temp dump of students
+  """
+  fullName = models.CharField(max_length=200, default=None, null=True)
+  startDate = models.DateTimeField()
+  # poor formating exists
+  # school = models.CharField(max_length=100, default=None, null=True)
+  # email = models.CharField(max_length=200, default=None, null=True)
+
+  
+
+
+
 
 class EventbriteDump(models.Model):
   """
@@ -39,6 +54,29 @@ class EventbriteDump(models.Model):
   # poor formating exists
   school = models.CharField(max_length=100, default=None, null=True)
 
+
+
+def addStudentsFromEventbrite():
+
+  """
+  adds students from event brite, tries not to duplicate
+
+  """
+
+
+  for i in EventbriteDump.objects.all():
+    if StudentDump.objects.filter(fullName__iexact = i.fullName).exists() == False:
+        print 'add', i.fullName, i.school
+        StudentDump.objects.create(fullName = i.fullName, school = i.school)
+
+def generateStudentDistributionReport():
+  """
+  makes a distict count per school
+  """
+  dist = StudentDump.objects.filter(school__isnull = False).values('school').annotate(Count('school')).order_by('-school__count')
+  for i in dist:
+    print u'"{}","{}"'.format(i['school'].replace(",", ""),i['school__count'])
+  return dist
 
 
 class Marketing(models.Model):

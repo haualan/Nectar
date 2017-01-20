@@ -427,6 +427,8 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
     #                         source = 'get_mySchools',
     #                         read_only= True)
 
+    school = SchoolSerializer()
+    
     myStudents = UserSerializer(many= True, 
                             source = 'get_myActiveStudents',
                             read_only= True)
