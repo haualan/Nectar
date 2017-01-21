@@ -20,8 +20,13 @@ from django.utils.text import slugify
 
 import stripe
 
+from django.contrib.postgres.fields import JSONField
+
 # from activities.statistics.heartratemodel.utils import *
 # from activities.statistics.jackdaniels import calc_JD_pace_heartrate
+
+def metadata_default():
+    return {}
 
 
 gender_choices = (
@@ -86,6 +91,19 @@ class User(AbstractEmailUser):
 
   # payment info
   stripeCustomerId = models.CharField(max_length=50, blank=False, null=True)
+
+  # parent specific settings
+  address = models.TextField(blank=True)
+  addressGoogleRef = JSONField(default = metadata_default)
+
+  # does your student need a computer?
+  needComputer = models.BooleanField(default = False)
+
+  # health remarks
+  remarks = models.TextField(blank=True)
+
+  # where did you hear about fca
+  heardFrom = models.TextField(blank=True)
 
 
 
@@ -352,10 +370,6 @@ def getS3contentType(filename, instance):
 
   return contentType
 
-from django.contrib.postgres.fields import JSONField
-
-def metadata_default():
-    return {}
 
 class UserFile(models.Model):
   user = models.ForeignKey('User')
