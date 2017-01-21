@@ -379,29 +379,39 @@ class SchoolUpdateOrCreateView(views.APIView):
     """
     api_name = 'schoolupdateorcreate'
     # queryset = School.objects.all()
-    serializer_class = SchoolUpdateOrCreateSerializer
+    # serializer_class = SchoolUpdateOrCreateSerializer
     permission_classes = (IsAuthenticated,)
     http_method_names= ('post', 'options')
 
     def post(self, request, format=None, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
+        serializer = SchoolUpdateOrCreateSerializer(data=request.data)
 
         
 
         serializer.is_valid(raise_exception=True)
-
+        # validated_data= request.data
+        validated_data= serializer.validated_data
 
         # school = serializer.validated_data.get('school')
-        print 'post validation', serializer.validated_data
+        print 'post validation', validated_data
 
-        place_id = serializer.validated_data.get('place_id')
-        avatar_url = serializer.validated_data.get('avatar_url')
-        name = serializer.validated_data.get('name')
-        lon = serializer.validated_data.get('lon')
-        lat = serializer.validated_data.get('lat')
-        formatted_address = serializer.validated_data.get('formatted_address')
+        # defaults = {
+
+        # }
 
 
+        place_id = validated_data.get('place_id')
+        avatar_url = validated_data.get('avatar_url')
+        name = validated_data.get('name')
+        lon = validated_data.get('lon')
+        lat = validated_data.get('lat')
+        formatted_address = validated_data.get('formatted_address')
+
+        # defaults = {k:v for k,v in validated_data.iteritems()}
+
+
+
+        return Response({})
 
         sch, created = School.objects.update_or_create(
             place_id = place_id,

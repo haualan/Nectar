@@ -406,8 +406,14 @@ class SchoolSerializer(serializers.HyperlinkedModelSerializer):
         fields = get_model_concrete_fields(model) + ['url']
 
 class SchoolUpdateOrCreateSerializer(serializers.ModelSerializer):
+    avatar_url = serializers.URLField(allow_blank=True, label='Avatar_url', max_length=200, required=False)
+    name = serializers.CharField(max_length=255, required=False)
+    lat = serializers.DecimalField(allow_null=True, decimal_places=6, max_digits=9, required=False)
+    lon = serializers.DecimalField(allow_null=True, decimal_places=6, max_digits=9, required=False)
+    formatted_address = serializers.CharField(allow_null=True, max_length=255, required=False)
+    place_id = serializers.CharField(allow_null=True, max_length=255, required=False)
+    
     class Meta:
-        model = School
         fields = ('avatar_url', 'name', 'lat', 'lon', 'formatted_address', 'place_id')
 
 # class UserSchoolRelationSerializer(serializers.HyperlinkedModelSerializer):
