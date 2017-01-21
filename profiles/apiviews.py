@@ -421,7 +421,7 @@ class SchoolUpdateOrCreateView(views.APIView):
         # return Response({})
 
         sch, created = School.objects.update_or_create(
-            place_id = place_id,
+            place_id = validated_data.get('place_id', None),
             # followAnnouncement = announcement,
 
             # if an extremely similar activity already exists, then don't copy
