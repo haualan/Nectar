@@ -393,21 +393,7 @@ class SchoolUpdateOrCreateView(views.APIView):
         validated_data= serializer.validated_data
 
         # school = serializer.validated_data.get('school')
-        print 'post validation', validated_data
-
-        # defaults = {
-
-        # }
-
-
-        # place_id = validated_data.get('place_id')
-        # avatar_url = validated_data.get('avatar_url')
-        # name = validated_data.get('name')
-        # lon = validated_data.get('lon')
-        # lat = validated_data.get('lat')
-        # formatted_address = validated_data.get('formatted_address')
-
-        # defaults = {k:v for k,v in validated_data.iteritems()}
+        # print 'post validation', validated_data
 
         defaults = validated_data
 
@@ -416,17 +402,10 @@ class SchoolUpdateOrCreateView(views.APIView):
             defaults.pop('avatar_url',None)
 
 
-
-
-        # return Response({})
-
         sch, created = School.objects.update_or_create(
             place_id = validated_data.get('place_id', None),
-            # followAnnouncement = announcement,
 
             # if an extremely similar activity already exists, then don't copy
-            
-            # defaults = defaults
             defaults = defaults
         )
 
