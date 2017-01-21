@@ -379,12 +379,12 @@ class SchoolUpdateOrCreateView(views.APIView):
     """
     api_name = 'schoolupdateorcreate'
     # queryset = School.objects.all()
-    # serializer_class = SchoolUpdateOrCreateSerializer
+    serializer_class = SchoolUpdateOrCreateSerializer
     permission_classes = (IsAuthenticated,)
     http_method_names= ('post', 'options')
 
     def post(self, request, format=None, *args, **kwargs):
-        serializer = SchoolUpdateOrCreateSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data, partial=True)
 
         
 
@@ -400,18 +400,25 @@ class SchoolUpdateOrCreateView(views.APIView):
         # }
 
 
-        place_id = validated_data.get('place_id')
-        avatar_url = validated_data.get('avatar_url')
-        name = validated_data.get('name')
-        lon = validated_data.get('lon')
-        lat = validated_data.get('lat')
-        formatted_address = validated_data.get('formatted_address')
+        # place_id = validated_data.get('place_id')
+        # avatar_url = validated_data.get('avatar_url')
+        # name = validated_data.get('name')
+        # lon = validated_data.get('lon')
+        # lat = validated_data.get('lat')
+        # formatted_address = validated_data.get('formatted_address')
 
         # defaults = {k:v for k,v in validated_data.iteritems()}
 
+        defaults = validated_data
+
+        # since avatar_url cannot be none in model, do not allow none to be passed
+        if 'avatar_url' in defaults and defaults['avatar_url'] is None:
+            defaults.pop('avatar_url',None)
 
 
-        return Response({})
+
+
+        # return Response({})
 
         sch, created = School.objects.update_or_create(
             place_id = place_id,
@@ -420,13 +427,7 @@ class SchoolUpdateOrCreateView(views.APIView):
             # if an extremely similar activity already exists, then don't copy
             
             # defaults = defaults
-            defaults = {
-                'avatar_url': avatar_url,
-                'name': name,
-                'lon': lon,
-                'lat': lat,
-                'formatted_address': formatted_address
-            }
+            defaults = defaults
         )
 
         # example:
@@ -442,9 +443,9 @@ class SchoolUpdateOrCreateView(views.APIView):
         #     }
         # )
 
-        # savedSchool = SchoolSerializer(data=sch, context={'request': request})
+        savedSchool = SchoolSerializer(sch, context={'request': request})
 
-        return Response({})
+        return Response(savedSchool.data)
 
 
 

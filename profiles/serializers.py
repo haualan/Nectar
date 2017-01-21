@@ -411,7 +411,7 @@ class SchoolUpdateOrCreateSerializer(serializers.Serializer):
     lat = serializers.DecimalField(allow_null=True, decimal_places=6, max_digits=9, required=False)
     lon = serializers.DecimalField(allow_null=True, decimal_places=6, max_digits=9, required=False)
     formatted_address = serializers.CharField(allow_null=True, max_length=255, required=False)
-    place_id = serializers.CharField(allow_null=True, max_length=255, required=False)
+    place_id = serializers.CharField(allow_null=True, max_length=255, required=True)
 
     # class Meta:
     #     fields = ('avatar_url', 'name', 'lat', 'lon', 'formatted_address', 'place_id')
