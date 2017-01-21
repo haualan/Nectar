@@ -413,8 +413,8 @@ class SchoolUpdateOrCreateSerializer(serializers.ModelSerializer):
     formatted_address = serializers.CharField(allow_null=True, max_length=255, required=False)
     place_id = serializers.CharField(allow_null=True, max_length=255, required=False)
     
-    class Meta:
-        fields = ('avatar_url', 'name', 'lat', 'lon', 'formatted_address', 'place_id')
+    # class Meta:
+    #     fields = ('avatar_url', 'name', 'lat', 'lon', 'formatted_address', 'place_id')
 
 # class UserSchoolRelationSerializer(serializers.HyperlinkedModelSerializer):
 #     place_id = 
