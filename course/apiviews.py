@@ -206,9 +206,23 @@ class CodeNinjaCacheUpdateView(views.APIView):
         if verifyToken != settings.VERIFYTOKEN:
             raise PermissionDenied('Verification Token missing or invalid')
 
+
+        # take a look at the active camps first
+        activeCampsUrl = 'http://hk.firstcodeacademy.com/api/camps/active'
+        r = requests.get(i)
+        activeCampsData = r.json()
+
+        activeCampsData_ids = ['http://hk.firstcodeacademy.com/api/camps/{}/offerings'.format(i['id']) for i in activeCampsData]
+
+
+
+
+
+
+
         # now we can start polling endpoint
 
-        for i in settings.CODENINJACACHEENDPOINTS:
+        for i in activeCampsData_ids:
             # attempt to poll data from 
 
             # r = requests.get('http://hk.firstcodeacademy.com/api/camps/3/offerings')
