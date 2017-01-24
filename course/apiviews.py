@@ -212,7 +212,7 @@ class CodeNinjaCacheUpdateView(views.APIView):
         r = requests.get(i)
         activeCampsData = r.json()
 
-        activeCampsData_ids = ['http://hk.firstcodeacademy.com/api/camps/{}/offerings'.format(i['id']) for i in activeCampsData]
+        activeCampsData_ids = ['http://hk.firstcodeacademy.com/api/camps/{}'.format(i['id']) for i in activeCampsData]
 
 
 
