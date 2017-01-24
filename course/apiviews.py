@@ -174,22 +174,26 @@ class CodeNinjaCacheUpdateView(views.APIView):
             return None, False
 
         course, created = Course.objects.update_or_create(
-                        name =  c['name'],
-                        age_group = c['age_group'],
-                        course_icon_url = c['course_icon_url'],
-                        location = c['location'],
-                        start_date = c['start_date'],
-                        end_date = c['end_date'],
-                        start_time = c['start_time'],
-                        end_time = c['end_time'],
-                        capacity = c['capacity'],
-                        enrollment_count = c['enrollment_count'],
-                        # eventbrite_tag = c['eventbrite_tag'],
-                        active = c['active'],
-                        remark = c['remark'],
+            # filter by
+            course_code = c['course_code'],
 
-                        defaults = { 'course_code': c['course_code'], },
-                    )
+
+            # name =  c['name'],
+            # age_group = c['age_group'],
+            # course_icon_url = c['course_icon_url'],
+            # location = c['location'],
+            # start_date = c['start_date'],
+            # end_date = c['end_date'],
+            # start_time = c['start_time'],
+            # end_time = c['end_time'],
+            # capacity = c['capacity'],
+            # enrollment_count = c['enrollment_count'],
+            # # eventbrite_tag = c['eventbrite_tag'],
+            # active = c['active'],
+            # remark = c['remark'],
+
+            defaults = c,
+        )
 
         print 'course created', course.id, created
 
@@ -208,8 +212,8 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
 
         # take a look at the active camps first
-        activeCampsUrl = 'http://hk.firstcodeacademy.com/api/camps/active'
-        r = requests.get(i)
+        activeCampsUrl = 'http://hk.firstcodeacademy.com/api/camps'
+        r = requests.get(activeCampsUrl)
         activeCampsData = r.json()
 
         activeCampsData_ids = ['http://hk.firstcodeacademy.com/api/camps/{}'.format(i['id']) for i in activeCampsData]
@@ -235,8 +239,11 @@ class CodeNinjaCacheUpdateView(views.APIView):
                 data = r.json()
 
                 obj, created = CodeNinjaCache.objects.update_or_create(
-                    data = data,
-                    defaults = { 'endpoint': i },
+                    # filter by this
+                    endpoint = i,
+
+                    # insert / update this
+                    defaults = { 'data': data },
                 )
 
             except Exception as e: 
