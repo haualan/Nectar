@@ -170,8 +170,12 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
         """
 
-        if len(c['course_code']) == 0:
+        if c['course_code'] is None or len(c['course_code']) == 0:
+            # skip items that are not valid
             return None, False
+
+        # filter out certain keys that should not be overwritten
+        c = {k:v for (k,v) in c.items() if k not in ['id'] }
 
         course, created = Course.objects.update_or_create(
             # filter by
@@ -203,6 +207,101 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
         return course, created
 
+    def processCamps(self, payload_ids):
+        """
+        processes the returned data for camps
+        """
+
+        memo = {}
+
+        for i in payload_ids:
+            # attempt to poll data from 
+
+            # r = requests.get('http://hk.firstcodeacademy.com/api/camps/3/offerings')
+            # print r.json()
+
+            obj = None
+
+            try:
+                r = requests.get(i)
+                data = r.json()
+
+                # filter out certain keys that should not be overwritten
+                data = {k:v for (k,v) in data.items() if k not in ['id'] }
+
+                obj, created = CodeNinjaCache.objects.update_or_create(
+                    # filter by this
+                    endpoint = i,
+
+                    # insert / update this
+                    defaults = { 'data': data },
+                )
+
+            except Exception as e: 
+                print 'CodeNinjaCacheUpdate', e
+
+            
+            if obj:
+                for c in obj.data.get('offerings'):
+                    
+                    # print 'offering', c
+
+                    if c['course_code'] not in memo:
+                        c['cnType'] = 'camps'
+                        self.updateCourse(c)
+                    
+                    memo[c['course_code']] = c
+
+        return memo
+
+    def processPrograms(self, payload_ids):
+        """
+        processes the returned data for camps
+        """
+
+        memo = {}
+
+        for i in payload_ids:
+            # attempt to poll data from 
+
+            # r = requests.get('http://hk.firstcodeacademy.com/api/camps/3/offerings')
+            # print r.json()
+
+            obj = None
+
+            try:
+                r = requests.get(i)
+                data = r.json()
+
+                # filter out certain keys that should not be overwritten
+                data = {k:v for (k,v) in data.items() if k not in ['id'] }
+
+                obj, created = CodeNinjaCache.objects.update_or_create(
+                    # filter by this
+                    endpoint = i,
+
+                    # insert / update this
+                    defaults = { 'data': data },
+                )
+
+            except Exception as e: 
+                print 'CodeNinjaCacheUpdate', e
+
+
+            
+            if obj:   
+                for c in obj.data.get('offerings'):
+                    
+                    # print 'offering', c
+
+                    if c['course_code'] not in memo:
+                        c['cnType'] = 'programs'
+                        self.updateCourse(c)
+                    
+                    memo[c['course_code']] = c
+
+        return memo
+
     def post(self, request, format=None, *args, **kwargs):
         verifyToken = request.data.get('verifyToken')
 
@@ -219,53 +318,30 @@ class CodeNinjaCacheUpdateView(views.APIView):
         activeCampsData_ids = ['http://hk.firstcodeacademy.com/api/camps/{}'.format(i['id']) for i in activeCampsData]
 
 
+        # now we can start polling endpoint
+        campsMemo = self.processCamps(activeCampsData_ids)
 
 
 
+
+        # take a look at the programs
+        activeProgramsUrl = 'http://hk.firstcodeacademy.com/api/programs'
+        r = requests.get(activeProgramsUrl)
+        activeProgramsData = r.json()
+
+        activeProgramsData_ids = ['http://hk.firstcodeacademy.com/api/programs/{}'.format(i['id']) for i in activeProgramsData]
 
 
         # now we can start polling endpoint
+        programsMemo = self.processPrograms(activeProgramsData_ids)
 
-        for i in activeCampsData_ids:
-            # attempt to poll data from 
-
-            # r = requests.get('http://hk.firstcodeacademy.com/api/camps/3/offerings')
-            # print r.json()
-
-            obj = None
-
-            try:
-                r = requests.get(i)
-                data = r.json()
-
-                obj, created = CodeNinjaCache.objects.update_or_create(
-                    # filter by this
-                    endpoint = i,
-
-                    # insert / update this
-                    defaults = { 'data': data },
-                )
-
-            except Exception as e: 
-                print 'CodeNinjaCacheUpdate', e
-
-
-            if obj:
-                memo = {}
-                for c in obj.data.get('offerings'):
-                    
-                    # print 'offering', c
-
-                    if c['course_code'] not in memo:
-                        self.updateCourse(c)
-                    
-                    memo[c['course_code']] = c
+        
 
 
 
 
 
-        r = {'status': 'success'}
+        r = {'status': 'success', 'campsMemo': campsMemo, 'programsMemo': programsMemo}
 
         return Response(r)
 

@@ -75,6 +75,9 @@ class UserCourseRelationship(models.Model):
 
 class Course(models.Model):
   name = models.CharField(max_length=255, blank=False)
+  # code Ninja type
+  cnType = models.CharField(max_length=255, blank=False, default=None, null=True)
+  
   course_code = models.CharField(max_length=255, blank=False)
   course_icon_url = models.URLField(blank=True, default=DEFAULT_PROFILE_PICTURE_URL)
   eventbrite_tag = models.CharField(max_length=255, blank=True)
