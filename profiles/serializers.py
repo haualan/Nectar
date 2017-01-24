@@ -335,17 +335,18 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ('url', 'id', 'avatar_url', 'birth_date', 'gender', 'firstname', 'lastname', 'tzName', 'phoneNumber', 
-            'location', 'lon', 'lat',
-            'hasOnboarded',
-            'isSearchable',
-            'role',
-            'school',
+        fields = get_model_concrete_fields(model) + ['url']
+        # fields = ('url', 'id', 'avatar_url', 'birth_date', 'gender', 'firstname', 'lastname', 'tzName', 'phoneNumber', 
+        #     'location', 'lon', 'lat',
+        #     'hasOnboarded',
+        #     'isSearchable',
+        #     'role',
+        #     'school',
 
-            # 'username', 
-            'email', 
+        #     # 'username', 
+        #     'email', 
             
-            )
+        #     )
 
 
 from course.serializers import UserCourseRelationshipSerializer
