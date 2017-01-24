@@ -511,6 +511,11 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
             'isPasswordSet',
             'isEmailVerified',
 
+            'address',
+            'addressGoogleRef',
+            'needComputer',
+            'remarks',
+            'heardFrom',
 
         
             )
