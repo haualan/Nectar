@@ -105,6 +105,13 @@ class User(AbstractEmailUser):
   # where did you hear about fca
   heardFrom = models.TextField(blank=True)
 
+  # where did you specicifically hear about fca (fixed options on frontend)
+  # ex. google
+  # facebook
+  # printed ads
+  heardFromOption = models.CharField(max_length=20, blank=True)
+
+
 
 
   def save(self, *args, **kwargs):
