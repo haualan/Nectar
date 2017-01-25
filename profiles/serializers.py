@@ -517,6 +517,7 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
             'needComputer',
             'remarks',
             'heardFrom',
+            'heardFromOption',
 
         
             )
