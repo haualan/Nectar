@@ -306,15 +306,15 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     API endpoint that allows current authenticated user to be viewed or edited.
     GET for all users, pass in ?myself=1 to see only yourself
     PUT to amend the current user
-    DELETE to delete the current user
 
     """
     api_name = 'userprofile'
 
     queryset = User.objects.all()
     serializer_class = UserProfileSerializer
-    permission_classes = (IsAuthenticated,IsOwnerOrReadOnly,)
-    # http_method_names = ['get','put', 'patch', 'delete']
+    permission_classes = (IsAuthenticated,)
+
+    http_method_names = ['get', 'put', 'patch', 'head', 'options', 'trace']
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', 'email')
 
@@ -327,15 +327,27 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             return self.queryset.filter(id=self.request.user.id)
         else:
             return self.queryset.filter(
-                Q(isSearchable=True) | Q(id=self.request.user.id))
+                Q(isSearchable=True) | Q(id=self.request.user.id) | Q(id=self.request.user.get_myActiveStudents)
+            )
+
+        # examples:
+        # User.objects.filter(Q(isSearchable=True) | Q(id=u.id) | Q(id=u.get_myActiveStudents) )
 
     def perform_update(self, serializer):
-        print "serializer.initial_data", serializer.initial_data 
+        print "serializer.validated_data", serializer.validated_data 
+
+
+        
         # if serializer.validated_data.get('email') == self.request.user.email:
         #     print 'same email', self.request.user.email
         origUser = self.get_object()
 
+
+        if origUser != self.request.user and origUser not in self.request.user.get_myActiveStudents:
+            raise PermissionDenied('you have no relationship with this user')
+
         u = serializer.save()
+
 
 
 
