@@ -333,6 +333,10 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
     # def _get_social_accounts(self, obj):
     #     return obj.social_auth.all().values('uid', 'provider', 'extra_data')
 
+    lat = serializers.DecimalField(allow_null=True, decimal_places=10, max_digits=19, required=False)
+    lon = serializers.DecimalField(allow_null=True, decimal_places=10, max_digits=19, required=False)
+
+
     class Meta:
         model = User
         fields = get_model_concrete_fields(model) + ['url']
@@ -475,8 +479,6 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
 
     isEmailVerified = serializers.SerializerMethodField(method_name = '_get_email_verification')
 
-    lat = serializers.DecimalField(allow_null=True, decimal_places=10, max_digits=19, required=False)
-    lon = serializers.DecimalField(allow_null=True, decimal_places=10, max_digits=19, required=False)
 
     def _get_email_verification(self, obj):
         ea = EmailAddress.objects.filter(user = obj)
