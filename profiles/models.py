@@ -133,12 +133,15 @@ class User(AbstractEmailUser):
       # if there is no stripe info, do nothing
       return False
 
-    cu = stripe.Customer.retrieve(self.stripeCustomerId)
-    cu.metadata = { 'uid': self.id }
-    cu.email = self.email
+    try:
+      cu = stripe.Customer.retrieve(self.stripeCustomerId)
+      cu.metadata = { 'uid': self.id }
+      cu.email = self.email
+      cu.save()
+    except stripe.InvalidRequestError, e:
+      print 'updateStripeCustomer error', e
 
 
-    cu.save()
     return True
 
 
