@@ -25,6 +25,20 @@ def postpone(function):
   return decorator
 
 
+class StripeWebhookView(views.APIView):
+  """
+  charges user on stripe
+  """
+
+  api_name = 'stripewebhook'
+  http_method_names = ['post']
+  permission_classes = (AllowAny, )
+  
+  def post(self, request, format=None, *args, **kwargs):
+    print request.data
+    return Response({})
+
+
 
 class PaymentChargeUserView(views.APIView):
   """
