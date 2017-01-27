@@ -197,6 +197,7 @@ class StripeWebhookView(views.APIView):
       buyerID = buyerID,
       studentID = studentID,
       course_code = course_code,
+      stripeCustomerId = stripeCustomerId,
     )
 
 
