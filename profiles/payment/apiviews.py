@@ -294,10 +294,10 @@ class PaymentChargeUserView(views.APIView):
     # Charge the user's card:
     # twd, sgd, hkd currencies
     # 1 is 1 cent
-    amt = 2
+    amt = 400
 
     charge = stripe.Charge.create(
-      amount=2,
+      amount=400,
       currency="hkd",
       description="enroll student id: {}, course_code : {}, name: {}".format(studentUser.id, course_code, course.name),
       # source=token,
