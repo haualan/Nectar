@@ -162,7 +162,7 @@ class StripeWebhookView(views.APIView):
     event_id = dataWrapper['id']
 
     livemode = dataWrapper['livemode']
-    transactionDateTime = timezone.datetime.fromtimestamp(obj['created'])
+    transactionDateTime = timezone.make_aware(timezone.datetime.fromtimestamp(obj['created']))
     currency = obj['currency']
     amount = obj['amount']
     amount_refunded = obj['amount_refunded']
