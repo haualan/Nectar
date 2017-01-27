@@ -171,7 +171,7 @@ class StripeWebhookView(views.APIView):
     # so we can relate dataset to the user this is applied on
     metadata = obj['metadata']
     buyerID = None
-    if 'buyerId' in metadata:
+    if 'buyerID' in metadata:
       buyerID = metadata['buyerID']
 
     studentID = None
@@ -287,7 +287,7 @@ class PaymentChargeUserView(views.APIView):
       "studentID": studentUser.id,
       "course_code": course_code,
       "course_name": course.name,
-      "buyerId": guardianUser.id,
+      "buyerID": guardianUser.id,
 
     }
 
