@@ -51,6 +51,9 @@ def get_default_age():
 
 # DEFAULT_PROFILE_PICTURE_URL = 'http://placehold.it/350x350'
 DEFAULT_PROFILE_PICTURE_URL = 'https://s3-ap-southeast-1.amazonaws.com/fcanectar/customMedia/defaultUserIcon.png'
+DEFAULT_PROFILE_PICTURE_MALE_URL = 'https://s3-ap-southeast-1.amazonaws.com/fcanectar/customMedia/defaultUserIconBoy.png'
+
+
 
 class User(AbstractEmailUser):
   avatar_url = models.URLField('avatar_url',blank=True, default=DEFAULT_PROFILE_PICTURE_URL)
@@ -117,6 +120,13 @@ class User(AbstractEmailUser):
   def save(self, *args, **kwargs):
     if self.email == '':
       self.email = None
+
+    if avatar_url in (DEFAULT_PROFILE_PICTURE_URL, DEFAULT_PROFILE_PICTURE_MALE_URL,):
+      if gender == 'M':
+        avatar_url = DEFAULT_PROFILE_PICTURE_MALE_URL
+      else:
+        avatar_url = DEFAULT_PROFILE_PICTURE_URL
+
 
     if self.email and self.stripeCustomerId:
       self.updateStripeCustomer()
