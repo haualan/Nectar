@@ -277,10 +277,13 @@ class UserCreateView(views.APIView):
         if username is None and email is None:
             raise ParseError('At least username or email must be filled')
 
-        # pass in default gender is not supplied
+        # pass in default gender if not supplied
         if gender is None:
             gender = 'M'
-        
+
+        avatar_url = User._meta.get_field('avatar_url').default
+        if gender == 'M':
+            avatar_url = 'https://s3-ap-southeast-1.amazonaws.com/fcanectar/customMedia/defaultUserIconBoy.png'
         try:
             user = User.objects.create(username=username, email=email, role=role, gender=gender)
         except IntegrityError as e:
