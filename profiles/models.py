@@ -121,11 +121,11 @@ class User(AbstractEmailUser):
     if self.email == '':
       self.email = None
 
-    if avatar_url in (DEFAULT_PROFILE_PICTURE_URL, DEFAULT_PROFILE_PICTURE_MALE_URL,):
-      if gender == 'M':
-        avatar_url = DEFAULT_PROFILE_PICTURE_MALE_URL
+    if self.avatar_url in (DEFAULT_PROFILE_PICTURE_URL, DEFAULT_PROFILE_PICTURE_MALE_URL,):
+      if self.gender == 'M':
+        self.avatar_url = DEFAULT_PROFILE_PICTURE_MALE_URL
       else:
-        avatar_url = DEFAULT_PROFILE_PICTURE_URL
+        self.avatar_url = DEFAULT_PROFILE_PICTURE_URL
 
 
     if self.email and self.stripeCustomerId:
