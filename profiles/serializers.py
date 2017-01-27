@@ -307,6 +307,8 @@ class UserCreateSerializer(serializers.Serializer):
     verifyToken = serializers.CharField(max_length=200, required=False, allow_blank=True)
     isMyStudent = serializers.BooleanField(required = False)
     gender = serializers.CharField(max_length=1, required=False)
+    firstname = serializers.CharField(max_length=200, required=False)
+    lastname = serializers.CharField(max_length=200, required=False)
 
     class Meta:
         model = User

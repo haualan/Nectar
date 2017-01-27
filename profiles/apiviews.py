@@ -264,6 +264,9 @@ class UserCreateView(views.APIView):
         isMyStudent = serializer.validated_data.get('isMyStudent')
         gender = serializer.validated_data.get('gender')
 
+        firstname = serializer.validated_data.get('firstname')
+        lastname = serializer.validated_data.get('lastname')
+
         # confirm that frontend has a signature passed
         if verifyToken != settings.VERIFYTOKEN:
             raise PermissionDenied('Verification Token missing or invalid')
@@ -285,9 +288,9 @@ class UserCreateView(views.APIView):
         # if gender == 'M':
         #     avatar_url = 'https://s3-ap-southeast-1.amazonaws.com/fcanectar/customMedia/defaultUserIconBoy.png'
 
-            
+
         try:
-            user = User.objects.create(username=username, email=email, role=role, gender=gender)
+            user = User.objects.create(username=username, email=email, role=role, gender=gender, firstname=firstname, lastname=lastname)
         except IntegrityError as e:
             raise ParseError('username is not unique or email incorrect: {}'.format(e))
 
