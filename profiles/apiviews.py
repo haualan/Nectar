@@ -262,10 +262,10 @@ class UserCreateView(views.APIView):
         role = serializer.validated_data.get('role')
         verifyToken = serializer.validated_data.get('verifyToken')
         isMyStudent = serializer.validated_data.get('isMyStudent')
-        gender = serializer.validated_data.get('gender')
+        gender = serializer.validated_data.get('gender', 'M')
 
-        firstname = serializer.validated_data.get('firstname')
-        lastname = serializer.validated_data.get('lastname')
+        firstname = serializer.validated_data.get('firstname', "")
+        lastname = serializer.validated_data.get('lastname', "")
 
         # confirm that frontend has a signature passed
         if verifyToken != settings.VERIFYTOKEN:
@@ -280,9 +280,6 @@ class UserCreateView(views.APIView):
         if username is None and email is None:
             raise ParseError('At least username or email must be filled')
 
-        # pass in default gender if not supplied
-        if gender is None:
-            gender = 'M'
 
         # avatar_url = User._meta.get_field('avatar_url').default
         # if gender == 'M':
