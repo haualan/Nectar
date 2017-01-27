@@ -262,6 +262,7 @@ class UserCreateView(views.APIView):
         role = serializer.validated_data.get('role')
         verifyToken = serializer.validated_data.get('verifyToken')
         isMyStudent = serializer.validated_data.get('isMyStudent')
+        gender = serializer.validated_data.get('gender')
 
         # confirm that frontend has a signature passed
         if verifyToken != settings.VERIFYTOKEN:
@@ -276,8 +277,12 @@ class UserCreateView(views.APIView):
         if username is None and email is None:
             raise ParseError('At least username or email must be filled')
 
+        # pass in default gender is not supplied
+        if gender is None:
+            gender = 'M'
+        
         try:
-            user = User.objects.create(username=username, email=email, role=role)
+            user = User.objects.create(username=username, email=email, role=role, gender=gender)
         except IntegrityError as e:
             raise ParseError('username is not unique or email incorrect: {}'.format(e))
 
