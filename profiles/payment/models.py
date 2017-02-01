@@ -42,7 +42,7 @@ class Coupon(models.Model):
   description_internal = models.TextField(blank=True)
 
   # effectDollar is the dollar amount it takes off the charge
-  effectDollar = models.DecimalField(max_digits=9, decimal_places=6, default=0)
+  effectDollar = models.DecimalField(max_digits=15, decimal_places=6, default=0)
 
   # effectMultiplier is the multiplier applied for the discount (.95) implies 5% off
   effectMultiplier = models.DecimalField(max_digits=9, decimal_places=6, default=1.00)
@@ -124,8 +124,9 @@ class Ledger(models.Model):
   event_id = models.CharField(max_length=255, blank=False, null=True, unique=True)
   event_type = models.CharField(max_length=255, blank=False, choices = event_type_choices)
 
-  amount = models.IntegerField(default= 0)
-  amount_refunded = models.IntegerField(default = 0)
+  # unreliable fields for accounting purposes
+  # amount = models.IntegerField(default= 0)
+  # amount_refunded = models.IntegerField(default = 0)
 
   livemode = models.BooleanField(default = False)
   transactionDateTime = models.DateTimeField(default=timezone.now)
@@ -142,6 +143,17 @@ class Ledger(models.Model):
   course_code = models.CharField(max_length=255, null=False,)
 
 
+  # order_id is the tax lot opening transaction, refunds should be deducted against this id
+  order_id = models.CharField(max_length=255, null=True,)
+
+  # if positive, indicates money charged, if negative, indicates refunds
+  localCurrencyChargedAmount = models.DecimalField(max_digits=15, decimal_places=6, default=0)
+
+  @transaction.atomic
+  def save(self, *args, **kwargs):
+    
+    
+    super(Ledger, self).save(*args, **kwargs)
 
 
 

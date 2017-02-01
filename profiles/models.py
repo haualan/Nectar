@@ -151,6 +151,10 @@ class User(AbstractEmailUser):
     except stripe.InvalidRequestError, e:
       print 'updateStripeCustomer error', e
 
+      # stripe ID probably bad, discard henceforth
+      self.stripeCustomerId = None
+
+
 
     return True
 
