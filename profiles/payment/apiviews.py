@@ -164,8 +164,11 @@ class StripeWebhookView(views.APIView):
     livemode = dataWrapper['livemode']
     transactionDateTime = timezone.make_aware(timezone.datetime.fromtimestamp(obj['created']))
     currency = obj['currency']
-    amount = obj['amount']
-    amount_refunded = obj['amount_refunded']
+
+    # these fields are not reliable for accounting purposes
+    # amount = obj['amount']
+    # amount_refunded = obj['amount_refunded']
+    
     stripeCustomerId = obj['customer']
 
     # so we can relate dataset to the user this is applied on
