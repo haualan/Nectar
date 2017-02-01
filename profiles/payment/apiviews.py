@@ -265,6 +265,17 @@ class PaymentChargeUserView(views.APIView):
     if guardianUser.email is None:
       raise ParseError('Guardian User account must have an email for payment purposes')
 
+
+    # if stripeCustomerId does exist, verify its existence first
+    if guardianUser.stripeCustomerId:
+      try:
+        cu = stripe.Customer.retrieve(guardianUser.stripeCustomerId)
+      except stripe.InvalidRequestError, e:
+        print 'PaymentChargeUserView stripe cus test error', e
+
+        # stripe ID probably bad, discard henceforth
+        guardianUser.stripeCustomerId = None
+
     if guardianUser.stripeCustomerId is None:
       customer = stripe.Customer.create(
         email = guardianUser.email,
