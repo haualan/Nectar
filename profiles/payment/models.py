@@ -149,6 +149,10 @@ class Ledger(models.Model):
   # if positive, indicates money charged, if negative, indicates refunds
   localCurrencyChargedAmount = models.DecimalField(max_digits=15, decimal_places=6, default=0)
 
+
+  # check who is this transaction entered by, could be None on DB, or uid
+  signBy = models.CharField(max_length=255, blank=False, null=True)
+
   @transaction.atomic
   def save(self, *args, **kwargs):
     # extract the required data from rawData as provided from stripe
@@ -158,6 +162,15 @@ class Ledger(models.Model):
     super(Ledger, self).save(*args, **kwargs)
 
 
+  def extractLocalCurrencyChargedAmount(self, rawDataObj = None):
+    """
+    extracts the transaction amount <number> given the raw data from stripe
+    - positive if it is a charge against the customer
+    - negative if it is a refund
+    """
+
+
+
   def processRawData(self):
     """
     given a payload from stripe, extract details and add contents back into ledger
@@ -165,6 +178,10 @@ class Ledger(models.Model):
     if self.rawData is None:
       # do nothing if no rawData
       return
+
+
+    # signify that raw data comes from stripe
+    self.signBy = 'Stripe'
 
     dataWrapper = self.rawData
     obj = dataWrapper['data']['object']
@@ -181,6 +198,7 @@ class Ledger(models.Model):
     # amount_refunded = obj['amount_refunded']
     
     stripeCustomerId = obj['customer']
+    order_id = obj['id']
 
     # so we can relate dataset to the user this is applied on
     metadata = obj['metadata']
@@ -207,6 +225,7 @@ class Ledger(models.Model):
     self.studentID = studentID
     self.course_code = course_code
     self.stripeCustomerId = stripeCustomerId
+    self.order_id = order_id
 
 
 
