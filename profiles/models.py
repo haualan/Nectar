@@ -435,5 +435,5 @@ class UserFile(models.Model):
     super(UserFile, self).delete()
 
 
-
+from payment.models import *
 
