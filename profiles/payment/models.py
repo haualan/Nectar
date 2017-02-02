@@ -113,6 +113,14 @@ event_type_choices = (
   ('charge.refunded', 'charge.refunded'),
 )
 
+
+currencyMultiplier = {
+  # because stripe uses 100 as 1 dollar
+  'hkd': 0.01,
+  'sgd': 0.01,
+  'twd': 0.01,
+}
+
 class Ledger(models.Model):
   """
   this houses all the transactions made for purchases and refunds and also supports manual transactions
@@ -162,12 +170,46 @@ class Ledger(models.Model):
     super(Ledger, self).save(*args, **kwargs)
 
 
-  def extractLocalCurrencyChargedAmount(self, rawDataObj = None):
+  def extractLocalCurrencyChargedAmount(self):
     """
     extracts the transaction amount <number> given the raw data from stripe
     - positive if it is a charge against the customer
     - negative if it is a refund
     """
+
+    dataWrapper = self.rawData
+    obj = dataWrapper['data']['object']
+
+    event_type = dataWrapper['type']
+
+    # init default returns
+    transactionDateTime = timezone.make_aware(timezone.datetime.fromtimestamp(obj['created']))
+    localCurrencyChargedAmount = 0
+
+
+    if event_type == 'charge.succeeded':
+      # if it's a charge, that's similar to opening a tax lot, an the transaction is a positive number
+      localCurrencyChargedAmount = obj['amount'] * currencyMultiplier[self.currency]
+      return localCurrencyChargedAmount , transactionDateTime
+
+    if event_type == 'charge.refunded':
+      # if it's a refund, one must traverse through the list of refunds to find how much this refund has been made
+
+      refundList = obj['refunds']['data']
+      
+
+      # assume the first object in this list is the refunded amt.
+      if len(refundList) > 0:
+        refund = refundList[0]
+        # negative amount for a refund
+        localCurrencyChargedAmount = refund.get('amount') * currencyMultiplier[self.currency] * -1
+        transactionDateTime = refund.get('created')
+
+      return localCurrencyChargedAmount , transactionDateTime 
+      
+
+    # this returns the default values
+    return localCurrencyChargedAmount , transactionDateTime 
 
 
 
@@ -190,7 +232,8 @@ class Ledger(models.Model):
     event_id = dataWrapper['id']
 
     livemode = dataWrapper['livemode']
-    transactionDateTime = timezone.make_aware(timezone.datetime.fromtimestamp(obj['created']))
+    
+
     currency = obj['currency']
 
     # these fields are not reliable for accounting purposes
@@ -217,7 +260,6 @@ class Ledger(models.Model):
 
 
     self.livemode = livemode
-    self.transactionDateTime = transactionDateTime
     self.currency = currency
     # amount = amount,
     # amount_refunded = amount_refunded,
@@ -226,6 +268,9 @@ class Ledger(models.Model):
     self.course_code = course_code
     self.stripeCustomerId = stripeCustomerId
     self.order_id = order_id
+
+    # has to be at the bottom, requires other precalculated data at the top
+    self.localCurrencyChargedAmount, self.transactionDateTime = self.extractLocalCurrencyChargedAmount()
 
 
 
