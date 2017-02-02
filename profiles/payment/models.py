@@ -151,10 +151,62 @@ class Ledger(models.Model):
 
   @transaction.atomic
   def save(self, *args, **kwargs):
-    
+    # extract the required data from rawData as provided from stripe
+    self.processRawData()
+
     
     super(Ledger, self).save(*args, **kwargs)
 
+
+  def processRawData(self):
+    """
+    given a payload from stripe, extract details and add contents back into ledger
+    """
+    if self.rawData is None:
+      # do nothing if no rawData
+      return
+
+    dataWrapper = self.rawData
+    obj = dataWrapper['data']['object']
+
+    event_type = dataWrapper['type']
+    event_id = dataWrapper['id']
+
+    livemode = dataWrapper['livemode']
+    transactionDateTime = timezone.make_aware(timezone.datetime.fromtimestamp(obj['created']))
+    currency = obj['currency']
+
+    # these fields are not reliable for accounting purposes
+    # amount = obj['amount']
+    # amount_refunded = obj['amount_refunded']
+    
+    stripeCustomerId = obj['customer']
+
+    # so we can relate dataset to the user this is applied on
+    metadata = obj['metadata']
+    buyerID = None
+    if 'buyerID' in metadata:
+      buyerID = metadata['buyerID']
+
+    studentID = None
+    if 'studentID' in metadata:
+      studentID = metadata['studentID']
+
+
+    course_code = None
+    if 'course_code' in metadata:
+      course_code = metadata['course_code']
+
+
+    self.livemode = livemode
+    self.transactionDateTime = transactionDateTime
+    self.currency = currency
+    # amount = amount,
+    # amount_refunded = amount_refunded,
+    self.buyerID = buyerID
+    self.studentID = studentID
+    self.course_code = course_code
+    self.stripeCustomerId = stripeCustomerId
 
 
 

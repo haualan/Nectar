@@ -147,7 +147,14 @@ class StripeWebhookView(views.APIView):
       return Response({})
 
 
-    self.processPayload(request)
+    # save the raw request and id info to the model and let model handlers fill in the rest of the fields
+    ledgerObj = Ledger.objects.create(
+      event_type = event_type,
+      event_id = event_id,
+      rawData = request.data,
+    )
+
+    # self.processPayload(request)
     # respond with a 200 if things are okay
     return Response({})
 
