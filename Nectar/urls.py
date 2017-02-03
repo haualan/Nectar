@@ -10,7 +10,8 @@ from profiles.views import AccountConfirmCompleteView, CustomPasswordChangeView
 # from activities.apiviews import LifeTimeCPView ,StravaSubView, GarminSubView, MobileSubView, RunningZoneView ,ChartingView, ActivitySummaryView, ActivityTimeSeriesView, ActivityMeanMaxView, UtilsView, FBShareView, PerfProUploadView, FBShareUnitsStressView, TPImportView
 # from streamView.apiviews import UserNotificationView, CatchMailView
 # from sccalendar.apiviews import SetRosterView
-from profiles.apiviews import MeView, InviteView, EmailConfirmView, UserCreateView, UserValidateView, SendConfirmationView, UserPublicView, StudentResetPWView, StudentDeactivateView, PaymentChargeUserView, SchoolUpdateOrCreateView, StripeWebhookView
+from profiles.apiviews import *
+# MeView, InviteView, EmailConfirmView, UserCreateView, UserValidateView, SendConfirmationView, UserPublicView, StudentResetPWView, StudentDeactivateView, PaymentChargeUserView, SchoolUpdateOrCreateView, StripeWebhookView, PaymentManualChargeView, PaymentManualRefundView
 # , DisconnectSocialView, GeneratePaymentTokenView, CheckoutView, GetPaymentCustView, PaymentListenerView, PaymentBatchProcess, GetOrgMonthEndSummaryView, CancelSubscriptionView
 from feed.apiviews import FeedView
 
@@ -96,6 +97,11 @@ urlpatterns = [
     # payment views
     url(r'^api/v1/paymentchargeuser/$', PaymentChargeUserView.as_view() , name = 'paymentchargeuser-list'),
     url(r'^api/v1/stripewebhook/$', StripeWebhookView.as_view() , name = 'stripewebhook-list'),
+
+    
+    url(r'^api/v1/paymentmanualcharge/$', PaymentManualChargeView.as_view() , name = 'paymentmanualcharge-list'),
+    url(r'^api/v1/paymentmanualrefund/$', PaymentManualRefundView.as_view() , name = 'paymentmanualrefund-list'),
+    
     
 
 

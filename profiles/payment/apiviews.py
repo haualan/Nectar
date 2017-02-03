@@ -334,3 +334,47 @@ class PaymentChargeUserView(views.APIView):
 
     return Response({'status': 'success'}, status=200)
 
+
+
+class PaymentManualChargeView(views.APIView):
+  """
+  charges user manually
+  """
+
+  api_name = 'paymentmanualcharge'
+  http_method_names = ['post']
+  permission_classes = (IsAuthenticated, )
+  serializer_class = PaymentManualChargeSerializer
+
+  def post(self, request, format=None, *args, **kwargs):
+    serializer = self.serializer_class(data=request.data)
+    serializer.is_valid(raise_exception=True)
+
+    
+
+    openTrans = Ledger.createManualCharge(**serializer.validated_data)
+
+    return {'status': 'success', 'event_id': openTrans.event_id}
+
+
+class PaymentManualRefundView(views.APIView):
+  """
+  charges user manually
+  """
+
+  api_name = 'paymentmanualrefund'
+  http_method_names = ['post']
+  permission_classes = (IsAuthenticated, )
+  serializer_class = PaymentManualRefundSerializer
+
+  def post(self, request, format=None, *args, **kwargs):
+    serializer = self.serializer_class(data=request.data)
+    serializer.is_valid(raise_exception=True)
+
+    closingTrans = Ledger.createManualRefund(**serializer.validated_data)
+
+    return {'status': 'success', 'event_id': closingTrans.event_id}
+
+
+
+

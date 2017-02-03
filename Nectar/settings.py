@@ -429,6 +429,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'fcadb',
+        # note need sa permissions to run tests and be able to create / destroy databases
+        # 'USER': 'sa',
         'USER': 'djangouser',
         'PASSWORD': '1q2w3e4r',
         'HOST': '127.0.0.1',
