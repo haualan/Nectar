@@ -203,7 +203,7 @@ class Ledger(models.Model):
         refund = refundList[0]
         # negative amount for a refund
         localCurrencyChargedAmount = refund.get('amount') * currencyMultiplier[self.currency] * -1
-        transactionDateTime = refund.get('created')
+        transactionDateTime = timezone.make_aware(timezone.datetime.fromtimestamp(refund.get('created')))
 
       return localCurrencyChargedAmount , transactionDateTime 
       
