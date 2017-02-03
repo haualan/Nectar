@@ -520,7 +520,7 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     http_method_names = ['get']
     permission_classes = (IsAuthenticated,)
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('name', 'email')
+    search_fields = ('firstname', 'lastname', 'email', 'id')
 
     def get_queryset(self):
 

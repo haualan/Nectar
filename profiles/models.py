@@ -39,6 +39,8 @@ role_choices = (
       ('S', 'student'),
       # instructor is a role set by system only
       ('I', 'instructor'),
+      ('O', 'operations'),
+      ('C', 'Chief Whatevers'),
   )
 import pytz
 tzName_choices = set((i, i) for i in pytz.all_timezones)
