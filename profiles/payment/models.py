@@ -132,10 +132,14 @@ source_choices = (
 )
 
 
-from django.contrib.auth import get_user_model
-UserModel = get_user_model()
+# from django.contrib.auth import get_user_model
+# UserModel = get_user_model()
 
-from Course.models import Course
+from profiles.models import User
+UserModel = User
+
+
+from course.models import Course
 
 class Ledger(models.Model):
   """
