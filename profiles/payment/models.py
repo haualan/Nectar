@@ -182,7 +182,7 @@ class Ledger(models.Model):
   signBy = models.CharField(max_length=255, blank=False, null=True)
 
   # what kind of transaction is this? cc, cash , check, 
-  source = models.CharField(max_length=10, blank=False, choices = source_choices)
+  source = models.CharField(max_length=10, blank=False, choices = source_choices, default='OTHER')
 
   # special remarks for this order for ops staff
   remarks = models.TextField(blank=True)
