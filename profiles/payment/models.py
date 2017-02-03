@@ -25,6 +25,9 @@ from django.contrib.postgres.fields import JSONField
 
 from django.db import transaction
 
+from rest_framework.exceptions import APIException, ParseError, PermissionDenied
+
+
 
 
 
@@ -121,6 +124,19 @@ currencyMultiplier = {
   'twd': 0.01,
 }
 
+source_choices = (
+  ('CC', 'credit card'),
+  ('CASH', 'cash'),
+  ('CHECK', 'check'),
+  ('OTHER', 'other'),
+)
+
+
+from django.contrib.auth import get_user_model
+UserModel = get_user_model()
+
+from Course.models import Course
+
 class Ledger(models.Model):
   """
   this houses all the transactions made for purchases and refunds and also supports manual transactions
@@ -161,6 +177,13 @@ class Ledger(models.Model):
   # check who is this transaction entered by, could be None on DB, or uid
   signBy = models.CharField(max_length=255, blank=False, null=True)
 
+  # what kind of transaction is this? cc, cash , check, 
+  source = models.CharField(max_length=10, blank=False, choices = source_choices)
+
+  # special remarks for this order for ops staff
+  remarks = models.TextField(blank=True)
+
+
   @transaction.atomic
   def save(self, *args, **kwargs):
     # extract the required data from rawData as provided from stripe
@@ -169,6 +192,96 @@ class Ledger(models.Model):
     
     super(Ledger, self).save(*args, **kwargs)
 
+  @classmethod
+  def createManualCharge(cls, currency, localCurrencyChargedAmount, buyerID, studentID, course_code, source, user=None, remarks = ""):
+    """
+    method to create a manual charge, which is an open tax lot, user is the employee_id authorizing this transaction
+    """
+
+    # employee must be supplied
+    if user is None or user.role not in ('I', 'O', 'C'):
+      raise ParseError('Authorized User does not exist')
+
+    # verify if these buyers and students exist, we do not foreign key them 
+    # because we do not want django to delete transactions when user objects are deleted by system
+    if not UserModel.objects.filter(id = buyerID).exists():
+      raise ParseError('buyerID does not exist')
+
+    if not UserModel.objects.filter(id = studentID).exists():
+      raise ParseError('studentID does not exist')
+
+
+    # verify that course_code exists
+    if not Course.objects.filter(course_code = course_code).exists():
+      raise ParseError('course_code does not exist')
+
+
+    openTrans = cls.objects.create(
+      event_type = 'charge.succeeded',
+      event_id = 'evt_man_{}'.format(uuid.uuid4()),
+      order_id = 'ch_{}_{}'.format(user.id, uuid.uuid4()),
+
+      signBy = user.id,
+      currency = currency,
+      localCurrencyChargedAmount = localCurrencyChargedAmount,
+      buyerID = buyerID,
+      studentID = studentID,
+      course_code = course_code,
+      source = source,
+      remarks = remarks,
+
+
+      livemode= True,
+
+
+
+    )
+    return openTrans
+
+  @classmethod
+  def createManualRefund(cls, localCurrencyChargedAmount, order_id, source, user=None, remarks = "" ):
+    """
+    given the order ID of the opening taxlot, apply a refund
+    """
+
+    if user is None or user.role not in ('I', 'O', 'C'):
+      raise ParseError('Authorized User does not exist')
+
+    # this is the opening tax lot, check for existence first
+    openTrans = cls.objects.filter(order_id=order_id)
+    if not openTrans and order_id is not None:
+      raise ParseError('order_id does not exist')
+
+    openTrans = openTrans.first()
+
+
+    # many attributes of openTrans will be reused
+    newRefund = cls.objects.create(
+
+      event_type = 'charge.refunded',
+      event_id = 'evt_man_{}'.format(uuid.uuid4()),
+
+      # order_id from the originating tax lot
+      order_id = openTrans.order_id,
+
+      signBy = user.id,
+      currency = openTrans.currency,
+      localCurrencyChargedAmount = localCurrencyChargedAmount,
+      buyerID = openTrans.buyerID,
+      studentID = openTrans.studentID,
+      course_code = openTrans.course_code,
+      source = source,
+      remarks = remarks,
+
+
+      livemode= openTrans.livemode,
+
+
+    )
+
+
+
+    return newRefund
 
   def extractLocalCurrencyChargedAmount(self):
     """
@@ -268,6 +381,10 @@ class Ledger(models.Model):
     self.course_code = course_code
     self.stripeCustomerId = stripeCustomerId
     self.order_id = order_id
+
+
+    # assume all stripe charges are. cc
+    self.source = 'CC'
 
     # has to be at the bottom, requires other precalculated data at the top
     self.localCurrencyChargedAmount, self.transactionDateTime = self.extractLocalCurrencyChargedAmount()
