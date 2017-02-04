@@ -23,33 +23,35 @@ class PaymentChargeUserSerializer(serializers.Serializer):
 
 
 class PaymentManualChargeSerializer(serializers.Serializer):
-	currency = serializers.CharField(max_length=3)
-	localCurrencyChargedAmount = serializers.DecimalField(max_digits=15, decimal_places=6)
-	buyerID = serializers.IntegerField()
-	studentID = serializers.IntegerField()
-	course_code = serializers.CharField(max_length=255)
-	source = serializers.CharField(max_length=10)
+    currency = serializers.CharField(max_length=3)
+    localCurrencyChargedAmount = serializers.DecimalField(max_digits=15, decimal_places=6)
+    buyerID = serializers.IntegerField()
+    studentID = serializers.IntegerField()
+    course_code = serializers.CharField(max_length=255)
+    source = serializers.CharField(max_length=10)
 
-	# will be collected by request
-	# user=None, 
+    # will be collected by request
+    # user=None, 
 
-	remarks = serializers.CharField(max_length=None, min_length=None, allow_blank=True,)
+    remarks = serializers.CharField(max_length=None, min_length=None, allow_blank=True,)
 
 
 
 class PaymentManualRefundSerializer(serializers.Serializer):
 
-	localCurrencyChargedAmount = serializers.DecimalField(max_digits=15, decimal_places=6)
-	order_id = serializers.CharField(max_length=255)
-	source = serializers.CharField(max_length=10)
+    localCurrencyChargedAmount = serializers.DecimalField(max_digits=15, decimal_places=6)
+    order_id = serializers.CharField(max_length=255)
+    source = serializers.CharField(max_length=10)
 
-	# user=None
-	remarks = serializers.CharField(max_length=None, min_length=None, allow_blank=True,)
+    # user=None
+    remarks = serializers.CharField(max_length=None, min_length=None, allow_blank=True,)
 
 
 
 
 class LedgerSerializer(serializers.HyperlinkedModelSerializer):
+    localCurrencyChargedAmount = serializers.DecimalField(max_digits=15, decimal_places=6)
+    
     class Meta:
         model = Ledger
         # fields = '__all__' 
