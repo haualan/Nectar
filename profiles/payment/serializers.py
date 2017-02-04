@@ -24,7 +24,7 @@ class PaymentChargeUserSerializer(serializers.Serializer):
 
 class PaymentManualChargeSerializer(serializers.Serializer):
     currency = serializers.CharField(max_length=3)
-    localCurrencyChargedAmount = serializers.DecimalField(max_digits=15, decimal_places=6)
+    localCurrencyChargedAmount = serializers.DecimalField(max_digits=15, decimal_places=6, )
     buyerID = serializers.IntegerField()
     studentID = serializers.IntegerField()
     course_code = serializers.CharField(max_length=255)
@@ -50,8 +50,8 @@ class PaymentManualRefundSerializer(serializers.Serializer):
 
 
 class LedgerSerializer(serializers.HyperlinkedModelSerializer):
-    localCurrencyChargedAmount = serializers.DecimalField(max_digits=15, decimal_places=6)
-    
+    localCurrencyChargedAmount = serializers.DecimalField(max_digits=15, decimal_places=6, coerce_to_string=False)
+
     class Meta:
         model = Ledger
         # fields = '__all__' 
