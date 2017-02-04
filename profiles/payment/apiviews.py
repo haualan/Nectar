@@ -400,6 +400,9 @@ class LedgerViewSet(viewsets.ReadOnlyModelViewSet):
       if u.role not in ('I', 'O', 'C'):  
         return self.queryset.filter(buyerID = u.id)
 
+      if 'buyerID' not in request.query_params:
+        raise ParseError('buyerID must be supplied as a query param')
+        
       return self.queryset
 
 
