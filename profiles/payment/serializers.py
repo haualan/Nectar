@@ -1,4 +1,17 @@
 from rest_framework import serializers
+from .models import *
+
+def get_model_concrete_fields(MyModel):
+    return [
+        f.name
+        for f in MyModel._meta.get_fields()
+        if f.concrete and (
+            not f.is_relation
+            or f.one_to_one
+            or (f.many_to_one and f.related_model)
+        )
+    ]
+
 
 class PaymentChargeUserSerializer(serializers.Serializer):
     token = serializers.CharField(max_length=200)
@@ -32,3 +45,12 @@ class PaymentManualRefundSerializer(serializers.Serializer):
 
 	# user=None
 	remarks = serializers.CharField(max_length=None, min_length=None, allow_blank=True,)
+
+
+
+
+class LedgerSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Ledger
+        # fields = '__all__' 
+        fields = get_model_concrete_fields(model) + ['url']

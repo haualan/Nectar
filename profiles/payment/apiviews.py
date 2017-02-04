@@ -377,4 +377,39 @@ class PaymentManualRefundView(views.APIView):
 
 
 
+class LedgerViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows ledger to be viewed only. 
+    \n pass in a query param: buyerID, with a user's id to get accounting details for that customer
+    \n - this is available generally for internal / office use only
+    \n - if not authorized, may return only the logged in user's items
+
+    """
+    api_name = 'ledger'
+
+    queryset = Ledger.objects.all()
+    serializer_class = LedgerSerializer
+    http_method_names = ['get']
+    permission_classes = (IsAuthenticated,)
+
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('buyerID',)
+
+    def get_queryset(self):
+      u = self.request.user
+      if u.role not in ('I', 'O', 'C'):  
+        return self.queryset.filter(buyerID = u.id)
+
+      return self.queryset
+
+
+
+
+
+
+
+
+
+
+
 
