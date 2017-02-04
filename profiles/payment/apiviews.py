@@ -395,14 +395,15 @@ class LedgerViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('buyerID',)
 
-    def get_queryset(self):
+    def get_queryset(self): 
+
       u = self.request.user
       if u.role not in ('I', 'O', 'C'):  
         return self.queryset.filter(buyerID = u.id)
 
-      if 'buyerID' not in request.query_params:
-        raise ParseError('buyerID must be supplied as a query param')
-        
+      if 'buyerID' not in self.request.query_params:
+        raise ParseError('buyerID must be supplied as a query param for internal usage to prevent oversized queries')
+
       return self.queryset
 
 
