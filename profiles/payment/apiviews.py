@@ -336,7 +336,7 @@ class PaymentChargeUserView(views.APIView):
     if amt is None or currency is None:
       raise ParseError('course: {} incorrect prices config: {}'.format(course_code, price_code))
 
-    mult = currencyMultiplier.get(currency.lower(), None) is None:
+    mult = currencyMultiplier.get(currency.lower(), None)
     if mult is None:
       raise ParseError('currency multiplier not recognized {}'.format(currency.lower()))
 
