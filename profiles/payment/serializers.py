@@ -16,6 +16,8 @@ def get_model_concrete_fields(MyModel):
 class PaymentChargeUserSerializer(serializers.Serializer):
     token = serializers.CharField(max_length=200)
     course_code = serializers.CharField(max_length=200)
+    price_code = serializers.CharField(max_length=200)
+    coupon_code = serializers.CharField(max_length=200, required=False)
     studentID = serializers.IntegerField()
 
     class Meta:

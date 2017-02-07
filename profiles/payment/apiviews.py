@@ -245,6 +245,8 @@ class PaymentChargeUserView(views.APIView):
     studentID = serializer.validated_data.get('studentID')
     token = serializer.validated_data.get('token')
     course_code = serializer.validated_data.get('course_code')
+    price_code = serializer.validated_data.get('price_code')
+    coupon_code = serializer.validated_data.get('coupon_code', None)
 
 
 
@@ -264,6 +266,15 @@ class PaymentChargeUserView(views.APIView):
       raise ParseError('course_code does not exist')
 
     course = course.first()
+
+    # price_obj reference is from database supplied by codeninja
+    price_obj = next((item for item in course.prices if item['price_code'] == price_code), None)
+
+    if price_obj is None:
+      raise ParseError('price_code does not exist')
+
+    # apply coupon and discounts here
+
 
     # check if student is already registered to class. do not want to pay twice
     if studentUser.usercourserelationship_set.filter(course = course).exists():
