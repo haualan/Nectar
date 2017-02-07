@@ -177,7 +177,7 @@ class CodeNinjaCacheUpdateView(views.APIView):
             return None, False
 
         # filter out certain keys that should not be overwritten
-        c = {k:v for (k,v) in c.items() if k not in ['id'] and in get_model_concrete_fields(Course) }
+        c = {k:v for (k,v) in c.items() if k not in ['id'] and k in get_model_concrete_fields(Course) }
 
         course, created = Course.objects.update_or_create(
             # filter by
@@ -228,8 +228,10 @@ class CodeNinjaCacheUpdateView(views.APIView):
                 r = requests.get(i)
                 data = r.json()
 
+                print i
+
                 # filter out certain keys that should not be overwritten
-                data = {k:v for (k,v) in data.items() if k not in ['id'] and in get_model_concrete_fields(Course) }
+                data = {k:v for (k,v) in data.items() if k not in ['id'] }
 
                 obj, created = CodeNinjaCache.objects.update_or_create(
                     # filter by this
@@ -239,20 +241,27 @@ class CodeNinjaCacheUpdateView(views.APIView):
                     defaults = { 'data': data },
                 )
 
+                print obj, created, obj.data, obj.data.get('offerings', [])
+
+
+
+            
+                if obj:
+                    for c in obj.data.get('offerings', []):
+                        
+                        print 'offering', c
+
+                        if c['course_code'] not in memo:
+                            c['cnType'] = 'camps'
+                            self.updateCourse(c)
+                        
+                        memo[c['course_code']] = c
+
             except Exception as e: 
                 print 'CodeNinjaCacheUpdate', e
 
-            
-            if obj:
-                for c in obj.data.get('offerings'):
-                    
-                    # print 'offering', c
 
-                    if c['course_code'] not in memo:
-                        c['cnType'] = 'camps'
-                        self.updateCourse(c)
-                    
-                    memo[c['course_code']] = c
+
 
         return memo
 
@@ -286,13 +295,12 @@ class CodeNinjaCacheUpdateView(views.APIView):
                     defaults = { 'data': data },
                 )
 
-            except Exception as e: 
-                print 'CodeNinjaCacheUpdate', e
+
 
 
             
             if obj:   
-                for c in obj.data.get('offerings'):
+                for c in obj.data.get('offerings', []):
                     
                     # print 'offering', c
 
@@ -301,6 +309,11 @@ class CodeNinjaCacheUpdateView(views.APIView):
                         self.updateCourse(c)
                     
                     memo[c['course_code']] = c
+
+
+            except Exception as e: 
+                print 'CodeNinjaCacheUpdate', e
+
 
         return memo
 
@@ -335,7 +348,12 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
 
         # now we can start polling endpoint
-        programsMemo = self.processPrograms(activeProgramsData_ids)
+        # missing course_code, abort
+        programsMemo = None
+        # programsMemo = self.processPrograms(activeProgramsData_ids)
+
+
+
 
         
 
@@ -343,7 +361,9 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
 
 
-        r = {'status': 'success', 'campsMemo': campsMemo, 'programsMemo': programsMemo}
+        r = {'status': 'success', 
+        'campsMemo': campsMemo, 
+        'programsMemo': programsMemo}
 
         return Response(r)
 
