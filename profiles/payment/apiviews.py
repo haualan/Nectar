@@ -324,14 +324,35 @@ class PaymentChargeUserView(views.APIView):
 
     }
 
+
+
     # Charge the user's card:
     # twd, sgd, hkd currencies
     # 1 is 1 cent
-    amt = 400
+
+    amt = price_obj.get('amount', None)
+    currency = price_obj.get('currency', None)
+
+    if amt is None or currency is None:
+      raise ParseError('course: {} incorrect prices config: {}'.format(course_code, price_code))
+
+    mult = currencyMultiplier.get(currency.lower(), None) is None:
+    if mult is None:
+      raise ParseError('currency multiplier not recognized {}'.format(currency.lower()))
+
+    # convert amt to decimal and apply multiplier (because stripe must use integers)
+    stripeAmt = None
+    try:
+      stripeAmt = int(round( float(amt)/ mult))
+    except Exception as e:
+      raise ParseError('stripe currency conversion error: {} / {}'.format(amt, mult))
+
+
+
 
     charge = stripe.Charge.create(
-      amount=400,
-      currency="hkd",
+      amount=stripeAmt,
+      currency=currency.lower(),
       description="enroll student id: {}, course_code : {}, name: {}".format(studentUser.id, course_code, course.name),
       # source=token,
       customer = guardianUser.stripeCustomerId,
