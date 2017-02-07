@@ -3,6 +3,18 @@ from uploadApp.models import *
 from course.models import *
 from django.db.models import Avg, Case, Count, F, Max, Min, Prefetch, Q, Sum, When
 
+
+def get_model_concrete_fields(MyModel):
+    return [
+        f.name
+        for f in MyModel._meta.get_fields()
+        if f.concrete and (
+            not f.is_relation
+            or f.one_to_one
+            or (f.many_to_one and f.related_model)
+        )
+    ]
+    
 # from course.models import UserCourseRelationship
 
 languages = [i[0] for i in language_choices]

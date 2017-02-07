@@ -75,9 +75,13 @@ class UserCourseRelationship(models.Model):
 
 class Course(models.Model):
   name = models.CharField(max_length=255, blank=False)
-  # code Ninja type
+
+  # code Ninja type which tells which endpoint the data came from
   cnType = models.CharField(max_length=255, blank=False, default=None, null=True)
   
+  event_type = models.CharField(max_length=255, blank=False, default=None, null=True)
+
+
   course_code = models.CharField(max_length=255, blank=False)
   course_icon_url = models.URLField(blank=True, default=DEFAULT_PROFILE_PICTURE_URL)
   eventbrite_tag = models.CharField(max_length=255, blank=True)
@@ -92,6 +96,8 @@ class Course(models.Model):
   enrollment_count = models.IntegerField(default = 0)
   active = models.BooleanField(default = True)
   remark = models.TextField(blank=True)
+
+  prices = JSONField(null=True)
 
   lastModified = models.DateTimeField(auto_now= True)
 

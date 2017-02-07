@@ -13,6 +13,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.utils import timezone
 from django.conf import settings
 
+from .utils import get_model_concrete_fields
+
 import requests
 
 
@@ -175,7 +177,7 @@ class CodeNinjaCacheUpdateView(views.APIView):
             return None, False
 
         # filter out certain keys that should not be overwritten
-        c = {k:v for (k,v) in c.items() if k not in ['id'] }
+        c = {k:v for (k,v) in c.items() if k not in ['id'] and in get_model_concrete_fields(Course) }
 
         course, created = Course.objects.update_or_create(
             # filter by
@@ -227,7 +229,7 @@ class CodeNinjaCacheUpdateView(views.APIView):
                 data = r.json()
 
                 # filter out certain keys that should not be overwritten
-                data = {k:v for (k,v) in data.items() if k not in ['id'] }
+                data = {k:v for (k,v) in data.items() if k not in ['id'] and in get_model_concrete_fields(Course) }
 
                 obj, created = CodeNinjaCache.objects.update_or_create(
                     # filter by this
