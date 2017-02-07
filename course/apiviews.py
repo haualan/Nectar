@@ -296,19 +296,17 @@ class CodeNinjaCacheUpdateView(views.APIView):
                 )
 
 
-
-
             
-            if obj:   
-                for c in obj.data.get('offerings', []):
-                    
-                    # print 'offering', c
+                if obj:   
+                    for c in obj.data.get('offerings', []):
+                        
+                        # print 'offering', c
 
-                    if c['course_code'] not in memo:
-                        c['cnType'] = 'programs'
-                        self.updateCourse(c)
-                    
-                    memo[c['course_code']] = c
+                        if c['course_code'] not in memo:
+                            c['cnType'] = 'programs'
+                            self.updateCourse(c)
+                        
+                        memo[c['course_code']] = c
 
 
             except Exception as e: 
