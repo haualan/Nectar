@@ -221,7 +221,7 @@ class CodeNinjaCacheUpdateView(views.APIView):
         # update course time info
         course.updateClassDates(classDates)
 
-        print 'course created', course.id, created, course.course_code
+        # print 'course created', course.id, created, course.course_code
 
 
 
@@ -248,7 +248,7 @@ class CodeNinjaCacheUpdateView(views.APIView):
                 r = requests.get(i, headers=self.cnHeaders, verify=False)
                 data = r.json()
 
-                print i
+                # print i
 
                 # filter out certain keys that should not be overwritten
                 data = {k:v for (k,v) in data.items() if k not in ['id'] }
@@ -261,7 +261,7 @@ class CodeNinjaCacheUpdateView(views.APIView):
                     defaults = { 'data': data },
                 )
 
-                print obj, created, obj.data, obj.data.get('offerings', [])
+                # print obj, created, obj.data, obj.data.get('offerings', [])
 
                 # camps have start / end dates lodged inside the course object
                 # courseDates = obj.getCourseDates()
@@ -274,7 +274,7 @@ class CodeNinjaCacheUpdateView(views.APIView):
                         # inject subdomain to c
                         c['subdomain'] = subdomain
                         
-                        print 'offering', c
+                        # print 'offering', c
 
                         if c['course_code'] not in memo:
                             c['cnType'] = 'camps'
@@ -283,7 +283,7 @@ class CodeNinjaCacheUpdateView(views.APIView):
                         memo[c['course_code']] = c
 
             except Exception as e: 
-                print 'CodeNinjaCacheUpdate', e
+                print 'CodeNinjaCacheUpdate', e, i
 
 
 
@@ -359,7 +359,7 @@ class CodeNinjaCacheUpdateView(views.APIView):
                             class_weekday = weekdayMapping.get(class_day.lower(), None)
                             if class_weekday is not None:
                                 classDates = courseDates.get(class_weekday, [])
-                                print 'extracted classDates', classDates
+                                # print 'extracted classDates', classDates
 
 
                             self.updateCourse(c, classDates = classDates)
@@ -368,7 +368,7 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
 
             except Exception as e: 
-                print 'CodeNinjaCacheUpdate', e
+                print 'CodeNinjaCacheUpdate', e, i
 
 
         return memo
@@ -385,7 +385,7 @@ class CodeNinjaCacheUpdateView(views.APIView):
         countriesUrl = 'http://www.firstcodeacademy.com/api/countries'
         r = requests.get(countriesUrl, headers = self.cnHeaders, verify=False)
 
-        print r, r.status_code, r.text, self.cnHeaders
+        # print r, r.status_code, r.text, self.cnHeaders
 
         countriesData = r.json()
         subdomains = [i['subdomain'] for i in countriesData]
@@ -402,7 +402,7 @@ class CodeNinjaCacheUpdateView(views.APIView):
             activeCampsData = r.json()
 
             activeCampsData_ids = ['http://{}.firstcodeacademy.com/api/camps/{}'.format(s ,i['id']) for i in activeCampsData]
-
+            print 'activeCampsData_ids', activeCampsData_ids
 
             # now we can start polling endpoint
             campsMemo = self.processCamps(activeCampsData_ids, subdomain = s)
@@ -413,12 +413,12 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
 
             # take a look at the programs
-            activeProgramsUrl = 'http://hk.firstcodeacademy.com/api/programs'
+            activeProgramsUrl = 'http://{}.firstcodeacademy.com/api/programs'.format(s)
             r = requests.get(activeProgramsUrl, headers = self.cnHeaders, verify=False)
             activeProgramsData = r.json()
 
             activeProgramsData_ids = ['http://{}.firstcodeacademy.com/api/programs/{}'.format(s, i['id']) for i in activeProgramsData]
-
+            print 'activeProgramsData_ids', activeProgramsData_ids
 
             # now we can start polling endpoint
             # missing course_code, abort

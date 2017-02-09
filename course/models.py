@@ -145,7 +145,7 @@ class Course(models.Model):
   eventbrite_tag = models.CharField(max_length=255, blank=True)
 
   class_day = models.CharField(max_length=255, blank=True)
-  
+
   age_group = models.CharField(max_length=255, blank=True)
   location = models.CharField(max_length=255, blank=True)
   start_date = models.DateTimeField(null=True)
@@ -206,16 +206,28 @@ class Course(models.Model):
 
   def updateClassDates(self, courseDates = []):
     """
+    if self.event_type is "term":
     given a list of <datetime> courseDates, crud date info for CourseClassDateRelationship
+
+    if self.event_type is "camp" or "event":
+    iterate from start_date till end_date and assume everyday to be a classday
+
     """
 
+    
+
+
+       
+
+
+    
     # CourseClassDateRelationship payload: cdPayload looks at the end_time of the course object to determine what time this course ends
     # courseDates may not contain the right time information
     end_time = self.end_time
     if type(end_time) is not timezone.datetime:
       end_time = dateTimeParse(end_time)
 
-    print 'updateClassDates', self.id, self.end_time, self.start_time, type(self.end_time)
+    # print 'updateClassDates', self.id, self.end_time, self.start_time, type(self.end_time)
     ehh = end_time.hour
     emm = end_time.minute
     ess = end_time.second
@@ -230,13 +242,41 @@ class Course(models.Model):
     sss = start_time.second
     sms = start_time.microsecond
 
-    print 'ehh', ehh
+    # print 'ehh', ehh
 
+    cdPayload = []
+    if self.event_type == 'term':
+      cdPayload = [{
+        'startDateTime': i.replace(hour = shh, minute = smm, second = sss, microsecond = sms),
+        'endDateTime': i.replace(hour = ehh, minute = emm, second = ess, microsecond = ems),
+      } for i in courseDates]
 
-    cdPayload = [{
-      'startDateTime': i.replace(hour = shh, minute = smm, second = sss, microsecond = sms),
-      'endDateTime': i.replace(hour = ehh, minute = emm, second = ess, microsecond = ems),
-    } for i in courseDates]
+    elif self.event_type in ['camp', 'event']:
+      # these types of events can rely on start and endDates
+      start_date = self.start_date
+      if type(start_date) is not timezone.datetime:
+        start_date = dateTimeParse(start_date)
+
+      end_date = self.end_date
+      if type(end_date) is not timezone.datetime:
+        end_date = dateTimeParse(end_date)
+
+      minDate = min(start_date, end_date)
+      maxDate = max(start_date, end_date)
+
+      # init counter for dates
+      currDate = minDate
+      courseDates = []
+      while currDate <= maxDate:
+        courseDates.append(currDate)
+        currDate += timezone.timedelta(days = 1)
+
+      cdPayload = [{
+        'startDateTime': i.replace(hour = shh, minute = smm, second = sss, microsecond = sms),
+        'endDateTime': i.replace(hour = ehh, minute = emm, second = ess, microsecond = ems),
+      } for i in courseDates]
+
+      # print 'update classdates camps', cdPayload, self.id, self.course_code
 
     # print 'cdPayload',[ timezone.make_naive(j['startDateTime']) for j in cdPayload]
 
@@ -248,10 +288,10 @@ class Course(models.Model):
     tbd = [i['startDateTime'] for i in currentDates if timezone.make_naive(i['startDateTime']) not in [ j['startDateTime'] for j in cdPayload] ]
     deleted = self.courseclassdaterelationship_set.filter(startDateTime__in = tbd).delete()
 
-    print 'currentDates', currentDates
-    print 'cdPayload', cdPayload
-    print 'deleted', deleted
-    # 
+    # print 'currentDates', currentDates
+    # print 'cdPayload', cdPayload
+    # print 'deleted', deleted
+      # 
 
     # create or update all the other dates
     for p in cdPayload:
