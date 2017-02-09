@@ -66,7 +66,7 @@ class CodeNinjaCache(models.Model):
 
     if 'api/programs' in self.endpoint:
       # this is a programs endpoint which has a class_dates field in self.data
-      cd = self.data.get('class_dates').replace(';\r\n',',')
+      cd = self.data.get('class_dates').replace(';\r\n',',').split(',')
 
       print cd
 
