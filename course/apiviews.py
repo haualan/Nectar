@@ -41,8 +41,24 @@ class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     permission_classes = (AllowAny,)
+
+    http_method_names =['get']
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('course_code',)
+
+
+class CourseClassDateRelationship(viewsets.ModelViewSet):
+    """
+    defines the CourseClassDateRelationship objects 
+    """
+    api_name = 'courseclassdaterelationship'
+    queryset = CourseClassDateRelationship.objects.all()
+    serializer_class = CourseClassDateRelationshipSerializer
+    http_method_names =['get']
+    permission_classes = (AllowAny,)
+    # filter_backends = (filters.DjangoFilterBackend,)
+    # filter_fields = ('course_code',)
+
 
 class LessonViewSet(viewsets.ModelViewSet):
     """
@@ -148,8 +164,9 @@ class CodeNinjaCacheUpdateView(views.APIView):
     # this endpoint should be public so anyone can sign up
     permission_classes = (AllowAny, )
     http_method_names =['post']
+    cnHeaders = {'Authorization': settings.CNKEY}
     
-    def updateCourse(self, c):
+    def updateCourse(self, c, classDates = []):
         """
         suppose code ninja passes a payload of a course, update or create the records on nectar
         ie:
@@ -201,7 +218,10 @@ class CodeNinjaCacheUpdateView(views.APIView):
             defaults = c,
         )
 
-        print 'course created', course.id, created
+        # update course time info
+        course.updateClassDates(classDates)
+
+        print 'course created', course.id, created, course.course_code
 
 
 
@@ -209,7 +229,7 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
         return course, created
 
-    def processCamps(self, payload_ids):
+    def processCamps(self, payload_ids, subdomain= None):
         """
         processes the returned data for camps
         """
@@ -219,13 +239,13 @@ class CodeNinjaCacheUpdateView(views.APIView):
         for i in payload_ids:
             # attempt to poll data from 
 
-            # r = requests.get('http://hk.firstcodeacademy.com/api/camps/3/offerings')
+            # r = requests.get('http://hk.firstcodeacademy.com/api/camps/3/offerings', headers=self.cnHeaders)
             # print r.json()
 
             obj = None
 
             try:
-                r = requests.get(i)
+                r = requests.get(i, headers=self.cnHeaders, verify=False)
                 data = r.json()
 
                 print i
@@ -243,17 +263,22 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
                 print obj, created, obj.data, obj.data.get('offerings', [])
 
+                # camps have start / end dates lodged inside the course object
+                # courseDates = obj.getCourseDates()
 
 
             
                 if obj:
                     for c in obj.data.get('offerings', []):
+
+                        # inject subdomain to c
+                        c['subdomain'] = subdomain
                         
                         print 'offering', c
 
                         if c['course_code'] not in memo:
                             c['cnType'] = 'camps'
-                            self.updateCourse(c)
+                            self.updateCourse(c, classDates = [])
                         
                         memo[c['course_code']] = c
 
@@ -265,7 +290,7 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
         return memo
 
-    def processPrograms(self, payload_ids):
+    def processPrograms(self, payload_ids, subdomain = None):
         """
         processes the returned data for camps
         """
@@ -275,13 +300,13 @@ class CodeNinjaCacheUpdateView(views.APIView):
         for i in payload_ids:
             # attempt to poll data from 
 
-            # r = requests.get('http://hk.firstcodeacademy.com/api/camps/3/offerings')
+            # r = requests.get('http://hk.firstcodeacademy.com/api/camps/3/offerings', headers=self.cnHeaders)
             # print r.json()
 
             obj = None
 
             try:
-                r = requests.get(i)
+                r = requests.get(i, headers=self.cnHeaders, verify=False)
                 data = r.json()
 
                 # filter out certain keys that should not be overwritten
@@ -295,6 +320,21 @@ class CodeNinjaCacheUpdateView(views.APIView):
                     defaults = { 'data': data },
                 )
 
+                # programs have dates listed in class_dates field , extract them
+                # courseDates are supplied as a dict of {<weekday>: [<datetime>...]}
+                courseDates = obj.getCourseDates()
+
+
+                weekdayMapping = {
+                    'mon': 0,
+                    'tue': 1,
+                    'wed': 2,
+                    'thu': 3,
+                    'fri': 4,
+                    'sat': 5,
+                    'sun': 6,
+                }
+
 
             
                 if obj:   
@@ -302,9 +342,27 @@ class CodeNinjaCacheUpdateView(views.APIView):
                         
                         # print 'offering', c
 
+                        # inject subdomain to c
+                        c['subdomain'] = subdomain
+
                         if c['course_code'] not in memo:
                             c['cnType'] = 'programs'
-                            self.updateCourse(c)
+
+                            # courseDates are supplied as a dict of {<weekday>: [<datetime>...]}
+                            # classDates only selects the time of date
+                            classDates = []
+
+                            # these are 'Mon', 'Tue'
+                            class_day = c.get('class_day', '')
+
+                            # is the translated numerical mapping as specified in weekdayMapping
+                            class_weekday = weekdayMapping.get(class_day.lower(), None)
+                            if class_weekday is not None:
+                                classDates = courseDates.get(class_weekday, [])
+                                print 'extracted classDates', classDates
+
+
+                            self.updateCourse(c, classDates = classDates)
                         
                         memo[c['course_code']] = c
 
@@ -322,33 +380,52 @@ class CodeNinjaCacheUpdateView(views.APIView):
         if verifyToken != settings.VERIFYTOKEN:
             raise PermissionDenied('Verification Token missing or invalid')
 
+        # needed for codeninja verification
 
-        # take a look at the active camps first
-        activeCampsUrl = 'http://hk.firstcodeacademy.com/api/camps'
-        r = requests.get(activeCampsUrl)
-        activeCampsData = r.json()
+        countriesUrl = 'http://www.firstcodeacademy.com/api/countries'
+        r = requests.get(countriesUrl, headers = self.cnHeaders, verify=False)
 
-        activeCampsData_ids = ['http://hk.firstcodeacademy.com/api/camps/{}'.format(i['id']) for i in activeCampsData]
+        print r, r.status_code, r.text, self.cnHeaders
 
-
-        # now we can start polling endpoint
-        campsMemo = self.processCamps(activeCampsData_ids)
+        countriesData = r.json()
+        subdomains = [i['subdomain'] for i in countriesData]
 
 
+        allcampsMemo = {}
+        allprogramsMemo = {}
+
+        for s in subdomains:
+
+            # take a look at the active camps first
+            activeCampsUrl = 'http://{}.firstcodeacademy.com/api/camps'.format(s)
+            r = requests.get(activeCampsUrl, headers = self.cnHeaders, verify=False)
+            activeCampsData = r.json()
+
+            activeCampsData_ids = ['http://{}.firstcodeacademy.com/api/camps/{}'.format(s ,i['id']) for i in activeCampsData]
 
 
-        # take a look at the programs
-        activeProgramsUrl = 'http://hk.firstcodeacademy.com/api/programs'
-        r = requests.get(activeProgramsUrl)
-        activeProgramsData = r.json()
-
-        activeProgramsData_ids = ['http://hk.firstcodeacademy.com/api/programs/{}'.format(i['id']) for i in activeProgramsData]
+            # now we can start polling endpoint
+            campsMemo = self.processCamps(activeCampsData_ids, subdomain = s)
+            for k in campsMemo:
+                allcampsMemo[k] = campsMemo[k]
 
 
-        # now we can start polling endpoint
-        # missing course_code, abort
-        # programsMemo = None
-        programsMemo = self.processPrograms(activeProgramsData_ids)
+
+
+            # take a look at the programs
+            activeProgramsUrl = 'http://hk.firstcodeacademy.com/api/programs'
+            r = requests.get(activeProgramsUrl, headers = self.cnHeaders, verify=False)
+            activeProgramsData = r.json()
+
+            activeProgramsData_ids = ['http://{}.firstcodeacademy.com/api/programs/{}'.format(s, i['id']) for i in activeProgramsData]
+
+
+            # now we can start polling endpoint
+            # missing course_code, abort
+            # programsMemo = None
+            programsMemo = self.processPrograms(activeProgramsData_ids, subdomain = s)
+            for k in programsMemo:
+                allprogramsMemo[k] = programsMemo[k]
 
 
 
@@ -360,8 +437,8 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
 
         r = {'status': 'success', 
-        'campsMemo': campsMemo, 
-        'programsMemo': programsMemo}
+        'campsMemo': allcampsMemo, 
+        'programsMemo': allprogramsMemo}
 
         return Response(r)
 

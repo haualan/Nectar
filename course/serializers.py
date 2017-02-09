@@ -30,10 +30,26 @@ def get_model_concrete_fields(MyModel):
     ]
 
 
+class CourseClassDateRelationshipSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = CourseClassDateRelationship
+        # fields = ['id']
+        fields = get_model_concrete_fields(model) + ['url']
+
 class CourseSerializer(serializers.HyperlinkedModelSerializer):
+    # classDates = CourseClassDateRelationshipSerializer(source='courseclassdaterelationship_set'
+    #     )
+
+    classDates = CourseClassDateRelationshipSerializer(many=True, source = 'courseclassdaterelationship_set')
+
+    # classDates = 
+
     class Meta:
         model = Course
-        fields = get_model_concrete_fields(model) + ['url']
+        fields = get_model_concrete_fields(model) + ['url', 
+            'classDates',
+            # 'courseclassdaterelationship_set',
+        ]
 
 
 class LessonSerializer(serializers.HyperlinkedModelSerializer):

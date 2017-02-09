@@ -68,7 +68,7 @@ class CodeNinjaCache(models.Model):
       # this is a programs endpoint which has a class_dates field in self.data
       cd = self.data.get('class_dates').replace(';\r\n',',').split(',')
 
-      print cd
+      # print cd
 
       # extract year from start_date
       year = dateTimeParse(self.data.get('start_date')).year
@@ -85,7 +85,7 @@ class CodeNinjaCache(models.Model):
           # that's the day of the week, 0 is Monday, 6 is Sunday
           weekday = d.weekday()
 
-          print 'dStr', dStr, 'd', d, 'weekday', weekday
+          # print 'dStr', dStr, 'd', d, 'weekday', weekday
 
           if weekday not in datesMemo:
             datesMemo[weekday] = []
@@ -103,7 +103,7 @@ class CodeNinjaCache(models.Model):
 
 
     # return default value
-    return []
+    return {}
 
 
 
@@ -144,6 +144,8 @@ class Course(models.Model):
   course_icon_url = models.URLField(blank=True, default=DEFAULT_PROFILE_PICTURE_URL)
   eventbrite_tag = models.CharField(max_length=255, blank=True)
 
+  class_day = models.CharField(max_length=255, blank=True)
+  
   age_group = models.CharField(max_length=255, blank=True)
   location = models.CharField(max_length=255, blank=True)
   start_date = models.DateTimeField(null=True)
@@ -161,6 +163,8 @@ class Course(models.Model):
   # classDates = JSONField(default = makeEmptyList)
 
   lastModified = models.DateTimeField(auto_now= True)
+
+  subdomain = models.CharField(max_length=255, blank=False, null=True, default=None)
 
   def firstDate(self):
     """
@@ -200,6 +204,67 @@ class Course(models.Model):
     """
     return formatLocation_choices.get(self.location, None)
 
+  def updateClassDates(self, courseDates = []):
+    """
+    given a list of <datetime> courseDates, crud date info for CourseClassDateRelationship
+    """
+
+    # CourseClassDateRelationship payload: cdPayload looks at the end_time of the course object to determine what time this course ends
+    # courseDates may not contain the right time information
+    end_time = self.end_time
+    if type(end_time) is not timezone.datetime:
+      end_time = dateTimeParse(end_time)
+
+    print 'updateClassDates', self.id, self.end_time, self.start_time, type(self.end_time)
+    ehh = end_time.hour
+    emm = end_time.minute
+    ess = end_time.second
+    ems = end_time.microsecond
+
+    start_time = self.start_time
+    if type(start_time) is not timezone.datetime:
+      start_time = dateTimeParse(start_time)
+
+    shh = start_time.hour
+    smm = start_time.minute
+    sss = start_time.second
+    sms = start_time.microsecond
+
+    print 'ehh', ehh
+
+
+    cdPayload = [{
+      'startDateTime': i.replace(hour = shh, minute = smm, second = sss, microsecond = sms),
+      'endDateTime': i.replace(hour = ehh, minute = emm, second = ess, microsecond = ems),
+    } for i in courseDates]
+
+    # print 'cdPayload',[ timezone.make_naive(j['startDateTime']) for j in cdPayload]
+
+    currentDates = self.courseclassdaterelationship_set.all().values('startDateTime')
+
+    
+
+    # dates to be deleted: find all the dates in currentDates but not in courseDates payload
+    tbd = [i['startDateTime'] for i in currentDates if timezone.make_naive(i['startDateTime']) not in [ j['startDateTime'] for j in cdPayload] ]
+    deleted = self.courseclassdaterelationship_set.filter(startDateTime__in = tbd).delete()
+
+    print 'currentDates', currentDates
+    print 'cdPayload', cdPayload
+    print 'deleted', deleted
+    # 
+
+    # create or update all the other dates
+    for p in cdPayload:
+      obj, created = self.courseclassdaterelationship_set.update_or_create(
+        course = self,
+        startDateTime = p['startDateTime'],
+        defaults = p
+      )
+
+    return True
+
+
+
 
   class Meta:
     # course code must be unique
@@ -211,6 +276,15 @@ class CourseClassDateRelationship(models.Model):
   ignore = models.BooleanField(default=False)
   startDateTime = models.DateTimeField()
   endDateTime = models.DateTimeField()
+
+  class Meta:
+    # courses must have unique startDateTime
+    unique_together = ('course', 'startDateTime')
+
+    # ordering is not a free operation!
+    # show earliest date first
+    ordering = ['startDateTime']
+
 
 
 
