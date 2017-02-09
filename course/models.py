@@ -68,6 +68,8 @@ class CodeNinjaCache(models.Model):
       # this is a programs endpoint which has a class_dates field in self.data
       cd = self.data.get('class_dates').replace(';\r\n',',')
 
+      print cd
+
       # extract year from start_date
       year = dateTimeParse(self.data.get('start_date')).year
 
@@ -82,6 +84,8 @@ class CodeNinjaCache(models.Model):
 
           # that's the day of the week, 0 is Monday, 6 is Sunday
           weekday = d.weekday()
+
+          print 'dStr', dStr, 'd', d, 'weekday', weekday
 
           if weekday not in datesMemo:
             datesMemo[weekday] = []
