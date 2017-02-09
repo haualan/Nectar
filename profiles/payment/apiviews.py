@@ -364,6 +364,10 @@ class PaymentChargeUserView(views.APIView):
     studentUser.usercourserelationship_set.create(course = course)
 
 
+    # send user an email
+    
+
+
     return Response({'status': 'success'}, status=200)
 
 
@@ -385,6 +389,10 @@ class PaymentManualChargeView(views.APIView):
     
 
     openTrans = Ledger.createManualCharge(**serializer.validated_data)
+
+    # TBD: subscribe user to course
+    # email user a receipt.
+
 
     return {'status': 'success', 'event_id': openTrans.event_id}
 

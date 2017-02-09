@@ -347,8 +347,8 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
         # now we can start polling endpoint
         # missing course_code, abort
-        programsMemo = None
-        # programsMemo = self.processPrograms(activeProgramsData_ids)
+        # programsMemo = None
+        programsMemo = self.processPrograms(activeProgramsData_ids)
 
 
 

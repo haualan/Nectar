@@ -13,7 +13,6 @@ from django.db.models import Count
 
 
 from datetime import timedelta
-import dateutil.parser
 import uuid, os
 
 DEFAULT_PROFILE_PICTURE_URL = 'http://placehold.it/350x350'
@@ -43,6 +42,7 @@ role_UserCourseRelationship_choices = (
 )
 
 from django.contrib.postgres.fields import JSONField
+from dateutil.parser import parse as dateTimeParse
 
 def codeNinjaCacheData_default():
   return {}
@@ -55,10 +55,59 @@ class CodeNinjaCache(models.Model):
   lastModified = models.DateTimeField(auto_now= True)
   data = JSONField(default = codeNinjaCacheData_default)
 
+  def getCourseDates(self):
+    """
+    extracts class dates info from data supplied from code ninja, 
+    - http://hk.firstcodeacademy.com/api/camps/:id
+      - for camps we will assume that everyday has a class, iterate data to find dates, this will otherwise return blank
+    - api/programs
+      - extract dates from field "class_dates": 
+    """
+
+    if 'api/programs' in self.endpoint:
+      # this is a programs endpoint which has a class_dates field in self.data
+      cd = self.data.get('class_dates').replace(';\r\n',',')
+
+      # extract year from start_date
+      year = dateTimeParse(self.data.get('start_date')).year
+
+      datesMemo = {}
+
+      # parse date string from class_dates
+      for dStr in cd:
+        try:
+          # try to extract dates, which might fail when it reads something like "Lesson 1"
+          d = dateTimeParse(dStr)
+          d = d.replace(year = year)
+
+          # that's the day of the week, 0 is Monday, 6 is Sunday
+          weekday = d.weekday()
+
+          if weekday not in datesMemo:
+            datesMemo[weekday] = []
+
+          datesMemo[weekday].append(d)
+
+        except ValueError as e:
+          pass
+
+      return datesMemo
+
+
+
+
+
+
+    # return default value
+    return []
+
+
+
   class Meta:
     unique_together = ('endpoint',)
 
-
+def makeEmptyList():
+  return []
 
 class UserCourseRelationship(models.Model):
   """
@@ -72,6 +121,11 @@ class UserCourseRelationship(models.Model):
   class Meta:
     unique_together = ('user', 'course',)
 
+
+formatLocation_choices = {
+  'kowloon': 'Unit 404, 4/F, Kowloon Building, 555 Nathan Road, Yau Ma Tei, Hong Kong',
+  'sheung wan': 'Unit 302-305, 3/F, Hollywood Centre, 233 Hollywood Road, Sheung Wan, Hong Kong',
+}
 
 class Course(models.Model):
   name = models.CharField(max_length=255, blank=False)
@@ -97,17 +151,66 @@ class Course(models.Model):
   active = models.BooleanField(default = True)
   remark = models.TextField(blank=True)
 
-  prices = JSONField(null=True)
+  prices = JSONField(default = makeEmptyList)
+
+  # determine what dates these classes are on, by default they will follow whatever is given by codeninja
+  # classDates = JSONField(default = makeEmptyList)
 
   lastModified = models.DateTimeField(auto_now= True)
+
+  def firstDate(self):
+    """
+    returns the first date of the course
+    """
+    d = self.start_date
+    if d is not None:
+      # example:
+      # In [17]: n.strftime('%b %d, %Y')
+      # Out[17]: 'Feb 09, 2017'
+      return d.strftime('%b %d, %Y')
+
+    # search CourseClassDateRelationship for dates instead.
+
+
+    # return a default date
+    return None
+
+  def firstTime(self):
+    """
+    returns the first date of the course
+
+    In [38]: dd.strftime('%r')
+    Out[38]: '02:57:23 PM'
+    """
+
+    d = self.start_time
+    if d is not None:
+      return d.strftime('%r')
+
+    return None
+
+
+  def formatLocation(self):
+    """
+    returns a pretty format of locations 
+    """
+    return formatLocation_choices.get(self.location, None)
+
 
   class Meta:
     # course code must be unique
     unique_together = ('course_code',)
 
+class CourseClassDateRelationship(models.Model):
+  course = models.ForeignKey('Course')
+  # if classes are bought over but needs to be manually cleaned up, use ignore so dates will not be counted as a classdate
+  ignore = models.BooleanField(default=False)
+  startDateTime = models.DateTimeField()
+  endDateTime = models.DateTimeField()
 
 
-from django.contrib.postgres.fields import JSONField
+
+
 
 def awardDefinition_default():
   return {}

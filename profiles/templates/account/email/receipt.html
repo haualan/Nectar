@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<div style="background:white;margin:0px" bgcolor="white">
+  <table cellspacing="0" border="0" cellpadding="0" align="center" width="100%" bgcolor="transparent" style="border-collapse:separate;border-spacing:0;font-family:Helvetica,Arial,sans-serif;letter-spacing:0;table-layout:fixed;padding:0px 10%;border: 3px solid #f8f8f8">
+    <tbody>
+      <tr>
+        <td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;padding:60px 0 0">
+          <table width="100%" style="border-collapse:separate;border-spacing:0;table-layout:fixed">
+            <tbody>
+              <tr>
+                <td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;padding:0;text-align:center" align="center">
+
+                  <img src="https://s3-ap-southeast-1.amazonaws.com/fcanectar/assets/fcalogosquare.png"
+                    width="300" height="300" style="padding:0 0 0px" class="CToWUd">
+
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table width="100%" style="border-collapse:separate;border-spacing:0;table-layout:fixed;padding:0 0 60px">
+            <tbody>
+              <tr>
+                <td style="color:#818181;font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5;; text-align:left;padding-bottom:75px; text-align:left">
+
+                  <h2 style="color:#566371; margin-bottom:0px">
+                    Order Confirmation
+                  </h2>
+
+                  <hr style="border-color:rgba(0,0,0,0.035);border-width:1px; margin:30px;">
+
+
+                  <p>Dear {{ guardian.firstname|default_if_none:"Guardian / Parent" }},</p>
+
+                  <p>
+                  I'm Natasha from First Code and I’d like to personally welcome you and {{student.firstname}}. The term starts soon and we are very excited to see {{student.firstname}} for the Fall term!
+                  </p> 
+
+                  <p>
+                  We believe that coding can empower us to become creators and not just consumers of technology. It means a lot to us to have the opportunity to be part of this journey with your child.
+                  </p>
+
+                  <p>We have received your child’s information below:</p>
+
+                  <p>
+                  Day: {{course.firstDate()}} <br>
+                  Time: {{course.firstTime()}} <br>
+                  Course: {{course.name}} <br>
+                  Location: {{course.formatLocation()}} <br>
+                  Full Class Calendar: <a style="" href="https://hk.firstcodeacademy.com/en/programs/calendar">
+                            Click here
+                        </a><br>
+                  </p>
+
+                  <p>
+                  Order Total: {{ order.formatPriceStr }} <br>
+                  Order Date: {{ order.date }} <br>
+                  </p>
+
+
+
+
+
+                  <p>
+                  <a style="" href="https://hk.firstcodeacademy.com/en/programs/calendar">
+                  Click here for an info pack
+                  </a> with some useful information about your schedule, what to bring to the class, what to do if you miss a class, how to find us etc.
+                  </p>
+
+                  <p>
+                  Meanwhile, feel free to reach out to me via email or at 2772-2108 if you have any questions.
+                  </p> 
+
+                  <p>
+                  We will see you and {{student.firstname}} on 1st day of class on {{course.firstDate}}! 
+                  </p>
+
+                  <p>
+                  Kind regards, <br>
+                  Natasha       <br>
+                  Community Manager <br>
+                  First Code Academy <br>
+                  </p>
+
+              
+                  <hr style="border-color:rgba(0,0,0,0.035);border-width:1px; margin:30px;">
+
+
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table cellspacing="0" border="0" cellpadding="0" align="center" width="100%" bgcolor="transparent" style="background:#F8DCC9;border-collapse:separate;border-spacing:0;font-family:Helvetica,Arial,sans-serif;letter-spacing:0;max-width:100%;table-layout:fixed">
+    <tbody>
+      <tr>
+        <td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;padding:26px 30px 22px;text-align:center;width:100%" align="center">
+
+          <h2 style="color:#566371;font-size:13px;font-weight:bold;text-decoration:none">Follow us</h2>
+          <p style="color:#566371;font-size:13px;font-weight:300;line-height:1.5;margin:27px 0 20px;text-decoration:none">
+
+            <a href="https://www.facebook.com/firstcodeacademy" style="border:none;color:#566371;font-size:13px;outline:none!important;text-decoration:none" target="_blank"><img alt="Facebook" src="https://ci5.googleusercontent.com/proxy/Sw4CyrfZdH2ipipO5GGNZq541laK-wiLVI-RU2JZTg-g4jqbKW5GFUKX_c6s4y63jcpI3tkHa72T7XnBMTPBMnKxmsRd1AK5MWsMWCsuWvYR3FxE3n_bxqIj5atqKj9RWhF7t9sgkutBpmXtTI2bI2GVA3SaOIkhxCRrNFwzvA=s0-d-e1-ft#https://marketing.intercomassets.com/assets/email/broadcast/facebook-2263526f2b7c7cf3c7c2a066588b01ef.png"
+                width="60" class="CToWUd"></a>
+
+
+            <a href="https://twitter.com/firstcode" style="border:none;color:#566371;font-size:13px;outline:none!important;text-decoration:none" target="_blank"><img alt="Twitter" src="https://ci6.googleusercontent.com/proxy/sjVAIvWOdBtARaYWoShRNhs0fhniaD20hHhLwlpCLEHOq6vo9yRlrUJZz-A5Pjjy9rWd2V-RvhIOHeO3vnlEGdDBNdtg0ZZ6oh087dXr-KdF7A1ziOzl_e5zRbl_Mf8-QfvbeWyoCRrf7QZsoWH7NoX07CwtPZDDfmCheotY=s0-d-e1-ft#https://marketing.intercomassets.com/assets/email/broadcast/twitter-fe222f8697fa267d095338db3f583c94.png"
+                width="60" class="CToWUd"></a>
+
+            <a href="http://blog.firstcodeacademy.com/" style="border:none;color:#566371;font-size:13px;outline:none!important;text-decoration:none;" target="_blank"><img alt="Twitter" src="https://cdn3.iconfinder.com/data/icons/happily-colored-snlogo/128/medium.png" width="45" class="CToWUd" style="margin:0px 10px"></a>
+
+          </p>
+
+
+          <span>
+
+                        <a style="margin:0;font-size:10pt;color:#566371;padding-right:3.5%" href="http://www.firstcodeacademy.com">
+                            firstcodeacademy.com
+                        </a>
+
+                        <a style="margin:0;font-size:10pt;color:#566371;padding:0% 3.5%;border-right:1px solid; border-left:1px solid; " href="http://blog.firstcodeacademy.com/">
+                            Our Blog
+                        </a>
+
+
+                        <a style="margin:0;font-size:10pt;color:#566371;padding-left:3.5%" href="mailto:hello@firstcodeacademy.com">E-mail Us</a>
+
+                </span>
+
+          <p>
+            <a href="%unsubscribe_url%" style="color:#566371;font-size:13px;font-weight:300;line-height:1.5;margin:0 0 10px;text-decoration:underline;">Unsubscribe</a>
+          </p>
+
+
+
+
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+</html>
