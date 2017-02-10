@@ -175,12 +175,15 @@ class Course(models.Model):
   subdomain = models.CharField(max_length=255, blank=False, null=True, default=None)
 
   def save(self, *args, **kwargs):
+    super(Course, self).save(*args, **kwargs) # Call the "real" save() method.
+
+    # allow object to be saved first or will get this error on new object saves:
+    #   ValueError at /api/v1/codeninjacacheupdate/
+    # save() prohibited to prevent data loss due to unsaved related object 'course'.
+  
     if self.event_type in ('camp', 'event'):
       # if event is a camp or an event, fill the dates
       self.updateClassDates()
-
-
-    super(Course, self).save(*args, **kwargs) # Call the "real" save() method.
 
   @classmethod
   def setActiveCourses(cls, listOfActiveCourse_codes = set()):

@@ -219,7 +219,7 @@ class CodeNinjaCacheUpdateView(views.APIView):
         )
 
         # update course time info, but only for term courses, camps and events have their class dates saved during model save, see models.py
-        if course.evenr_type == 'term':
+        if course.event_type == 'term':
             course.updateClassDates(classDates)
 
         # print 'course created', course.id, created, course.course_code
@@ -245,46 +245,50 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
             obj = None
 
-            try:
-                r = requests.get(i, headers=self.cnHeaders, verify=False)
-                data = r.json()
-
-                # print i
-
-                # filter out certain keys that should not be overwritten
-                data = {k:v for (k,v) in data.items() if k not in ['id'] }
-
-                obj, created = CodeNinjaCache.objects.update_or_create(
-                    # filter by this
-                    endpoint = i,
-
-                    # insert / update this
-                    defaults = { 'data': data },
-                )
-
-                # print obj, created, obj.data, obj.data.get('offerings', [])
-
-                # camps have start / end dates lodged inside the course object
-                # courseDates = obj.getCourseDates()
+            # try:
 
 
-            
-                if obj:
-                    for c in obj.data.get('offerings', []):
+            r = requests.get(i, headers=self.cnHeaders, verify=False)
+            data = r.json()
 
-                        # inject subdomain to c
-                        c['subdomain'] = subdomain
-                        
-                        # print 'offering', c
+            # print i
 
-                        if c['course_code'] not in memo:
-                            c['cnType'] = 'camps'
-                            self.updateCourse(c, classDates = [])
-                        
-                        memo[c['course_code']] = c
+            # filter out certain keys that should not be overwritten
+            data = {k:v for (k,v) in data.items() if k not in ['id'] }
 
-            except Exception as e: 
-                print 'CodeNinjaCacheUpdate', e, i
+            obj, created = CodeNinjaCache.objects.update_or_create(
+                # filter by this
+                endpoint = i,
+
+                # insert / update this
+                defaults = { 'data': data },
+            )
+
+            # print obj, created, obj.data, obj.data.get('offerings', [])
+
+            # camps have start / end dates lodged inside the course object
+            # courseDates = obj.getCourseDates()
+
+
+        
+            if obj:
+                for c in obj.data.get('offerings', []):
+
+                    # inject subdomain to c
+                    c['subdomain'] = subdomain
+                    
+                    # print 'offering', c
+
+                    if c['course_code'] not in memo:
+                        c['cnType'] = 'camps'
+                        self.updateCourse(c, classDates = [])
+                    
+                    memo[c['course_code']] = c
+
+
+
+            # except Exception as e: 
+            #     print 'CodeNinjaCacheUpdate', e, i
 
 
 
@@ -306,70 +310,74 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
             obj = None
 
-            try:
-                r = requests.get(i, headers=self.cnHeaders, verify=False)
-                data = r.json()
-
-                # filter out certain keys that should not be overwritten
-                data = {k:v for (k,v) in data.items() if k not in ['id'] }
-
-                obj, created = CodeNinjaCache.objects.update_or_create(
-                    # filter by this
-                    endpoint = i,
-
-                    # insert / update this
-                    defaults = { 'data': data },
-                )
-
-                # programs have dates listed in class_dates field , extract them
-                # courseDates are supplied as a dict of {<weekday>: [<datetime>...]}
-                courseDates = obj.getCourseDates()
+            # let's not obscure errors
+            # try:
 
 
-                weekdayMapping = {
-                    'mon': 0,
-                    'tue': 1,
-                    'wed': 2,
-                    'thu': 3,
-                    'fri': 4,
-                    'sat': 5,
-                    'sun': 6,
-                }
+
+            r = requests.get(i, headers=self.cnHeaders, verify=False)
+            data = r.json()
+
+            # filter out certain keys that should not be overwritten
+            data = {k:v for (k,v) in data.items() if k not in ['id'] }
+
+            obj, created = CodeNinjaCache.objects.update_or_create(
+                # filter by this
+                endpoint = i,
+
+                # insert / update this
+                defaults = { 'data': data },
+            )
+
+            # programs have dates listed in class_dates field , extract them
+            # courseDates are supplied as a dict of {<weekday>: [<datetime>...]}
+            courseDates = obj.getCourseDates()
 
 
-            
-                if obj:   
-                    for c in obj.data.get('offerings', []):
-                        
-                        # print 'offering', c
-
-                        # inject subdomain to c
-                        c['subdomain'] = subdomain
-
-                        if c['course_code'] not in memo:
-                            c['cnType'] = 'programs'
-
-                            # courseDates are supplied as a dict of {<weekday>: [<datetime>...]}
-                            # classDates only selects the time of date
-                            classDates = []
-
-                            # these are 'Mon', 'Tue'
-                            class_day = c.get('class_day', '')
-
-                            # is the translated numerical mapping as specified in weekdayMapping
-                            class_weekday = weekdayMapping.get(class_day.lower(), None)
-                            if class_weekday is not None:
-                                classDates = courseDates.get(class_weekday, [])
-                                # print 'extracted classDates', classDates
+            weekdayMapping = {
+                'mon': 0,
+                'tue': 1,
+                'wed': 2,
+                'thu': 3,
+                'fri': 4,
+                'sat': 5,
+                'sun': 6,
+            }
 
 
-                            self.updateCourse(c, classDates = classDates)
-                        
-                        memo[c['course_code']] = c
+        
+            if obj:   
+                for c in obj.data.get('offerings', []):
+                    
+                    # print 'offering', c
+
+                    # inject subdomain to c
+                    c['subdomain'] = subdomain
+
+                    if c['course_code'] not in memo:
+                        c['cnType'] = 'programs'
+
+                        # courseDates are supplied as a dict of {<weekday>: [<datetime>...]}
+                        # classDates only selects the time of date
+                        classDates = []
+
+                        # these are 'Mon', 'Tue'
+                        class_day = c.get('class_day', '')
+
+                        # is the translated numerical mapping as specified in weekdayMapping
+                        class_weekday = weekdayMapping.get(class_day.lower(), None)
+                        if class_weekday is not None:
+                            classDates = courseDates.get(class_weekday, [])
+                            # print 'extracted classDates', classDates
 
 
-            except Exception as e: 
-                print 'CodeNinjaCacheUpdate', e, i
+                        self.updateCourse(c, classDates = classDates)
+                    
+                    memo[c['course_code']] = c
+
+
+            # except Exception as e: 
+            #     print 'CodeNinjaCacheUpdate', e, i
 
 
         return memo
