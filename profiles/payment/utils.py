@@ -50,6 +50,8 @@ def send_order_confirm_email(order):
     print 'course does not exist...', order.course_code,
     return False
 
+  course = course.first()
+
 
   payload = {
     'guardian': buyerUser,
