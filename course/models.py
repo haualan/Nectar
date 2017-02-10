@@ -182,6 +182,14 @@ class Course(models.Model):
 
     super(Course, self).save(*args, **kwargs) # Call the "real" save() method.
 
+  @classmethod
+  def setActiveCourses(cls, listOfActiveCourse_codes = set()):
+    """
+    given a list of course_codes as str, inactivate courses outside this list
+    """ 
+
+    cls.objects.filter(course_code__in = listOfActiveCourse_codes).update(active = True)
+    cls.objects.exclude(course_code__in = listOfActiveCourse_codes).update(active = False)
 
   def firstDate(self):
     """

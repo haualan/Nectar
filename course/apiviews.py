@@ -395,6 +395,8 @@ class CodeNinjaCacheUpdateView(views.APIView):
         allcampsMemo = {}
         allprogramsMemo = {}
 
+
+
         for s in subdomains:
 
             # take a look at the active camps first
@@ -430,9 +432,10 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
 
 
+        allActiveCourse_codesMemo = set(allcampsMemo.keys()).union(allprogramsMemo.keys())  
 
-        
-
+        # set the courses across the board
+        Course.setActiveCourses(allActiveCourse_codesMemo)
 
 
 
