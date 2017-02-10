@@ -88,7 +88,7 @@ def send_email(email, subject, text, html ):
   return r.status_code
 
 
-def send_test_email(email, subject, text, html ):
+def send_test_email():
   """
   base function for sending email
   """
