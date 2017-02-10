@@ -128,7 +128,7 @@ def renderOrderConfirmTemplate(p={}, isHtml = False):
 
   order = p.get('order')
   formatPriceStr = '{} {}'.format(order.localCurrencyChargedAmount, order.currency.upper())
-  localizedTransactionDateTime = order.localizedTransactionDateTime
+  localizedTransactionDateTime = order.localizedTransactionDateTime()
 
   context = {
     'guardianFirstname': guardianFirstname,
