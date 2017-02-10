@@ -195,8 +195,9 @@ class Course(models.Model):
       return d.strftime('%b %d, %Y')
 
     # search CourseClassDateRelationship for dates instead.
-
-
+    d = self.courseclassdaterelationship_set.filter(ignore = False).aggregate(Min('startDateTime')).get('startDateTime__min', None)
+    if d is not None:
+      return d.strftime('%b %d, %Y')
     # return a default date
     return None
 
