@@ -9,7 +9,7 @@ from django.conf import settings
 from django.dispatch import receiver
 from django.forms import ModelForm
 from datetime import datetime
-from django.db.models import Count
+from django.db.models import Avg, Case, Count, F, Max, Min, Prefetch, Q, Sum, When
 
 
 from datetime import timedelta
