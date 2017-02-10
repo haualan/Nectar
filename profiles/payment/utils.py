@@ -142,6 +142,10 @@ def renderOrderConfirmTemplate(p={}, isHtml = False):
   }
 
 
+  print 'context'
+  print context
+
+
 
   if isHtml == False:
     return u"""
