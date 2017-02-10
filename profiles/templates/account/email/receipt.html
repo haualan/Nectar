@@ -31,10 +31,10 @@
                   <hr style="border-color:rgba(0,0,0,0.035);border-width:1px; margin:30px;">
 
 
-                  <p>Dear {{ guardian.firstname|default_if_none:"Guardian / Parent" }},</p>
+                  <p>Dear {{ guardianFirstname|default_if_none:"Guardian / Parent" }},</p>
 
                   <p>
-                  I'm Natasha from First Code and I’d like to personally welcome you and {{student.firstname}}. The term starts soon and we are very excited to see {{student.firstname}} for the Fall term!
+                  I'm Natasha from First Code and I’d like to personally welcome you and {{studentFirstname}}. The term starts soon and we are very excited to see {{studentFirstname}} for the Fall term!
                   </p> 
 
                   <p>
@@ -44,18 +44,18 @@
                   <p>We have received your child’s information below:</p>
 
                   <p>
-                  Day: {{course.firstDate()}} <br>
-                  Time: {{course.firstTime()}} <br>
-                  Course: {{course.name}} <br>
-                  Location: {{course.formatLocation()}} <br>
+                  Day: {{firstDate}} <br>
+                  Time: {{firstTime}} <br>
+                  Course: {{courseName}} <br>
+                  Location: {{formatLocation}} <br>
                   Full Class Calendar: <a style="" href="https://hk.firstcodeacademy.com/en/programs/calendar">
                             Click here
                         </a><br>
                   </p>
 
                   <p>
-                  Order Total: {{ order.formatPriceStr }} <br>
-                  Order Date: {{ order.transactionDateTime }} <br>
+                  Order Total: {{ formatPriceStr }} <br>
+                  Order Date: {{ localizedTransactionDateTime}} <br>
                   </p>
 
 
@@ -73,7 +73,7 @@
                   </p> 
 
                   <p>
-                  We will see you and {{student.firstname}} on 1st day of class on {{course.firstDate}}! 
+                  We will see you and {{studentFirstname}} on 1st day of class on {{firstDate}}! 
                   </p>
 
                   <p>
