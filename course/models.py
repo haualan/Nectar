@@ -135,6 +135,7 @@ event_type_choices  = (
   ('term', 'term'),
   ('camp', 'camp'),
   ('event', 'event'),
+  ('workshop', 'workshop'),
 )
 
 event_type_choices_list  =  [i[0] for i in event_type_choices ]
@@ -180,8 +181,8 @@ class Course(models.Model):
     # allow object to be saved first or will get this error on new object saves:
     #   ValueError at /api/v1/codeninjacacheupdate/
     # save() prohibited to prevent data loss due to unsaved related object 'course'.
-  
-    if self.event_type in ('camp', 'event'):
+
+    if self.event_type not in ('term'):
       # if event is a camp or an event, fill the dates
       self.updateClassDates()
 
@@ -280,7 +281,7 @@ class Course(models.Model):
         'endDateTime': i.replace(hour = ehh, minute = emm, second = ess, microsecond = ems),
       } for i in courseDates]
 
-    elif self.event_type in ['camp', 'event']:
+    else:
       # these types of events can rely on start and endDates
       start_date = self.start_date
       if type(start_date) is not timezone.datetime:
