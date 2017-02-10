@@ -124,6 +124,13 @@ currencyMultiplier = {
   'twd': 0.01,
 }
 
+
+currencyInferTz = {
+  'hkd': timezone.pytz.timezone("Asia/Hong_Kong"),
+  'sgd': timezone.pytz.timezone("Asia/Singapore"),
+  'twd': timezone.pytz.timezone("Asia/Taipei"),
+}
+
 source_choices = (
   ('CC', 'credit card'),
   ('CASH', 'cash'),
@@ -140,6 +147,9 @@ UserModel = User
 
 
 from course.models import Course
+
+
+
 
 class Ledger(models.Model):
   """
@@ -328,7 +338,27 @@ class Ledger(models.Model):
     # this returns the default values
     return localCurrencyChargedAmount , transactionDateTime 
 
+  def getBuyerUser(self):
+    """
+    returns the buyer user else none
+    """
 
+    buyerUser = UserModel.objects.filter(id = self.buyerID)
+    if buyerUser:
+      return buyerUser.first()
+
+    return None
+
+  def getStudentUser(self):
+    """
+    returns the student user else none
+    """
+
+    studentUser = UserModel.objects.filter(id = self.studentID)
+    if studentUser:
+      return studentUser.first()
+
+    return None
 
   def processRawData(self):
     """
@@ -393,6 +423,17 @@ class Ledger(models.Model):
     # has to be at the bottom, requires other precalculated data at the top
     self.localCurrencyChargedAmount, self.transactionDateTime = self.extractLocalCurrencyChargedAmount()
 
+  def localizedTransactionDateTime(self):
+    """
+    given currency, guess the local datetime from utc time
+    """
+
+    tzLocal = currencyInferTz.get(self.currency.lower(), None)
+
+    if tzLocal is None:
+      return self.transactionDateTime
+
+    return tzLocal.normalize(self.transactionDateTime)
 
 
 

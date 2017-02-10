@@ -476,7 +476,7 @@ CODENINJACACHEENDPOINTS = [
     'http://hk.firstcodeacademy.com/api/camps/4/offerings',
 ]
 
-
+DEFAULT_FROM_EMAIL = 'hello@firstcodeacademy.com'
 
 
 from config import *
