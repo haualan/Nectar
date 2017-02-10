@@ -18,6 +18,9 @@ from django.conf import settings
 from django.utils import timezone
 from django.template.loader import render_to_string
 
+from course.models import Course
+
+
 import requests
 # from allauth.account.models import EmailAddress, EmailConfirmation
 
