@@ -218,8 +218,9 @@ class CodeNinjaCacheUpdateView(views.APIView):
             defaults = c,
         )
 
-        # update course time info
-        course.updateClassDates(classDates)
+        # update course time info, but only for term courses, camps and events have their class dates saved during model save, see models.py
+        if course.evenr_type == 'term':
+            course.updateClassDates(classDates)
 
         # print 'course created', course.id, created, course.course_code
 

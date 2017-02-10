@@ -131,6 +131,14 @@ formatLocation_choices = {
   'sheung wan': 'Unit 302-305, 3/F, Hollywood Centre, 233 Hollywood Road, Sheung Wan, Hong Kong',
 }
 
+event_type_choices  = (
+  ('term', 'term'),
+  ('camp', 'camp'),
+  ('event', 'event'),
+)
+
+event_type_choices_list  =  [i[0] for i in event_type_choices ]
+
 class Course(models.Model):
   name = models.CharField(max_length=255, blank=False)
 
@@ -165,6 +173,15 @@ class Course(models.Model):
   lastModified = models.DateTimeField(auto_now= True)
 
   subdomain = models.CharField(max_length=255, blank=False, null=True, default=None)
+
+  def save(self, *args, **kwargs):
+    if self.event_type in ('camp', 'event'):
+      # if event is a camp or an event, fill the dates
+      self.updateClassDates()
+
+
+    super(Course, self).save(*args, **kwargs) # Call the "real" save() method.
+
 
   def firstDate(self):
     """
