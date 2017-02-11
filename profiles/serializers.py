@@ -282,6 +282,12 @@ def get_model_concrete_fields(MyModel):
     ]
 
 
+class SchoolSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = School
+        fields = get_model_concrete_fields(model) + ['url']
+
+
 class StudentResetPWSerializer(serializers.Serializer):
     password1 = serializers.CharField(max_length=200)
     password2 = serializers.CharField(max_length=200)
@@ -410,10 +416,6 @@ class GuardianStudentRelationSerializer(serializers.HyperlinkedModelSerializer):
         # fields = '__all__' 
         fields = get_model_concrete_fields(model) + ['url']
 
-class SchoolSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = School
-        fields = get_model_concrete_fields(model) + ['url']
 
 class SchoolUpdateOrCreateSerializer(serializers.Serializer):
     avatar_url = serializers.URLField(allow_blank=True, label='Avatar_url', max_length=200, required=False)
