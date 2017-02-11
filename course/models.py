@@ -232,7 +232,11 @@ class Course(models.Model):
     """
     returns a pretty format of locations 
     """
-    return formatLocation_choices.get(self.location, None)
+    r =  formatLocation_choices.get(self.location.lower(), None)
+    if r is None:
+      return self.location
+
+    return r
 
   def updateClassDates(self, courseDates = []):
     """
