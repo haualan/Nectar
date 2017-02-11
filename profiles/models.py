@@ -69,7 +69,7 @@ class User(AbstractEmailUser):
 
   # timezone offset relative to UTC
   tzName = models.CharField(max_length=100, default = 'Hongkong',  choices = tzName_choices)
-  phoneNumber = models.CharField(max_length=50, blank=True, null=False)
+  phoneNumber = models.CharField(max_length=50, blank=True, null=False, default="")
   location = models.CharField(max_length=100, blank=True, null=True)
 
   lon = models.DecimalField(max_digits=9, decimal_places=6, null=True)
