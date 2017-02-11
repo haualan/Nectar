@@ -339,6 +339,8 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
     lat = serializers.DecimalField(allow_null=True, decimal_places=10, max_digits=19, required=False)
     lon = serializers.DecimalField(allow_null=True, decimal_places=10, max_digits=19, required=False)
 
+    school = SchoolSerializer()
+
 
     class Meta:
         model = User
