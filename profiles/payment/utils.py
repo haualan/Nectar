@@ -146,46 +146,44 @@ def renderOrderConfirmTemplate(p={}, isHtml = False):
   print context
 
 
+  # if isHtml == False:
+  #   return u"""
 
-  if isHtml == False:
-    return u"""
+  #   Order Confirmation
 
-    Order Confirmation
+  #   Dear {[guardianFirstname]},
 
-    Dear {[guardianFirstname]},
+  #   I'm Natasha from First Code and I’d like to personally welcome you and {[studentFirstname]}. The term starts soon and we are very excited to see {[studentFirstname]} for the Fall term!
 
-    I'm Natasha from First Code and I’d like to personally welcome you and {[studentFirstname]}. The term starts soon and we are very excited to see {[studentFirstname]} for the Fall term!
+  #   We believe that coding can empower us to become creators and not just consumers of technology. It means a lot to us to have the opportunity to be part of this journey with your child.
 
-    We believe that coding can empower us to become creators and not just consumers of technology. It means a lot to us to have the opportunity to be part of this journey with your child.
+  #   We have received your child’s information below:
 
-    We have received your child’s information below:
-
-    Day: {[firstDate]}
-    Time: {[firstTime]}
-    Course: {[courseName]}
-    Location: {[formatLocation]}
-    Full Class Calendar: https://hk.firstcodeacademy.com/en/programs/calendar
-
+  #   Day: {[firstDate]}
+  #   Time: {[firstTime]}
+  #   Course: {[courseName]}
+  #   Location: {[formatLocation]}
+  #   Full Class Calendar: https://hk.firstcodeacademy.com/en/programs/calendar
 
 
-    Order Total: {[formatPriceStr]} <br>
-    Order Date: {[localizedTransactionDateTime]} <br>
+
+  #   Order Total: {[formatPriceStr]} <br>
+  #   Order Date: {[localizedTransactionDateTime]} <br>
 
 
-    Check our calendar for useful information about your schedule, what to bring to the class, what to do if you miss a class, how to find us etc.
-    class calendar: https://hk.firstcodeacademy.com/en/programs/calendar
+  #   Check our calendar for useful information about your schedule, what to bring to the class, what to do if you miss a class, how to find us etc.
+  #   class calendar: https://hk.firstcodeacademy.com/en/programs/calendar
 
-    Meanwhile, feel free to reach out to me via email or at 2772-2108 if you have any questions.
+  #   Meanwhile, feel free to reach out to me via email or at 2772-2108 if you have any questions.
 
 
-    We will see you and {[studentFirstname]} on 1st day of class on {[firstDate]}! 
+  #   We will see you and {[studentFirstname]} on 1st day of class on {[firstDate]}! 
 
-    Kind regards,
-    Natasha       
-    Community Manager
-    First Code Academy
-
-    """.format(context)
+  #   Kind regards,
+  #   Natasha       
+  #   Community Manager
+  #   First Code Academy
+  #   """.format(context)
 
   return render_to_string("account/email/receipt.html", context).strip()
 
