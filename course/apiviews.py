@@ -435,14 +435,16 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
                         # events have dates and some other fields injected in its parent call http://hk.firstcodeacademy.com/api/events/
                         # inject them to this child course
-                        c['start_date'] = p['start_date']
-                        c['end_date'] = p['end_date']
+                        c['start_date'] = c['event_date']
+                        c['end_date'] = c['event_date']
+
                         c['start_time'] = p['start_time']
                         c['end_time'] = p['end_time']
                         c['event_type'] = p['event_type']
 
                         # inject prices, which are all the same for the set of courses in this event
                         c['prices'] = obj.data.get('prices', [])
+                        c['name'] = obj.data.get('name', '')
 
                         self.updateCourse(c, classDates = [])
                     
@@ -529,8 +531,9 @@ class CodeNinjaCacheUpdateView(views.APIView):
             activeEventsData_payloads = [
                 { 
                     'url':'http://{}.firstcodeacademy.com/api/events/{}'.format(s, i['id']),
-                    'start_date':  i['event_date'],
-                    'end_date':  i['event_date'],
+                    # the event_date field is not correct, look at the offerings instead
+                    # 'start_date':  i['event_date'],
+                    # 'end_date':  i['event_date'],
                     'start_time': i['start_time'],
                     'end_time': i['end_time'],
                     'event_type': i['event_type'],
