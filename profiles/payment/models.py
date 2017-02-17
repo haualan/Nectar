@@ -338,6 +338,12 @@ class Ledger(models.Model):
     # this returns the default values
     return localCurrencyChargedAmount , transactionDateTime 
 
+  def formatPriceStr(self):
+    """
+    returns a pretty formatted string for prices
+    """
+    return '{} {}'.format(int(self.localCurrencyChargedAmount), self.currency.upper())
+
   def getBuyerUser(self):
     """
     returns the buyer user else none

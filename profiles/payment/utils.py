@@ -64,9 +64,11 @@ def send_order_confirm_email(order):
 
   text = renderOrderConfirmTemplate(payload, isHtml = False)
 
-  subject = 'First Code Academy Order Confirmation'
+  subject = 'First Code Academy Registration Confirmation'
 
-  return send_email(email, subject, text, html )
+  subdomain = course.subdomain
+
+  return send_email(email, subject, text, html, subdomain )
 
 
 
@@ -74,16 +76,53 @@ def send_order_confirm_email(order):
   # print r.status_code, context['email'],  context['recipient_name'], context['subject'],  r.text
 
 
-def send_email(email, subject, text, html ):
+
+
+
+
+subdomainSpecificMapping = {
+  'hk': {
+    'internalName': 'Natasha',
+    'fullClassCalendarUrl': 'https://hk.firstcodeacademy.com/en/programs/calendar',
+    'emailFrom': 'hello@firstcodeacademy.com',
+    'officePhone': '+852 2772 2108', 
+    'officeLocation': 'Unit 302-305, 3/F, Hollywood Centre, 233 Hollywood Road, Sheung Wan, Hong Kong'
+  },
+  'sg': {
+    'internalName': 'Wee Ping',
+    'fullClassCalendarUrl': 'https://sg.firstcodeacademy.com/en/programs/calendar',
+    'emailFrom': 'hellosg@firstcodeacademy.com',
+    'officePhone': '+65 6820 2633',
+    'officeLocation': '#04-13, Stamford Court, 61 Stamford Road, Singapore 178892'
+  },
+  'tw': {
+    'internalName': 'Chi',
+    'fullClassCalendarUrl': 'https://tw.firstcodeacademy.com/en/programs/calendar',
+    'emailFrom': 'hello.tw@firstcodeacademy.com',
+    'officePhone': '+886 909 818 260',
+
+    # tw has no fixed location yet
+    'officeLocation': ''
+
+  },
+
+}
+
+
+def send_email(email, subject, text, html, subdomain = 'hk' ):
   """
   base function for sending email
   """
 
+  # hk serves as a fallback
+  if len(subdomain) == 0:
+    subdomain = 'hk'
+
   r = requests.post(
     settings.MAILGUN_API_URL,
     auth=("api", settings.MAILGUN_KEY),
-    data={"from": settings.DEFAULT_FROM_EMAIL,
-          "h:Reply-To": "hello@firstcodeacademy.com",
+    data={"from": subdomainSpecificMapping.get(subdomain).get('emailFrom'),
+          "h:Reply-To": subdomainSpecificMapping.get(subdomain).get('emailFrom'),
           "to": email,
           "subject": subject,
           "text": text,
@@ -101,9 +140,9 @@ def send_test_email():
   subject = 'test email from server'
   text = 'test text'
   html = '<p>test html in email</p>'
+  subdomain = 'hk'
 
-  return send_email(email, subject, text, html )
-
+  return send_email(email, subject, text, html, subdomain )
 
 
 def renderOrderConfirmTemplate(p={}, isHtml = False):
@@ -120,28 +159,70 @@ def renderOrderConfirmTemplate(p={}, isHtml = False):
   studentFirstname = p.get('student').firstname
 
   if not studentFirstname:
-    studentFirstname = 'your student'
+    studentFirstname = p.get('student').displayName
 
 
-  firstDate = p.get('course').firstDate()
-  firstTime = p.get('course').firstTime()
-  courseName = p.get('course').name
-  formatLocation = p.get('course').formatLocation()
+  course = p.get('course')
+
+  
+
+  firstTime = course.firstTime()
+  courseName = course.name
+  courseEventType = course.event_type
+  formatLocation = course.formatLocation()
+
+  subdomain = course.subdomain
+
+  firstDate = course.firstDate()
+  lastDate = course.lastDate()
+
+  dateStr = firstDate
+  if courseEventType in ['term', 'camp']:
+    dateStr = '{} - {}'.format(firstDate, lastDate)
+
+
+  internalName = subdomainSpecificMapping.get(subdomain).get('internalName')
+  fullClassCalendarUrl = subdomainSpecificMapping.get(subdomain).get('fullClassCalendarUrl')
+  officePhone = subdomainSpecificMapping.get(subdomain).get('officePhone')
+  officeLocation = subdomainSpecificMapping.get(subdomain).get('officeLocation')
+  emailFrom = subdomainSpecificMapping.get(subdomain).get('emailFrom')
+
 
 
   order = p.get('order')
-  formatPriceStr = '{} {}'.format(order.localCurrencyChargedAmount, order.currency.upper())
+  formatPriceStr = order.formatPriceStr()
+  orderCode = order.event_id
+
+
+  
   localizedTransactionDateTime = order.localizedTransactionDateTime()
 
   context = {
     'guardianFirstname': guardianFirstname,
     'studentFirstname': studentFirstname,
-    'firstDate': firstDate,
+    # 'firstDate': firstDate,
+    'dateStr': dateStr,
+
     'firstTime': firstTime,
     'courseName': courseName,
     'formatLocation': formatLocation,
     'formatPriceStr': formatPriceStr,
     'localizedTransactionDateTime': localizedTransactionDateTime,
+    'courseEventType': courseEventType,
+
+    'fullClassCalendarUrl':fullClassCalendarUrl,
+    'internalName': internalName,
+    'officePhone': officePhone,
+    'officeLocation': officeLocation,
+
+    'emailFrom': emailFrom,
+
+    'year': timezone.now().year,
+
+
+
+
+
   }
 
 

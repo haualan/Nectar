@@ -123,10 +123,10 @@ class UserCourseRelationship(models.Model):
     unique_together = ('user', 'course',)
 
 
-formatLocation_choices = {
-  'kowloon': 'Unit 404, 4/F, Kowloon Building, 555 Nathan Road, Yau Ma Tei, Hong Kong',
-  'sheung wan': 'Unit 302-305, 3/F, Hollywood Centre, 233 Hollywood Road, Sheung Wan, Hong Kong',
-}
+# formatLocation_choices = {
+#   'kowloon': 'Unit 404, 4/F, Kowloon Building, 555 Nathan Road, Yau Ma Tei, Hong Kong',
+#   'sheung wan': 'Unit 302-305, 3/F, Hollywood Centre, 233 Hollywood Road, Sheung Wan, Hong Kong',
+# }
 
 event_type_choices  = (
   ('term', 'term'),
@@ -211,6 +211,25 @@ class Course(models.Model):
     # return a default date
     return None
 
+  def lastDate(self):
+    """
+    returns the last startDate of the course
+    """
+    d = self.end_date
+    if d is not None:
+      # example:
+      # In [17]: n.strftime('%b %d, %Y')
+      # Out[17]: 'Feb 09, 2017'
+      return d.strftime('%b %d, %Y')
+
+    # search CourseClassDateRelationship for dates instead.
+    d = self.courseclassdaterelationship_set.filter(ignore = False).aggregate(Max('startDateTime')).get('startDateTime__max', None)
+    if d is not None:
+      return d.strftime('%b %d, %Y')
+    # return a default date
+    return None
+
+
   def firstTime(self):
     """
     returns the first date of the course
@@ -230,11 +249,15 @@ class Course(models.Model):
     """
     returns a pretty format of locations 
     """
-    r =  formatLocation_choices.get(self.location.lower(), None)
-    if r is None:
+
+    # 
+    if self.address:
+      return self.address
+
+    if self.location:
       return self.location
 
-    return r
+    return 'Please call to confirm'
 
   def updateClassDates(self, courseDates = []):
     """

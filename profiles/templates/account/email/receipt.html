@@ -19,14 +19,11 @@
             </tbody>
           </table>
 
-          <table width="100%" style="border-collapse:separate;border-spacing:0;table-layout:fixed;padding:0 0 60px">
+          <table width="100%" style="border-collapse:separate;border-spacing:0;table-layout:fixed;padding:0 0 0px">
             <tbody>
               <tr>
-                <td style="color:#818181;font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5;; text-align:left;padding-bottom:75px; text-align:left">
+                <td style="color:#818181;font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5;; text-align:left;padding-bottom:25px; text-align:left">
 
-                  <h2 style="color:#566371; margin-bottom:0px">
-                    Order Confirmation
-                  </h2>
 
                   <hr style="border-color:rgba(0,0,0,0.035);border-width:1px; margin:30px;">
 
@@ -34,7 +31,7 @@
                   <p>Dear {{ guardianFirstname|default_if_none:"Guardian / Parent" }},</p>
 
                   <p>
-                  I'm Natasha from First Code and I’d like to personally welcome you and {{studentFirstname}}. The term starts soon and we are very excited to see {{studentFirstname}} for the Fall term!
+                  I'm {{ internalName }} from First Code and I’d like to personally welcome you and your child, {{studentFirstname}}, to our academy. The class will start soon and we are very excited to see {{studentFirstname}} for the new term!
                   </p> 
 
                   <p>
@@ -44,41 +41,24 @@
                   <p>We have received your child’s information below:</p>
 
                   <p>
-                  Day: {{firstDate}} <br>
+                  Day(s): {{dateStr}} <br>
                   Time: {{firstTime}} <br>
                   Course: {{courseName}} <br>
                   Location: {{formatLocation}} <br>
-                  Full Class Calendar: <a style="" href="https://hk.firstcodeacademy.com/en/programs/calendar">
+                  Full Class Calendar: <a style="" href="{{ fullClassCalendarUrl }}">
                             Click here
                         </a><br>
                   </p>
 
-                  <p>
-                  Order Total: {{ formatPriceStr }} <br>
-                  Order Date: {{ localizedTransactionDateTime}} <br>
-                  </p>
-
-
-
 
 
                   <p>
-                  <a style="" href="https://hk.firstcodeacademy.com/en/programs/calendar">
-                  Click here for an info pack
-                  </a> with some useful information about your schedule, what to bring to the class, what to do if you miss a class, how to find us etc.
-                  </p>
-
-                  <p>
-                  Meanwhile, feel free to reach out to me via email or at 2772-2108 if you have any questions.
-                  </p> 
-
-                  <p>
-                  We will see you and {{studentFirstname}} on 1st day of class on {{firstDate}}! 
+                  Meanwhile, feel free to reach out to me via email or at {{ officePhone }} if you have any questions. We will see you and {{studentFirstname}} on 1st day of class on {{firstDate}}! 
                   </p>
 
                   <p>
                   Kind regards, <br>
-                  Natasha       <br>
+                  {{ internalName }}  <br>
                   Community Manager <br>
                   First Code Academy <br>
                   </p>
@@ -87,61 +67,408 @@
                   <hr style="border-color:rgba(0,0,0,0.035);border-width:1px; margin:30px;">
 
 
+
                 </td>
               </tr>
             </tbody>
           </table>
+
+
+<!-- subbanner receipt -->
+                    <table bgcolor="#e56060" border="0" cellpadding="0" cellspacing="0" width="500" align="center" style="">
+                      <tbody>
+                        <tr>
+                          <td align="center" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">
+                            <table class="width" border="0" cellpadding="0" cellspacing="0" width="500">
+                              <tbody>
+                                <tr>
+                                  <td colspan="4" height="8" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="100%">
+                                    <div class="clear" style="height: 8px; width: 1px;">&nbsp;</div>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td class="perm-padding" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="20">
+                                    <div class="clear" style="height: 1px 20px;"></div>
+                                  </td>
+                                  <td align="left" class="subbanner-item font-small" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly; color: #ffffff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; line-height: 17px; text-shadow: 0 1px 1px #e56060;" width="230">
+                                    <span
+                                      class="apple-override-header"
+                                      style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly; color: #ffffff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; line-height: 17px; text-shadow: 0 1px 1px #e56060;"
+                                      >
+                                        {{ localizedTransactionDateTime }}
+                                    </span>
+                                  </td>
+                                  <td align="right" class="subbanner-item font-small" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly; color: #ffffff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; line-height: 17px; text-shadow: 0 1px 1px #e56060;" width="230">
+                                    <span class="apple-override-header" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly; color: #ffffff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; line-height: 17px; text-shadow: 0 1px 1px #e56060;">{{ orderCode }}</span>
+                                  </td>
+                                  <td class="perm-padding" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="20">
+                                    <div class="clear" style="height: 1px 20px;"></div>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td colspan="4" height="8" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="100%">
+                                    <div class="clear" style="height: 8px; width: 1px;">&nbsp;</div>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <!-- /subbanner -->
+
+
+
+              <!-- summary -->
+<table bgcolor="ffffff" border="0" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e4e6e8; padding:0 0 60px" width="100%">
+  <tbody>
+    <tr>
+      <td align="center" style="border: 0; margin: 0; padding: 0;">
+        <table border="0" cellpadding="0" cellspacing="0" class="width" width="500">
+          <tbody>
+            <tr>
+              <td class="temp-padding" style="border: 0; margin: 0; padding: 0; mso-line-height-rule: exactly; font-size: 1px; line-height: 1px;">
+                <div class="clear" style="height: 1px; width: 20px;"></div>
+              </td>
+              <td style="border: 0; margin: 0; padding: 0; mso-line-height-rule: exactly; font-size: 1px; line-height: 1px;" width="460">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                  <tbody>
+
+                    <!-- title -->
+                    <tr>
+                      <td colspan="5" height="12" style="border: 0; margin: 0; padding: 0; mso-line-height-rule: exactly; font-size: 1px; line-height: 1px;">
+                        <div class="clear" style="height: 12px; width: 1px;">&nbsp;</div>
+                      </td>
+                    </tr>
+                    <tr class="summary-item">
+                      <td class="summary-padding" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px;" width="1">
+                        <div class="clear" style="height: 1px; width: 1px;"></div>
+                      </td>
+                      <td align="left" class="font-small" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; color: #77858c; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: bold; line-height: 20px;" width="100%">
+                        Description
+                      </td>
+                      <td style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px;" width="10">
+                        <div class="clear" style="height: 1px; width: 10px;"></div>
+                      </td>
+                      <td align="right" class="font-small" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; color: #77858c; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: bold; line-height: 20px;" width="120">
+                        Amount
+                      </td>
+                      <td class="summary-padding" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px;" width="1">
+                        <div class="clear" style="height: 1px; width: 1px;"></div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="5" height="12" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly; border-bottom: 1px solid #eaeff2;">
+                        <div class="clear" style="height: 12px; width: 1px;">&nbsp;</div>
+                      </td>
+                    </tr>
+                    <!-- /title -->
+
+                      <!-- item -->
+                      <tr>
+                        <td colspan="5" height="11" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly; border-top: 1px solid #eaeff2;">
+                          <div class="clear" style="height: 11px; width: 1px;">&nbsp;</div>
+                        </td>
+                      </tr>
+                      <tr class="summary-item">
+                        <td class="summary-padding" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px;" width="1">
+                          <div class="clear" style="height: 1px; width: 1px;"></div>
+                        </td>
+                        <td align="left" class="font-medium" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; color: #292e31; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; line-height: 17px;" width="100%">
+                          <span class="apple-override-dark" style="border: 0; margin: 0; padding: 0;">{{courseName}}</span>
+                        </td>
+                        <td style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px;" width="10">
+                          <div class="clear" style="height: 1px; width: 10px;"></div>
+                        </td>
+                        <td align="right" class="font-medium" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; color: #292e31; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; line-height: 17px;" width="120">
+                          {{ formatPriceStr }}
+                        </td>
+                        <td class="summary-padding" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px;" width="1">
+                          <div class="clear" style="height: 1px; width: 1px;"></div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="5" height="12" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">
+                          <div class="clear" style="height: 12px; width: 1px;">&nbsp;</div>
+                        </td>
+                      </tr>
+                      <!-- /item -->
+
+                    <!-- breakdown -->
+                    <tr>
+                      <td colspan="5" align="right" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly; border-top: 2px solid #eaeff2;">
+                        <table border="0" cellpadding="0" cellspacing="0" class="width" width="320">
+                          <tbody>
+
+                            <!-- amount -->
+                            <tr>
+                              <td colspan="5" height="11" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">
+                                <div class="clear" style="height: 11px; width: 1px;">&nbsp;</div>
+                              </td>
+                            </tr>
+                            <tr class="summary-item">
+                              <td class="summary-padding" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px;" width="1">
+                                <div class="clear" style="height: 1px; width: 1px;"></div>
+                              </td>
+                              <td align="left" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; color: #292e31; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: bold; line-height: 17px;" width="100">
+                                Total
+                              </td>
+                              <td style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px;" width="10">
+                                <div class="clear" style="height: 1px; width: 10px;"></div>
+                              </td>
+                              <td align="right" class="summary-total width" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; color: #292e31; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 16px; font-weight: bold; line-height: 17px;" width="208">
+                                {{ formatPriceStr }}
+                              </td>
+                              <td class="summary-padding" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px;" width="1">
+                                <div class="clear" style="height: 1px; width: 1px;"></div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td colspan="5" height="12" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">
+                                <div class="clear" style="height: 12px; width: 1px;">&nbsp;</div>
+                              </td>
+                            </tr>
+                            <!-- /amount -->
+
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                    <!-- /breakdown -->
+
+                  </tbody>
+                </table>
+              </td>
+              <td class="temp-padding" style="border: 0; margin: 0; padding: 0; mso-line-height-rule: exactly; font-size: 1px; line-height: 1px;">
+                <div class="clear" style="height: 1px; width: 20px;"></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<!-- /summary -->
+
+
+
+
         </td>
       </tr>
     </tbody>
   </table>
 
-  <table cellspacing="0" border="0" cellpadding="0" align="center" width="100%" bgcolor="transparent" style="background:#F8DCC9;border-collapse:separate;border-spacing:0;font-family:Helvetica,Arial,sans-serif;letter-spacing:0;max-width:100%;table-layout:fixed">
+
+
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnFollowContentContainer" style="min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
     <tbody>
-      <tr>
-        <td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;padding:26px 30px 22px;text-align:center;width:100%" align="center">
-
-          <h2 style="color:#566371;font-size:13px;font-weight:bold;text-decoration:none">Follow us</h2>
-          <p style="color:#566371;font-size:13px;font-weight:300;line-height:1.5;margin:27px 0 20px;text-decoration:none">
-
-            <a href="https://www.facebook.com/firstcodeacademy" style="border:none;color:#566371;font-size:13px;outline:none!important;text-decoration:none" target="_blank"><img alt="Facebook" src="https://ci5.googleusercontent.com/proxy/Sw4CyrfZdH2ipipO5GGNZq541laK-wiLVI-RU2JZTg-g4jqbKW5GFUKX_c6s4y63jcpI3tkHa72T7XnBMTPBMnKxmsRd1AK5MWsMWCsuWvYR3FxE3n_bxqIj5atqKj9RWhF7t9sgkutBpmXtTI2bI2GVA3SaOIkhxCRrNFwzvA=s0-d-e1-ft#https://marketing.intercomassets.com/assets/email/broadcast/facebook-2263526f2b7c7cf3c7c2a066588b01ef.png"
-                width="60" class="CToWUd"></a>
-
-
-            <a href="https://twitter.com/firstcode" style="border:none;color:#566371;font-size:13px;outline:none!important;text-decoration:none" target="_blank"><img alt="Twitter" src="https://ci6.googleusercontent.com/proxy/sjVAIvWOdBtARaYWoShRNhs0fhniaD20hHhLwlpCLEHOq6vo9yRlrUJZz-A5Pjjy9rWd2V-RvhIOHeO3vnlEGdDBNdtg0ZZ6oh087dXr-KdF7A1ziOzl_e5zRbl_Mf8-QfvbeWyoCRrf7QZsoWH7NoX07CwtPZDDfmCheotY=s0-d-e1-ft#https://marketing.intercomassets.com/assets/email/broadcast/twitter-fe222f8697fa267d095338db3f583c94.png"
-                width="60" class="CToWUd"></a>
-
-            <a href="http://blog.firstcodeacademy.com/" style="border:none;color:#566371;font-size:13px;outline:none!important;text-decoration:none;" target="_blank"><img alt="Twitter" src="https://cdn3.iconfinder.com/data/icons/happily-colored-snlogo/128/medium.png" width="45" class="CToWUd" style="margin:0px 10px"></a>
-
-          </p>
-
-
-          <span>
-
-                        <a style="margin:0;font-size:10pt;color:#566371;padding-right:3.5%" href="http://www.firstcodeacademy.com">
-                            firstcodeacademy.com
-                        </a>
-
-                        <a style="margin:0;font-size:10pt;color:#566371;padding:0% 3.5%;border-right:1px solid; border-left:1px solid; " href="http://blog.firstcodeacademy.com/">
-                            Our Blog
-                        </a>
-
-
-                        <a style="margin:0;font-size:10pt;color:#566371;padding-left:3.5%" href="mailto:hello@firstcodeacademy.com">E-mail Us</a>
-
-                </span>
-
-          <p>
-            <a href="%unsubscribe_url%" style="color:#566371;font-size:13px;font-weight:300;line-height:1.5;margin:0 0 10px;text-decoration:underline;">Unsubscribe</a>
-          </p>
-
-
-
-
+    <tr>
+        <td align="center" style="padding-left: 9px;padding-right: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" class="mcnFollowContent">
+                <tbody><tr>
+                    <td align="center" valign="top" style="padding-top: 9px;padding-right: 9px;padding-left: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                            <tbody><tr>
+                                <td align="center" valign="top" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                        
+                                        
+                                            <table align="left" border="0" cellpadding="0" cellspacing="0" style="display: inline;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                <tbody><tr>
+                                                    <td valign="top" style="padding-right: 10px;padding-bottom: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" class="mcnFollowContentItemContainer">
+                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnFollowContentItem" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                            <tbody><tr>
+                                                                <td align="left" valign="middle" style="padding-top: 5px;padding-right: 10px;padding-bottom: 5px;padding-left: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                                    <table align="left" border="0" cellpadding="0" cellspacing="0" width="" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                                        <tbody><tr>
+                                                                            
+                                                                                <td align="center" valign="middle" width="24" class="mcnFollowIconContent" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                                                    <a href="https://www.facebook.com/firstcodeacademy/" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;"><img src="https://cdn-images.mailchimp.com/icons/social-block-v2/dark-facebook-48.png" style="display: block;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;" height="24" width="24" class=""></a>
+                                                                                </td>
+                                                                            
+                                                                            
+                                                                        </tr>
+                                                                    </tbody></table>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody></table>
+                                                    </td>
+                                                </tr>
+                                            </tbody></table>
+                                        
+                                        <!--[if mso]>
+                                        </td>
+                                        <![endif]-->
+                                    
+                                        <!--[if mso]>
+                                        <td align="center" valign="top">
+                                        <![endif]-->
+                                        
+                                        
+                                            <table align="left" border="0" cellpadding="0" cellspacing="0" style="display: inline;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                <tbody><tr>
+                                                    <td valign="top" style="padding-right: 10px;padding-bottom: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" class="mcnFollowContentItemContainer">
+                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnFollowContentItem" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                            <tbody><tr>
+                                                                <td align="left" valign="middle" style="padding-top: 5px;padding-right: 10px;padding-bottom: 5px;padding-left: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                                    <table align="left" border="0" cellpadding="0" cellspacing="0" width="" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                                        <tbody><tr>
+                                                                            
+                                                                                <td align="center" valign="middle" width="24" class="mcnFollowIconContent" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                                                    <a href="http://instagram.com/first_code" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;"><img src="https://cdn-images.mailchimp.com/icons/social-block-v2/dark-instagram-48.png" style="display: block;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;" height="24" width="24" class=""></a>
+                                                                                </td>
+                                                                            
+                                                                            
+                                                                        </tr>
+                                                                    </tbody></table>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody></table>
+                                                    </td>
+                                                </tr>
+                                            </tbody></table>
+                                        
+                                        <!--[if mso]>
+                                        </td>
+                                        <![endif]-->
+                                    
+                                        <!--[if mso]>
+                                        <td align="center" valign="top">
+                                        <![endif]-->
+                                        
+                                        
+                                            <table align="left" border="0" cellpadding="0" cellspacing="0" style="display: inline;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                <tbody><tr>
+                                                    <td valign="top" style="padding-right: 10px;padding-bottom: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" class="mcnFollowContentItemContainer">
+                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnFollowContentItem" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                            <tbody><tr>
+                                                                <td align="left" valign="middle" style="padding-top: 5px;padding-right: 10px;padding-bottom: 5px;padding-left: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                                    <table align="left" border="0" cellpadding="0" cellspacing="0" width="" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                                        <tbody><tr>
+                                                                            
+                                                                                <td align="center" valign="middle" width="24" class="mcnFollowIconContent" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                                                    <a href="mailto:hello@firstcodeacademy.com" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;"><img src="https://cdn-images.mailchimp.com/icons/social-block-v2/dark-forwardtofriend-48.png" style="display: block;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;" height="24" width="24" class=""></a>
+                                                                                </td>
+                                                                            
+                                                                            
+                                                                        </tr>
+                                                                    </tbody></table>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody></table>
+                                                    </td>
+                                                </tr>
+                                            </tbody></table>
+                                        
+                                        <!--[if mso]>
+                                        </td>
+                                        <![endif]-->
+                                    
+                                        <!--[if mso]>
+                                        <td align="center" valign="top">
+                                        <![endif]-->
+                                        
+                                        
+                                            <table align="left" border="0" cellpadding="0" cellspacing="0" style="display: inline;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                <tbody><tr>
+                                                    <td valign="top" style="padding-right: 0;padding-bottom: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" class="mcnFollowContentItemContainer">
+                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnFollowContentItem" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                            <tbody><tr>
+                                                                <td align="left" valign="middle" style="padding-top: 5px;padding-right: 10px;padding-bottom: 5px;padding-left: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                                    <table align="left" border="0" cellpadding="0" cellspacing="0" width="" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                                        <tbody><tr>
+                                                                            
+                                                                                <td align="center" valign="middle" width="24" class="mcnFollowIconContent" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                                                    <a href="https://www.youtube.com/channel/UCEpeoIHlcsHEZqE2Mkp7tBQ" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;"><img src="https://cdn-images.mailchimp.com/icons/social-block-v2/dark-youtube-48.png" style="display: block;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;" height="24" width="24" class=""></a>
+                                                                                </td>
+                                                                            
+                                                                            
+                                                                        </tr>
+                                                                    </tbody></table>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody></table>
+                                                    </td>
+                                                </tr>
+                                            </tbody></table>
+                                        
+                                        <!--[if mso]>
+                                        </td>
+                                        <![endif]-->
+                                    
+                                    <!--[if mso]>
+                                    </tr>
+                                    </table>
+                                    <![endif]-->
+                                </td>
+                            </tr>
+                        </tbody></table>
+                    </td>
+                </tr>
+            </tbody></table>
         </td>
-      </tr>
+    </tr>
+</tbody>
+</table>
+
+
+
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+    <tbody class="mcnTextBlockOuter">
+        <tr>
+            <td valign="top" class="mcnTextBlockInner" style="padding-top: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                <!--[if mso]>
+        <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+        <tr>
+        <![endif]-->
+          
+        <!--[if mso]>
+        <td valign="top" width="600" style="width:600px;">
+        <![endif]-->
+                <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width: 100%;min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" width="100%" class="mcnTextContentContainer">
+                    <tbody><tr>
+                        
+                        <td valign="top" class="mcnTextContent" style="padding-top: 0;padding-right: 18px;padding-bottom: 9px;padding-left: 18px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #656565;font-family: Helvetica;font-size: 12px;line-height: 150%;text-align: center;">
+                        
+                            <br>
+<span style="font-size:12px">Copyright © {{ year }} First Code Academy, All rights reserved.<br>
+<br>
+First Code Academy<br>
+Shaping Future Creators<br>
+www.firstcodeacademy.com<br>
+<br>
+{{ officeLocation }}<br>
+<br>
+Tel: {{ officePhone }}  Email: {{ emailFrom }}</span><br>
+<br>
+
+ 
+                        </td>
+                    </tr>
+                </tbody></table>
+        <!--[if mso]>
+        </td>
+        <![endif]-->
+                
+        <!--[if mso]>
+        </tr>
+        </table>
+        <![endif]-->
+            </td>
+        </tr>
     </tbody>
-  </table>
+</table></td>
+
+
+
+
+
+
+
+
 
 </div>
 
