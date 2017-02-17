@@ -9,6 +9,8 @@ from .serializers import *
 from course.models import Course
 from .models import *
 
+from .utils import send_order_confirm_email
+
 
 import stripe
 
@@ -210,6 +212,9 @@ class StripeWebhookView(views.APIView):
       stripeCustomerId = stripeCustomerId,
     )
 
+    if event_type == 'charge.succeeded'
+      send_order_confirm_email(ledgerObj)
+
 
     return ledgerObj
 
@@ -364,7 +369,8 @@ class PaymentChargeUserView(views.APIView):
     studentUser.usercourserelationship_set.create(course = course)
 
 
-    # send user an email
+    # send user an email, handled when recieve payment happends
+    # send_order_confirm_email(order)
     
 
 
