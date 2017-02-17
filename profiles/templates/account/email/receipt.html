@@ -6,10 +6,10 @@
     <tbody>
       <tr>
         <td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;padding:60px 0 0">
-          <table width="100%" style="border-collapse:separate;border-spacing:0;table-layout:fixed">
+          <table width="100%" align="center" style="border-collapse:separate;border-spacing:0;table-layout:fixed">
             <tbody>
               <tr>
-                <td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;padding:0;text-align:center" align="center">
+                <td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;padding:0;" align="center">
 
                   <img src="https://s3-ap-southeast-1.amazonaws.com/fcanectar/assets/fcalogosquare.png"
                     width="300" height="300" style="padding:0 0 0px" class="CToWUd">
@@ -38,16 +38,16 @@
                   We believe that coding can empower us to become creators and not just consumers of technology. It means a lot to us to have the opportunity to be part of this journey with your child.
                   </p>
 
-                  <p>We have received your child’s information below:</p>
-
                   <p>
                   Day(s): {{dateStr}} <br>
-                  Time: {{firstTime}} <br>
+                  Class Start Time: {{firstTime}} <br>
+                  Class End Time: {{lastTime}} <br>
                   Course: {{courseName}} <br>
                   Location: {{formatLocation}} <br>
-                  Full Class Calendar: <a style="" href="{{ fullClassCalendarUrl }}">
-                            Click here
-                        </a><br>
+
+                  {% if courseEventType == 'term' %}
+                  Full Class Calendar: <a style="" href="{{ fullClassCalendarUrl }}">Click here</a><br>
+                  {% endif %}
                   </p>
 
 
@@ -99,7 +99,7 @@
                                     </span>
                                   </td>
                                   <td align="right" class="subbanner-item font-small" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly; color: #ffffff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; line-height: 17px; text-shadow: 0 1px 1px #e56060;" width="230">
-                                    <span class="apple-override-header" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly; color: #ffffff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; line-height: 17px; text-shadow: 0 1px 1px #e56060;">{{ orderCode }}</span>
+                                    <span class="apple-override-header" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly; color: #ffffff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; line-height: 17px; text-shadow: 0 1px 1px #e56060;">Order ID: {{ orderCode }}</span>
                                   </td>
                                   <td class="perm-padding" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="20">
                                     <div class="clear" style="height: 1px 20px;"></div>

@@ -232,13 +232,27 @@ class Course(models.Model):
 
   def firstTime(self):
     """
-    returns the first date of the course
+    returns the first time of the course
 
     In [5]: timezone.now().strftime('%-I:%M %p')
     Out[5]: '9:03 AM'
     """
 
     d = self.start_time
+    if d is not None:
+      return d.strftime('%-I:%M %p')
+
+    return None
+
+  def lastTime(self):
+    """
+    returns the first time of the course
+
+    In [5]: timezone.now().strftime('%-I:%M %p')
+    Out[5]: '9:03 AM'
+    """
+
+    d = self.end_time
     if d is not None:
       return d.strftime('%-I:%M %p')
 

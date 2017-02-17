@@ -5,10 +5,9 @@ I'm {{ internalName }} from First Code and I’d like to personally welcome you 
 We believe that coding can empower us to become creators and not just consumers of technology. It means a lot to us to have the opportunity to be part of this journey with your child.
 
 
-We have received your child’s information below:
-
 Day(s): {{dateStr}}
-Time: {{firstTime}} 
+Class Start Time: {{firstTime}} 
+Class End Time: {{lastTime}}
 Course: {{courseName}}
 Location: {{formatLocation}}
 Full Class Calendar: {{ fullClassCalendarUrl }}
@@ -26,6 +25,6 @@ Community Manager
 First Code Academy
 
 Order Receipt:
-Order Code: {{ orderCode }}
+Order ID: {{ orderCode }}
 Order Total: {{ formatPriceStr }}
 Order Date: {[localizedTransactionDateTime]}

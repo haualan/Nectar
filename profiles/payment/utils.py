@@ -151,12 +151,12 @@ def renderOrderConfirmTemplate(p={}, isHtml = False):
   to be generated for a text based email, c is the context passed to render the string
   p the payload requires, <guardian User>, <Student User>, <course>, <order>
   """
-  guardianFirstname = p.get('guardian').firstname
+  guardianFirstname = p.get('guardian').firstname.title()
 
   if not guardianFirstname:
     guardianFirstname = 'Guardian / Parent'
 
-  studentFirstname = p.get('student').firstname
+  studentFirstname = p.get('student').firstname.title()
 
   if not studentFirstname:
     studentFirstname = p.get('student').displayName
@@ -165,8 +165,8 @@ def renderOrderConfirmTemplate(p={}, isHtml = False):
   course = p.get('course')
 
   
-
   firstTime = course.firstTime()
+  lastTime = course.lastTime()
   courseName = course.name
   courseEventType = course.event_type
   formatLocation = course.formatLocation()
@@ -204,6 +204,7 @@ def renderOrderConfirmTemplate(p={}, isHtml = False):
     'dateStr': dateStr,
 
     'firstTime': firstTime,
+    'lastTime': lastTime,
     'courseName': courseName,
     'formatLocation': formatLocation,
     'formatPriceStr': formatPriceStr,
