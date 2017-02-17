@@ -153,7 +153,7 @@ def renderOrderConfirmTemplate(p={}, isHtml = False):
   """
   guardianFirstname = p.get('guardian').firstname
 
-  if guardianFirstname is None:
+  if not guardianFirstname:
     guardianFirstname = 'Guardian / Parent'
 
   studentFirstname = p.get('student').firstname
