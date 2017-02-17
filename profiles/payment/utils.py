@@ -195,7 +195,7 @@ def renderOrderConfirmTemplate(p={}, isHtml = False):
 
 
   
-  localizedTransactionDateTime = order.localizedTransactionDateTime()
+  localizedTransactionDateTime = order.formatLocalizedTransactionDateTime()
 
   context = {
     'guardianFirstname': guardianFirstname,
@@ -218,6 +218,9 @@ def renderOrderConfirmTemplate(p={}, isHtml = False):
     'emailFrom': emailFrom,
 
     'year': timezone.now().year,
+
+    'orderCode': orderCode,
+
 
 
 

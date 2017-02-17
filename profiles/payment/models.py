@@ -441,5 +441,15 @@ class Ledger(models.Model):
 
     return tzLocal.normalize(self.transactionDateTime)
 
+  def formatLocalizedTransactionDateTime(self):
+    """
+    given currency, guess the local datetime from utc time
+    pretty version, date only
+    """
+
+    return self.localizedTransactionDateTime().strftime('%b %d, %Y')
+
+
+  
 
 
