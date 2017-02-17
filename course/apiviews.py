@@ -17,6 +17,8 @@ from .utils import get_model_concrete_fields
 
 import requests
 
+from dateutil.parser import parse as dateTimeParse
+
 
 
 
@@ -218,7 +220,8 @@ class CodeNinjaCacheUpdateView(views.APIView):
             defaults = c,
         )
 
-        # update course time info, but only for term courses, camps and events have their class dates saved during model save, see models.py
+        # update course time info, but only for term courses because it requires the classDates param for this to be correct
+        # camps and events have their class dates saved during model save, see models.py
         if course.event_type == 'term':
             course.updateClassDates(classDates)
 
@@ -276,7 +279,7 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
                     # inject subdomain to c
                     c['subdomain'] = subdomain
-                    
+
                     # print 'offering', c
 
                     if c['course_code'] not in memo:
@@ -382,6 +385,80 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
         return memo
 
+    def processEvents(self, activeEventsData_payloads, subdomain = None):
+        """
+        processes the returned data for camps
+        """
+
+        memo = {}
+
+        for p in activeEventsData_payloads:
+            # attempt to poll data from 
+
+            # r = requests.get('http://hk.firstcodeacademy.com/api/camps/3/offerings', headers=self.cnHeaders)
+            # print r.json()
+
+            obj = None
+
+            # let's not obscure errors
+            # try:
+
+
+
+            r = requests.get(p.get('url'), headers=self.cnHeaders, verify=False)
+            data = r.json()
+
+            # filter out certain keys that should not be overwritten
+            data = {k:v for (k,v) in data.items() if k not in ['id'] }
+
+
+
+
+            obj, created = CodeNinjaCache.objects.update_or_create(
+                # filter by this
+                endpoint = i,
+
+                # insert / update this
+                defaults = { 'data': data },
+            )
+
+            if obj:   
+                for c in obj.data.get('offerings', []):
+
+                    # inject subdomain to c
+                    c['subdomain'] = subdomain
+
+                    # print 'offering', c
+
+                    if c['course_code'] not in memo:
+                        c['cnType'] = 'events'
+
+                        # events have dates and some other fields injected in its parent call http://hk.firstcodeacademy.com/api/events/
+                        # inject them to this child course
+                        c['start_date'] = p['start_date']
+                        c['end_date'] = p['end_date']
+                        c['start_time'] = p['start_time']
+                        c['end_time'] = p['end_time']
+                        c['event_type'] = p['event_type']
+
+                        self.updateCourse(c, classDates = [])
+                    
+                    memo[c['course_code']] = c
+
+        return memo
+
+            
+
+
+
+
+
+
+
+
+
+
+
     def post(self, request, format=None, *args, **kwargs):
         verifyToken = request.data.get('verifyToken')
 
@@ -402,6 +479,7 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
         allcampsMemo = {}
         allprogramsMemo = {}
+        alleventsMemo = {}
 
 
 
@@ -439,8 +517,36 @@ class CodeNinjaCacheUpdateView(views.APIView):
                 allprogramsMemo[k] = programsMemo[k]
 
 
+            # take a look at the events (which has all the trial classes)
+            activeEventsUrl = 'http://{}.firstcodeacademy.com/api/events'.format(s)
+            r = requests.get(activeEventsUrl, headers = self.cnHeaders, verify=False)
+            activeEventsData = r.json()
 
-        allActiveCourse_codesMemo = set(allcampsMemo.keys()).union(allprogramsMemo.keys())  
+
+            activeEventsData_payloads = [
+                { 
+                    'url':'http://{}.firstcodeacademy.com/api/events/{}'.format(s, i['id']),
+                    'start_date':  i['event_date'],
+                    'end_date':  i['event_date'],
+                    'start_time': i['start_time'],
+                    'end_time': i['end_time'],
+                    'event_type': i['event_type'],
+
+                } for i in activeEventsData
+
+            ]
+            print 'activeEventsData_payloads', activeEventsData_payloads
+
+            # now we can start polling endpoint
+            # missing course_code, abort
+            # eventsMemo = None
+            eventsMemo = self.processEvents(activeEventsData_payloads, subdomain = s, )
+            for k in eventsMemo:
+                alleventsMemo[k] = eventsMemo[k]
+
+
+
+        allActiveCourse_codesMemo = set(allcampsMemo.keys()).union(allprogramsMemo.keys()).union(alleventsMemo.keys())  
 
         # set the courses across the board
         Course.setActiveCourses(allActiveCourse_codesMemo)
@@ -450,7 +556,10 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
         r = {'status': 'success', 
         'campsMemo': allcampsMemo, 
-        'programsMemo': allprogramsMemo}
+        'programsMemo': allprogramsMemo,
+        'eventsMemo': alleventsMemo,
+
+        }
 
         return Response(r)
 

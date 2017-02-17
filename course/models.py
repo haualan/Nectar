@@ -15,7 +15,7 @@ from django.db.models import Avg, Case, Count, F, Max, Min, Prefetch, Q, Sum, Wh
 from datetime import timedelta
 import uuid, os
 
-DEFAULT_PROFILE_PICTURE_URL = 'http://placehold.it/350x350'
+DEFAULT_PROFILE_PICTURE_URL = 'https://s3-ap-southeast-1.amazonaws.com/fcanectar/assets/firstcode_logo.png'
 # from uploadApp.models import language_choices
 language_choices = (
   ('', 'None'),
@@ -99,9 +99,6 @@ class CodeNinjaCache(models.Model):
 
 
 
-
-
-
     # return default value
     return {}
 
@@ -157,6 +154,7 @@ class Course(models.Model):
 
   age_group = models.CharField(max_length=255, blank=True)
   location = models.CharField(max_length=255, blank=True)
+  address = models.CharField(max_length=1000, blank=True)
   start_date = models.DateTimeField(null=True)
   end_date = models.DateTimeField(null=True)
   start_time = models.DateTimeField(null=True)
