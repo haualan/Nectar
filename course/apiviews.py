@@ -441,6 +441,9 @@ class CodeNinjaCacheUpdateView(views.APIView):
                         c['end_time'] = p['end_time']
                         c['event_type'] = p['event_type']
 
+                        # inject prices, which are all the same for the set of courses in this event
+                        c['prices'] = obj.data.get('prices', [])
+
                         self.updateCourse(c, classDates = [])
                     
                     memo[c['course_code']] = c
