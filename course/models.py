@@ -234,13 +234,13 @@ class Course(models.Model):
     """
     returns the first date of the course
 
-    In [38]: dd.strftime('%r')
-    Out[38]: '02:57:23 PM'
+    In [5]: timezone.now().strftime('%-I:%M %p')
+    Out[5]: '9:03 AM'
     """
 
     d = self.start_time
     if d is not None:
-      return d.strftime('%r')
+      return d.strftime('%-I:%M %p')
 
     return None
 
