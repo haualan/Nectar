@@ -405,6 +405,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             'username',
             'enrolledCourses',
             'school',
+            'birth_date',
             )
 
 class UserSimpleSerializer(serializers.HyperlinkedModelSerializer):
