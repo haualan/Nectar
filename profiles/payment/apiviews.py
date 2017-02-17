@@ -156,6 +156,11 @@ class StripeWebhookView(views.APIView):
       rawData = request.data,
     )
 
+    print 'event_type', event_type == 'charge.succeeded'
+    if event_type == 'charge.succeeded':
+      send_order_confirm_email(ledgerObj)
+
+
     # self.processPayload(request)
     # respond with a 200 if things are okay
     return Response({})
@@ -212,9 +217,6 @@ class StripeWebhookView(views.APIView):
       stripeCustomerId = stripeCustomerId,
     )
 
-    print 'event_type', event_type == 'charge.succeeded'
-    if event_type == 'charge.succeeded':
-      send_order_confirm_email(ledgerObj)
 
 
     return ledgerObj
