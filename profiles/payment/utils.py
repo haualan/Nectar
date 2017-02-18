@@ -30,7 +30,7 @@ def send_internal_sales_email(order, injectEmail=None):
   """
   when an order is made, send an internal email to team
   """
-  return send_order_confirm_email(order = order, isInternal = True)
+  return send_order_confirm_email(order = order, isInternal = True, injectEmail=injectEmail)
 
 
 
