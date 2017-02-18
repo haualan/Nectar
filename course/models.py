@@ -372,7 +372,12 @@ class Course(models.Model):
 
     return True
 
+  def getEnrollment(self):
+    """
+    Takes a look at the course and finds out how many students (technically non internal office users) are enrolled in said course
+    """
 
+    return self.usercourserelationship_set.exclude(user__role__in = ['I', 'O', 'C'])
 
 
   class Meta:

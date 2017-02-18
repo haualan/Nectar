@@ -19,7 +19,7 @@ Day(s): {{dateStr}}
 Class Start Time: {{firstTime}} 
 Class End Time: {{lastTime}}
 
-Course Code: {{ order.course_code }}
+Course Code: {{ orderObj.course_code }}
 Course Name: {{ courseObj.name }}
 Location: {{formatLocation}}
 

@@ -254,3 +254,40 @@ def renderOrderConfirmTemplate(p={}, isHtml = False, isInternal = False):
 
   return render_to_string("account/email/receipt.html", context).strip()
 
+
+def updateCodeNinjaEnrollment(order):
+  """
+  based on the course code attached to the order, send signal to codeninja on newest enrollment number
+  usage example:
+  - PATCH http://hk.firstcodeacademy.com/api/events/offerings/AT-SCRATCH-TRIAL-20170304-SW
+  - payload = { "enrollment_count": 2 }
+  """
+  c = order.getCourseOrNone()
+
+
+  if c is None:
+    # course does not exist, abort
+    return
+
+  url = 'http://{}.firstcodeacademy.com/api/events/offerings/{}'.format(c.subdomain, c.course_code)
+
+  enrollment_count = c.getEnrollment().count()
+
+
+  r = requests.patch(
+    url,
+    headers={'Authorization': settings.CNKEY}, verify=False,
+    data={ "enrollment_count": enrollment_count }
+  )
+
+  print 'updateCodeNinjaEnrollment',  r.status_code
+
+  if int(r.status_code) != 200:
+    print r.text
+
+
+  return r
+
+
+
+

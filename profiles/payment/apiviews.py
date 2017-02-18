@@ -9,7 +9,7 @@ from .serializers import *
 from course.models import Course
 from .models import *
 
-from .utils import send_order_confirm_email, send_internal_sales_email
+from .utils import send_order_confirm_email, send_internal_sales_email, updateCodeNinjaEnrollment
 
 
 import stripe
@@ -172,6 +172,7 @@ class StripeWebhookView(views.APIView):
     all the responses the server should have upon the confirmation of a charge
     - send confirmation email to buyer
     - send some signal to internal team
+    - update enrollment on codeninja
     """
 
     send_order_confirm_email(ledgerObj)
@@ -184,17 +185,21 @@ class StripeWebhookView(views.APIView):
       # if it doesn't exist, it's not a real class
       return
 
-    ssm = settings.SUBDOMAINSPECIFICMAPPING
+    # ssm = settings.SUBDOMAINSPECIFICMAPPING
 
-    defaultEmailTo = ssm.get('hk').get('emailFrom')
+    # defaultEmailTo = ssm.get('hk').get('emailFrom')
 
-    subdomainDict = ssm.get(c.subdomain, ssm.get('hk'))
-    emailTo = subdomainDict.get('emailFrom', defaultEmailTo)
+    # subdomainDict = ssm.get(c.subdomain, ssm.get('hk'))
+    # emailTo = subdomainDict.get('emailFrom', defaultEmailTo)
 
     # for testing, just email to alan@
-    emailTo = 'alan@firstcodeacademy.com'
+    # emailTo = 'alan@firstcodeacademy.com'
 
-    send_internal_sales_email(ledgerObj, injectEmail = emailTo)
+    send_internal_sales_email(ledgerObj)
+
+
+    # tell codeninja about enrollment
+    updateCodeNinjaEnrollment(ledgerObj)
 
 
      
