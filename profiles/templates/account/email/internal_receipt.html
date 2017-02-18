@@ -3,29 +3,29 @@
 
 <div style="background:white;margin:0px" bgcolor="white">
 
-Order Receipt:
-Order ID: {{ orderCode }}
-Order Total: {{ formatPriceStr }}
-Order Date: {{ localizedTransactionDateTime }}
+<p>Order Receipt: </p>
+<p>Order ID: {{ orderCode }} </p>
+<p>Order Total: {{ formatPriceStr }} </p>
+<p>Order Date: {{ localizedTransactionDateTime }} </p>
 
 
-guardian email: {{ guardianObj.email }}
-guardian displayName: {{ guardianObj.displayName }}
-guardian phone: {{ guardianObj.phoneNumberone }}
+<p>guardian email: {{ guardianObj.email }} </p>
+<p>guardian displayName: {{ guardianObj.displayName }} </p>
+<p>guardian phone: {{ guardianObj.phoneNumberone }} </p>
 
 
-student email: {{ studentObj.email }}
-student displayName: {{ studentObj.displayName }}
+<p>student email: {{ studentObj.email }} </p>
+<p>student displayName: {{ studentObj.displayName }} </p>
 
 
-Day(s): {{dateStr}}
+<p>Day(s): {{dateStr}} </p>
 
-Class Start Time: {{firstTime}} 
-Class End Time: {{lastTime}}
+<p>Class Start Time: {{firstTime}}  </p>
+<p>Class End Time: {{lastTime}} </p>
 
-Course Code: {{ order.course_code }}
-Course Name: {{ courseObj.name }}
-Location: {{formatLocation}}
+<p>Course Code: {{ order.course_code }} </p>
+<p>Course Name: {{ courseObj.name }} </p>
+<p>Location: {{formatLocation}} </p>
 
 
 </div>
