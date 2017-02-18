@@ -277,10 +277,10 @@ def updateCodeNinjaEnrollment(order):
   r = requests.patch(
     url,
     headers={'Authorization': settings.CNKEY}, verify=False,
-    data={ "enrollment_count": enrollment_count }
+    json={ "enrollment_count": enrollment_count }
   )
 
-  print 'updateCodeNinjaEnrollment',  r.status_code
+  print 'updateCodeNinjaEnrollment',  r.status_code, r.url
 
   if int(r.status_code) != 200:
     print r.text
