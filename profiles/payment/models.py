@@ -460,6 +460,62 @@ class Ledger(models.Model):
 
     return None
 
-  
+  @classmethod
+  def getAmortizedRevenueSchedule(self, startDate, endDate):
+    """
+    show the amortized revenue from our books
+    - assume each class date recieves a pro-rata revenue
+    - say a course with 2 class dates (02/01/2017, 03/01/2017) is charged 100 HKD, 50 revenue will be booked for each class on those dates  
+    """
+
+    endDate = endDate.replace(hour = 23, minute=59, second = 59, microsecond=999999)
+
+    allOrders = Ledger.objects.filter(
+      # livemode = True,
+      transactionDateTime__gte = startDate, 
+      transactionDateTime__lte = endDate
+    )
+
+    # list of course_codes from Ledger
+    course_codes_list = [order.course_code for order in allOrders]
+
+    allCourses = Course.objects.filter(course_code__in = course_codes_list).prefetch_related('courseclassdaterelationship_set')
+
+    # inspect the class dates and the count and put them in a courseMemo for lookup / memo
+    courseMemo = {}
+    for c in allCourses:
+      courseMemo[c.course_code] = [ d.startDateTime for d in c.courseclassdaterelationship_set.all() if d.ignore == False ]
+
+    # actually process the ledger items now, split into currency
+    r = []
+    for o in allOrders:
+
+      classDates = courseMemo.get(o.course_code, [])
+
+      if len(classDates) == 0:
+        r.append({
+          'date': o.transactionDateTime,
+          'currency': o.currency,
+          'amt': o.localCurrencyChargedAmount,
+          'course_code': o.course_code,
+        })
+        # go to the next order, just book revenue on transaction date
+        continue
+
+      # otherwise for every date of the course there we book a revenue
+      for date in classDates:
+
+        r.append({
+          'date': date,
+          'currency': o.currency,
+          'amt': float(o.localCurrencyChargedAmount) / float(len(classDates)),
+          'course_code': o.course_code,
+        })
+
+    return r
+
+
+
+
 
 
