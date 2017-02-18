@@ -461,7 +461,7 @@ class Ledger(models.Model):
     return None
 
   @classmethod
-  def getAmortizedRevenueSchedule(self, startDate, endDate):
+  def getAmortizedRevenueSchedule(cls, startDate, endDate):
     """
     show the amortized revenue from our books
     - assume each class date recieves a pro-rata revenue
@@ -470,7 +470,7 @@ class Ledger(models.Model):
 
     endDate = endDate.replace(hour = 23, minute=59, second = 59, microsecond=999999)
 
-    allOrders = Ledger.objects.filter(
+    allOrders = cls.objects.filter(
       # livemode = True,
       transactionDateTime__gte = startDate, 
       transactionDateTime__lte = endDate

@@ -45,8 +45,9 @@ class CourseViewSet(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
 
     http_method_names =['get']
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter,)
     filter_fields = ('course_code',)
+    search_fields = ('course_code', 'name', 'location', 'id')
 
 
 class CourseClassDateRelationship(viewsets.ModelViewSet):
