@@ -479,4 +479,32 @@ CODENINJACACHEENDPOINTS = [
 DEFAULT_FROM_EMAIL = 'hello@firstcodeacademy.com'
 
 
+SUBDOMAINSPECIFICMAPPING = {
+  'hk': {
+    'internalName': 'Natasha',
+    'fullClassCalendarUrl': 'https://hk.firstcodeacademy.com/en/programs/calendar',
+    'emailFrom': 'hello@firstcodeacademy.com',
+    'officePhone': '+852 2772 2108', 
+    'officeLocation': 'Unit 302-305, 3/F, Hollywood Centre, 233 Hollywood Road, Sheung Wan, Hong Kong'
+  },
+  'sg': {
+    'internalName': 'Wee Ping',
+    'fullClassCalendarUrl': 'https://sg.firstcodeacademy.com/en/programs/calendar',
+    'emailFrom': 'hellosg@firstcodeacademy.com',
+    'officePhone': '+65 6820 2633',
+    'officeLocation': '#04-13, Stamford Court, 61 Stamford Road, Singapore 178892'
+  },
+  'tw': {
+    'internalName': 'Chi',
+    'fullClassCalendarUrl': 'https://tw.firstcodeacademy.com/en/programs/calendar',
+    'emailFrom': 'hello.tw@firstcodeacademy.com',
+    'officePhone': '+886 909 818 260',
+
+    # tw has no fixed location yet
+    'officeLocation': ''
+
+  },
+
+}
+
 from config import *

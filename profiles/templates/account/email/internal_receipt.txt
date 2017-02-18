@@ -1,0 +1,28 @@
+
+Order Receipt:
+Order ID: {{ orderCode }}
+Order Total: {{ formatPriceStr }}
+Order Date: {{ localizedTransactionDateTime }}
+
+
+guardian email: {{ guardianObj.email }}
+guardian displayName: {{ guardianObj.displayName }}
+guardian phone: {{ guardianObj.phoneNumberone }}
+
+
+student email: {{ studentObj.email }}
+student displayName: {{ studentObj.displayName }}
+
+
+Day(s): {{dateStr}}
+
+Class Start Time: {{firstTime}} 
+Class End Time: {{lastTime}}
+
+Course Code: {{ order.course_code }}
+Course Name: {{ courseObj.name }}
+Location: {{formatLocation}}
+
+
+
+

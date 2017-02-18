@@ -10,12 +10,10 @@ Class Start Time: {{firstTime}}
 Class End Time: {{lastTime}}
 Course: {{courseName}}
 Location: {{formatLocation}}
+{% if courseEventType == 'term' %}
 Full Class Calendar: {{ fullClassCalendarUrl }}
+{% endif %}
 
-
-
-Check our calendar for useful information about your schedule, what to bring to the class, what to do if you miss a class, how to find us etc.
-class calendar: https://hk.firstcodeacademy.com/en/programs/calendar
 
 Meanwhile, feel free to reach out to me via email or at {{ officePhone }} if you have any questions. We will see you and {{studentFirstname}} on 1st day of class on {{firstDate}}! 
 

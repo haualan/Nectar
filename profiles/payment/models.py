@@ -449,6 +449,16 @@ class Ledger(models.Model):
 
     return self.localizedTransactionDateTime().strftime('%b %d, %Y')
 
+  def getCourseOrNone(self):
+    """
+    returns the course object of the class, or returns none if none found
+    """
+
+    c = Course.objects.filter( course_code = self.course_code)
+    if c:
+      return c.first()
+
+    return None
 
   
 

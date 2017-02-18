@@ -24,9 +24,17 @@ from course.models import Course
 import requests
 # from allauth.account.models import EmailAddress, EmailConfirmation
 
+subdomainSpecificMapping = settings.SUBDOMAINSPECIFICMAPPING
+
+def send_internal_sales_email(order, injectEmail=None):
+  """
+  when an order is made, send an internal email to team
+  """
+  return send_order_confirm_email(order = order, isInternal = True)
 
 
-def send_order_confirm_email(order):
+
+def send_order_confirm_email(order, isInternal = False, injectEmail=None):
   # i.e.: on payment for example, we send a receipt
   # order is assumed to be a ledger object
 
@@ -60,7 +68,33 @@ def send_order_confirm_email(order):
     'order': order,
   }
 
-  html=  renderOrderConfirmTemplate(payload ,isHtml = True)
+  if isInternal:
+    html = renderOrderConfirmTemplate(payload ,isHtml = True, isInternal=True)
+    text = renderOrderConfirmTemplate(payload, isHtml = False, isInternal=True)
+
+    email = subdomainSpecificMapping.get(subdomain).get('emailFrom')
+    subdomain = course.subdomain
+
+    # hk serves as a fallback
+    if len(subdomain) == 0:
+      subdomain = 'hk'
+    email = subdomainSpecificMapping.get(subdomain).get('emailFrom')
+
+    # email can be overriden upstream
+    if injectEmail:
+      email = injectEmail
+
+    formatPriceStr = order.formatPriceStr()
+
+    subject = '[{} - {}] {} Signup {} by {}'.format('TEST', subdomain, formatPriceStr, order.course_code, email)
+    if order.livemode:
+      subject = '[{} - {}] {} Signup {} by {}'.format('LIVE', subdomain, formatPriceStr, order.course_code, email)
+
+    
+    return send_email(email, subject, text, html, subdomain )
+
+
+  html = renderOrderConfirmTemplate(payload ,isHtml = True)
 
   text = renderOrderConfirmTemplate(payload, isHtml = False)
 
@@ -80,33 +114,6 @@ def send_order_confirm_email(order):
 
 
 
-subdomainSpecificMapping = {
-  'hk': {
-    'internalName': 'Natasha',
-    'fullClassCalendarUrl': 'https://hk.firstcodeacademy.com/en/programs/calendar',
-    'emailFrom': 'hello@firstcodeacademy.com',
-    'officePhone': '+852 2772 2108', 
-    'officeLocation': 'Unit 302-305, 3/F, Hollywood Centre, 233 Hollywood Road, Sheung Wan, Hong Kong'
-  },
-  'sg': {
-    'internalName': 'Wee Ping',
-    'fullClassCalendarUrl': 'https://sg.firstcodeacademy.com/en/programs/calendar',
-    'emailFrom': 'hellosg@firstcodeacademy.com',
-    'officePhone': '+65 6820 2633',
-    'officeLocation': '#04-13, Stamford Court, 61 Stamford Road, Singapore 178892'
-  },
-  'tw': {
-    'internalName': 'Chi',
-    'fullClassCalendarUrl': 'https://tw.firstcodeacademy.com/en/programs/calendar',
-    'emailFrom': 'hello.tw@firstcodeacademy.com',
-    'officePhone': '+886 909 818 260',
-
-    # tw has no fixed location yet
-    'officeLocation': ''
-
-  },
-
-}
 
 
 def send_email(email, subject, text, html, subdomain = 'hk' ):
@@ -145,21 +152,23 @@ def send_test_email():
   return send_email(email, subject, text, html, subdomain )
 
 
-def renderOrderConfirmTemplate(p={}, isHtml = False):
+def renderOrderConfirmTemplate(p={}, isHtml = False, isInternal = False):
 
   """
   to be generated for a text based email, c is the context passed to render the string
   p the payload requires, <guardian User>, <Student User>, <course>, <order>
   """
-  guardianFirstname = p.get('guardian').firstname.title()
+  guardian = p.get('guardian')
+  guardianFirstname = guardian.firstname.title()
 
   if not guardianFirstname:
     guardianFirstname = 'Guardian / Parent'
 
-  studentFirstname = p.get('student').firstname.title()
+  student = p.get('student')
+  studentFirstname = student.firstname.title()
 
   if not studentFirstname:
-    studentFirstname = p.get('student').displayName
+    studentFirstname = student.displayName
 
 
   course = p.get('course')
@@ -222,9 +231,10 @@ def renderOrderConfirmTemplate(p={}, isHtml = False):
 
     'orderCode': orderCode,
 
-
-
-
+    'courseObj': course,
+    'guardianObj': guardian,
+    'studentObj': student,
+    'orderObj': order,
 
 
   }
@@ -233,6 +243,10 @@ def renderOrderConfirmTemplate(p={}, isHtml = False):
   print 'context'
   print context
 
+  if isInternal == True:
+    if isHtml == False:
+      return render_to_string("account/email/internal_receipt.txt", context).strip()
+    return render_to_string("account/email/internal_receipt.html", context).strip()
 
   if isHtml == False:
     return render_to_string("account/email/receipt.txt", context).strip()

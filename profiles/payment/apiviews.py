@@ -9,7 +9,7 @@ from .serializers import *
 from course.models import Course
 from .models import *
 
-from .utils import send_order_confirm_email
+from .utils import send_order_confirm_email, send_internal_sales_email
 
 
 import stripe
@@ -158,12 +158,49 @@ class StripeWebhookView(views.APIView):
 
     print 'event_type', event_type == 'charge.succeeded'
     if event_type == 'charge.succeeded':
-      send_order_confirm_email(ledgerObj)
+      self.broadcastChargeSucceeded(ledgerObj)
+      
 
 
     # self.processPayload(request)
     # respond with a 200 if things are okay
     return Response({})
+
+  @postpone
+  def broadcastChargeSucceeded(self, ledgerObj):
+    """ 
+    all the responses the server should have upon the confirmation of a charge
+    - send confirmation email to buyer
+    - send some signal to internal team
+    """
+
+    send_order_confirm_email(ledgerObj)
+
+    # internally send an email to respective offices
+    # if the email is not found, send to hk internal team
+
+    c = ledgerObj.getCourseOrNone()
+    if c is None:
+      # if it doesn't exist, it's not a real class
+      return
+
+    ssm = settings.SUBDOMAINSPECIFICMAPPING
+
+    defaultEmailTo = ssm.get('hk').get('emailFrom')
+
+    subdomainDict = ssm.get(c.subdomain, ssm.get('hk'))
+    emailTo = subdomainDict.get('emailFrom', defaultEmailTo)
+
+    # for testing, just email to alan@
+    emailTo = 'alan@firstcodeacademy.com'
+
+    send_internal_sales_email(ledgerObj, injectEmail = emailTo)
+
+
+     
+
+
+
 
   def processPayload(self, request):
     """
@@ -231,17 +268,6 @@ class PaymentChargeUserView(views.APIView):
   http_method_names = ['post']
   permission_classes = (IsAuthenticated, )
   serializer_class = PaymentChargeUserSerializer
-
-  # @postpone
-  # def runProcesses(self):
-  #     print 'runProcesses batch '
-      
-  #     c = checkAllAccountStatus()
-      
-
-      
-  #     r = recordOrganizationAuditTrail()
-      
 
   def post(self, request, format=None, *args, **kwargs):
     serializer = self.serializer_class(data=request.data)
