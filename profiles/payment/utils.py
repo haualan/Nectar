@@ -72,8 +72,9 @@ def send_order_confirm_email(order, isInternal = False, injectEmail=None):
     html = renderOrderConfirmTemplate(payload ,isHtml = True, isInternal=True)
     text = renderOrderConfirmTemplate(payload, isHtml = False, isInternal=True)
 
-    email = subdomainSpecificMapping.get(subdomain).get('emailFrom')
     subdomain = course.subdomain
+    email = subdomainSpecificMapping.get(subdomain).get('emailFrom')
+    
 
     # hk serves as a fallback
     if len(subdomain) == 0:
