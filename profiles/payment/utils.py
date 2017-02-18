@@ -269,7 +269,7 @@ def updateCodeNinjaEnrollment(order):
     # course does not exist, abort
     return
 
-  url = 'http://{}.firstcodeacademy.com/api/events/offerings/{}'.format(c.subdomain, c.course_code)
+  url = 'https://{}.firstcodeacademy.com/api/events/offerings/{}'.format(c.subdomain, c.course_code)
 
   enrollment_count = c.getEnrollment().count()
 
@@ -277,17 +277,34 @@ def updateCodeNinjaEnrollment(order):
 
   r = requests.patch(
     url,
-    headers={'Authorization': settings.CNKEY}, verify=False,
+    headers={'Authorization': settings.CNKEY, 'Content-type': 'application/json', 'Accept': 'text/plain'}, verify=False,
     json=jsonBody
   )
 
-  print 'updateCodeNinjaEnrollment',  r.status_code, r.url, jsonBody
+  print 'updateCodeNinjaEnrollment',  r.status_code, r.url, jsonBody, {'Authorization': settings.CNKEY}
 
   if int(r.status_code) != 200:
     print r.text
 
 
   return r
+
+
+# for easy pasting to shell_plus
+# c = order.getCourseOrNone()
+# url = 'https://{}.firstcodeacademy.com/api/events/offerings/{}'.format(c.subdomain, c.course_code)
+# enrollment_count = c.getEnrollment().count()
+# jsonBody = { "enrollment_count": enrollment_count }
+# r = requests.patch(
+#   url,
+#   headers={'Authorization': settings.CNKEY, 'Content-type': 'application/json', 'Accept': 'text/plain'}, verify=False,
+#   json=jsonBody
+# )
+# print 'updateCodeNinjaEnrollment',  r.status_code, r.url, jsonBody, {'Authorization': settings.CNKEY}
+# if int(r.status_code) != 200:
+#   print r.text
+
+
 
 
 
