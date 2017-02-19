@@ -439,8 +439,10 @@ class CodeNinjaCacheUpdateView(views.APIView):
                         c['start_date'] = c['event_date']
                         c['end_date'] = c['event_date']
 
-                        c['start_time'] = p['start_time']
-                        c['end_time'] = p['end_time']
+                        # this date from p is wrong, take the value from c
+                        # c['start_time'] = p['start_time']
+                        # c['end_time'] = p['end_time']
+
                         c['event_type'] = p['event_type']
 
                         # inject prices, which are all the same for the set of courses in this event
