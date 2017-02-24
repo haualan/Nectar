@@ -377,7 +377,11 @@ class Course(models.Model):
     Takes a look at the course and finds out how many students (technically non internal office users) are enrolled in said course
     """
 
-    return self.usercourserelationship_set.exclude(user__role__in = ['I', 'O', 'C'])
+    return self.usercourserelationship_set.exclude(
+      user__role__in = ['I', 'O', 'C']
+    ).exclude(
+      # exclude count from test users and internal accounts
+      user__GuardianStudentRelation_student__guardian__email__regex  = '(@firstcodeacademy.com|alan.wc.hau)')
 
 
   class Meta:
