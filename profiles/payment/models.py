@@ -149,7 +149,7 @@ UserModel = User
 from course.models import Course
 
 
-
+stripeAcct_choices = [ (k, k) for k in settings.STRIPE_SECRET_MAP]
 
 class Ledger(models.Model):
   """
@@ -159,7 +159,7 @@ class Ledger(models.Model):
   rawData = JSONField(null=True)
 
   # unique identifier for the generated event, it may be blank in the event that the event is manually created
-  event_id = models.CharField(max_length=255, blank=False, null=True, unique=True)
+  event_id = models.CharField(max_length=255, blank=False, null=True)
   event_type = models.CharField(max_length=255, blank=False, choices = event_type_choices)
 
   # unreliable fields for accounting purposes
@@ -198,7 +198,7 @@ class Ledger(models.Model):
   remarks = models.TextField(blank=True)
 
   # which stripe acct processed this, use contents to lookup stripe key in conifg
-  stripeAcct = models.CharField(max_length=30, blank=False, default='hkd')
+  stripeAcct = models.CharField(max_length=30, blank=False, null=True, choices=stripeAcct_choices)
 
 
   @transaction.atomic
@@ -517,6 +517,10 @@ class Ledger(models.Model):
 
     return r
 
+  class Meta:
+    # event id is unique per strip acct
+    unique_together = ('stripeAcct', 'event_id')
+    
 
 
 

@@ -339,6 +339,14 @@ class PaymentChargeUserView(views.APIView):
       raise ParseError('Guardian User account must have an email for payment purposes')
 
 
+    # currency is needed to locate the correct stripe key
+    currency = price_obj.get('currency', None)
+    stripe.api_key = settings.STRIPE_SECRET_MAP.get(currency, None)
+
+    if stripe.api_key is None:
+      raise ParseError('Currency not found: {}, cannot locate stripe key'.format(currency))
+
+
     # if stripeCustomerId does exist, verify its existence first
     if guardianUser.stripeCustomerId:
       try:
@@ -383,7 +391,7 @@ class PaymentChargeUserView(views.APIView):
     # 1 is 1 cent
 
     amt = price_obj.get('amount', None)
-    currency = price_obj.get('currency', None)
+
 
     if amt is None or currency is None:
       raise ParseError('course: {} incorrect prices config: {}'.format(course_code, price_code))

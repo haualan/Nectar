@@ -132,7 +132,7 @@ class User(AbstractEmailUser):
         self.avatar_url = DEFAULT_PROFILE_PICTURE_URL
 
 
-    if self.email and self.stripeCustomerId:
+    if self.email and self.stripeCustomerId and self.stripeAcct:
       self.updateStripeCustomer()
 
     super(User, self).save(*args, **kwargs) # Call the "real" save() method.
@@ -163,6 +163,7 @@ class User(AbstractEmailUser):
 
       # stripe ID probably bad, discard henceforth
       self.stripeCustomerId = None
+      self.stripeAcct = None
 
 
 
