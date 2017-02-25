@@ -135,6 +135,9 @@ def send_email(email, subject, text, html, subdomain = 'hk' ):
           "subject": subject,
           "text": text,
           "html": html,
+          
+          "bcc" : 'michelle@firstcodeacademy.com, alan@firstcodeacademy.com',
+
           })
 
   return r.status_code
