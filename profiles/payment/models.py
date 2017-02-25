@@ -197,6 +197,9 @@ class Ledger(models.Model):
   # special remarks for this order for ops staff
   remarks = models.TextField(blank=True)
 
+  # which stripe acct processed this, use contents to lookup stripe key in conifg
+  stripeAcct = models.CharField(max_length=30, blank=False, default='hkd')
+
 
   @transaction.atomic
   def save(self, *args, **kwargs):

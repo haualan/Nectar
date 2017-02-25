@@ -16,7 +16,9 @@ import stripe
 
 # Set your secret key: remember to change this to your live secret key in production
 # See your keys here: https://dashboard.stripe.com/account/apikeys
-stripe.api_key = settings.STRIPE_SECRET
+# since FCA has multiple offices, we need to set this according to the webhooks
+# setting HK here is just a default
+stripe.api_key = settings.STRIPE_SECRET_MAP.get('hkd')
 
 
 from threading import Thread
@@ -130,6 +132,16 @@ class StripeWebhookView(views.APIView):
 
     dataWrapper = request.data
 
+    # extract the currency and find the stripe key based on currency
+    currency = 'hkd'
+    try:
+      currency = dataWrapper.get('data').get('object').get('currency').lower()
+    except:
+      pass
+
+    stripe.api_key = settings.STRIPE_SECRET_MAP.get( currency )
+
+
     try:
       event = stripe.Event.retrieve(dataWrapper["id"])
 
@@ -154,6 +166,7 @@ class StripeWebhookView(views.APIView):
       event_type = event_type,
       event_id = event_id,
       rawData = request.data,
+      stripeAcct = currency,
     )
 
     print 'event_type', event_type == 'charge.succeeded'

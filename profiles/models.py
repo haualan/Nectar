@@ -96,6 +96,8 @@ class User(AbstractEmailUser):
 
   # payment info
   stripeCustomerId = models.CharField(max_length=50, blank=False, null=True)
+  # which stripe acct processed this, use contents to lookup stripe key in conifg
+  stripeAcct = models.CharField(max_length=30, blank=False, null=True)
 
   # parent specific settings
   address = models.TextField(blank=True)
@@ -145,7 +147,13 @@ class User(AbstractEmailUser):
       # if there is no stripe info, do nothing
       return False
 
+    if self.stripeAcct not in settings.STRIPE_SECRET_MAP:
+      # if there is no valid strip acct info, do nothing
+      # because it's unclear which stripeAcct to lookup
+      return False
+
     try:
+      stripe.api_key = settings.STRIPE_SECRET_MAP.get( self.stripeAcct )
       cu = stripe.Customer.retrieve(self.stripeCustomerId)
       cu.metadata = { 'uid': self.id }
       cu.email = self.email
