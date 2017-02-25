@@ -3,6 +3,16 @@ from uploadApp.models import *
 from course.models import *
 from django.db.models import Avg, Case, Count, F, Max, Min, Prefetch, Q, Sum, When
 
+def updatePriceToSampleCourse(currency):
+	c = Course.objects.get(id = 4)
+	c.prices = [
+		{
+	        "currency": currency,
+	        "amount": "480.0",
+	        "price_code": currency,
+	    }
+	]
+	return c.save()
 
 def get_model_concrete_fields(MyModel):
     return [
