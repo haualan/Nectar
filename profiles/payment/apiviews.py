@@ -340,8 +340,8 @@ class PaymentChargeUserView(views.APIView):
 
 
     # currency is needed to locate the correct stripe key
-    currency = price_obj.get('currency', None)
-    stripe.api_key = settings.STRIPE_SECRET_MAP.get(currency, None)
+    currency = price_obj.get('currency', '')
+    stripe.api_key = settings.STRIPE_SECRET_MAP.get(currency.lower(), None)
 
     if stripe.api_key is None:
       raise ParseError('Currency not found: {}, cannot locate stripe key'.format(currency))
