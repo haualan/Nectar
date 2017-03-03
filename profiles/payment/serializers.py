@@ -12,6 +12,9 @@ def get_model_concrete_fields(MyModel):
         )
     ]
 
+class CouponValidationSerializer(serializers.Serializer):
+    coupon_code = serializers.CharField(max_length=200)
+    course_code = serializers.CharField(max_length=200)
 
 class PaymentChargeUserSerializer(serializers.Serializer):
     token = serializers.CharField(max_length=200)

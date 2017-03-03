@@ -9,7 +9,7 @@ from .serializers import *
 from course.models import Course
 from .models import *
 
-from .utils import send_order_confirm_email, send_internal_sales_email, updateCodeNinjaEnrollment
+from .utils import send_order_confirm_email, send_internal_sales_email, updateCodeNinjaEnrollment, validateCodeNinjaCoupon
 
 
 import stripe
@@ -508,6 +508,28 @@ class LedgerViewSet(viewsets.ReadOnlyModelViewSet):
       return self.queryset
 
 
+class CouponValidationView(views.APIView):
+  """
+  given a payload of { 'coupon': 'SOMECOUPON'}
+  validate with code ninja to see if coupon is actually valid.
+
+  Front end should update with price
+  """
+  api_name = 'couponvalidation'
+  http_method_names = ['post']
+  permission_classes = (IsAuthenticated, )
+  serializer_class = CouponValidationSerializer
+
+  def post(self, request, format=None, *args, **kwargs):
+    serializer = self.serializer_class(data=request.data)
+    serializer.is_valid(raise_exception=True)
+
+    coupon_code = serializer.validated_data.get('coupon')
+    course_code = serializer.validated_data.get('course_code')
+
+
+    isValid, reason = validateCodeNinjaCoupon(coupon_code = coupon_code , course_code = course_code)
+    return {'isValid': isValid, 'reason': reason}
 
 
 

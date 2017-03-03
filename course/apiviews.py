@@ -256,7 +256,7 @@ class CodeNinjaCacheUpdateView(views.APIView):
             # try:
 
 
-            r = requests.get(i, headers=self.cnHeaders, verify=False)
+            r = requests.get(i, headers=self.cnHeaders)
             data = r.json()
 
             # print i
@@ -323,7 +323,7 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
 
 
-            r = requests.get(i, headers=self.cnHeaders, verify=False)
+            r = requests.get(i, headers=self.cnHeaders)
             data = r.json()
 
             # filter out certain keys that should not be overwritten
@@ -410,7 +410,7 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
 
 
-            r = requests.get(p.get('url'), headers=self.cnHeaders, verify=False)
+            r = requests.get(p.get('url'), headers=self.cnHeaders)
             data = r.json()
 
             # filter out certain keys that should not be overwritten
@@ -501,11 +501,11 @@ class CodeNinjaCacheUpdateView(views.APIView):
         for s in subdomains:
 
             # take a look at the active camps first
-            activeCampsUrl = 'http://{}.firstcodeacademy.com/api/camps'.format(s)
-            r = requests.get(activeCampsUrl, headers = self.cnHeaders, verify=False)
+            activeCampsUrl = 'https://{}.firstcodeacademy.com/api/camps'.format(s)
+            r = requests.get(activeCampsUrl, headers = self.cnHeaders)
             activeCampsData = r.json()
 
-            activeCampsData_ids = ['http://{}.firstcodeacademy.com/api/camps/{}'.format(s ,i['id']) for i in activeCampsData]
+            activeCampsData_ids = ['https://{}.firstcodeacademy.com/api/camps/{}'.format(s ,i['id']) for i in activeCampsData]
             print 'activeCampsData_ids', activeCampsData_ids
 
             # now we can start polling endpoint
@@ -517,11 +517,11 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
 
             # take a look at the programs
-            activeProgramsUrl = 'http://{}.firstcodeacademy.com/api/programs'.format(s)
-            r = requests.get(activeProgramsUrl, headers = self.cnHeaders, verify=False)
+            activeProgramsUrl = 'https://{}.firstcodeacademy.com/api/programs'.format(s)
+            r = requests.get(activeProgramsUrl, headers = self.cnHeaders)
             activeProgramsData = r.json()
 
-            activeProgramsData_ids = ['http://{}.firstcodeacademy.com/api/programs/{}'.format(s, i['id']) for i in activeProgramsData]
+            activeProgramsData_ids = ['https://{}.firstcodeacademy.com/api/programs/{}'.format(s, i['id']) for i in activeProgramsData]
             print 'activeProgramsData_ids', activeProgramsData_ids
 
             # now we can start polling endpoint
@@ -533,14 +533,14 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
 
             # take a look at the events (which has all the trial classes)
-            activeEventsUrl = 'http://{}.firstcodeacademy.com/api/events'.format(s)
-            r = requests.get(activeEventsUrl, headers = self.cnHeaders, verify=False)
+            activeEventsUrl = 'https://{}.firstcodeacademy.com/api/events'.format(s)
+            r = requests.get(activeEventsUrl, headers = self.cnHeaders)
             activeEventsData = r.json()
 
 
             activeEventsData_payloads = [
                 { 
-                    'url':'http://{}.firstcodeacademy.com/api/events/{}'.format(s, i['id']),
+                    'url':'https://{}.firstcodeacademy.com/api/events/{}'.format(s, i['id']),
                     # the event_date field is not correct, look at the offerings instead
                     # 'start_date':  i['event_date'],
                     # 'end_date':  i['event_date'],

@@ -20,6 +20,8 @@ from django.template.loader import render_to_string
 
 from course.models import Course
 
+from dateutil.parser import parse as dateTimeParse
+
 
 import requests
 # from allauth.account.models import EmailAddress, EmailConfirmation
@@ -280,7 +282,7 @@ def updateCodeNinjaEnrollment(order):
 
   r = requests.patch(
     url,
-    headers={'Authorization': settings.CNKEY, 'Content-type': 'application/json', 'Accept': 'text/plain'}, verify=False,
+    headers={'Authorization': settings.CNKEY, 'Content-type': 'application/json', 'Accept': 'text/plain'},
     json=jsonBody
   )
 
@@ -308,7 +310,161 @@ def updateCodeNinjaEnrollment(order):
 #   print r.text
 
 
+def useCodeNinjaCoupon(coupon_code, course_code):
+  return validateCodeNinjaCoupon(coupon_code, course_code, useCoupon=True)
 
 
+def validateCodeNinjaCoupon(coupon_code, course_code, useCoupon=False):
+  """
+  given coupon_code, send a get request to https://hk.firstcodeacademy.com/api/coupons
+  and see if the coupon is valid for the course_code in question.
+  - return True if valid, else False
+  """
+
+  if not coupon_code:
+    reason = 'invalid coupon, coupon cannot be empty'
+    return False, reason
+
+  if not course_code:
+    reason = 'invalid coupon, course_code cannot be empty'
+    return False, reason
+  
+  course = Course.objects.filter(course_code = course_code)
+  if not course:
+    reason = 'course_code is invalid'
+    return False, reason
+  course = course.first()
+
+
+
+  cnHeaders = {'Authorization': settings.CNKEY}
+  r = requests.get(url = 'https://hk.firstcodeacademy.com/api/coupons', headers = cnHeaders)
+
+
+#   expect r.json() like this:
+#   [
+#   {
+#     "id": 1,
+#     "coupon_code": "SUMMEREARLY17",
+#     "discount_amount": "380.0",
+#     "currency": "HKD",
+#     "use_type": "Unlimited",
+#     "start_date": "2017-03-01",
+#     "start_time": "2000-01-01T00:00:00.000Z",
+#     "end_date": "2017-06-01",
+#     "end_time": "2000-01-01T00:00:00.000Z",
+#     "applicable_type": "Camp",
+#     "course_code": "",
+#     "use_capacity": 0,
+#     "use_count": 0
+#   }, ...
+# ]
+
+  for i in r.json():
+    if i.get('coupon_code') == coupon_code:
+
+      discount_amount = float(i.get('discount_amount', 0))
+
+      currency = i.get('currency')
+      use_type = i.get('use_type')
+
+      start_date = dateTimeParse(i.get('start_date'))
+      start_time = dateTimeParse(i.get('start_time'))
+      end_date = dateTimeParse(i.get('end_date'))
+      end_time = dateTimeParse(i.get('end_time'))
+
+
+      use_count = int(i.get('use_count'))
+      use_capacity = int(i.get('use_capacity'))
+
+      applicable_type = i.get('applicable_type', '').lower()
+
+      coupon_specific_course_code = i.get('course_code')
+
+
+      # @kevon:
+      # Logic for coupon
+
+      # if applicable_type is "All" -> it works for Term/Camp/Event
+      # if applicable_type is "Camp" -> it works only for Camp
+      # if applicable_type is "Term" -> it works only for Term
+      # if applicable_type is "Event" -> it works only for Event
+      if applicable_type != 'all':
+        # check if restriction applies to course
+        if applicable_type != course.event_type.lower():
+          print 'invalid coupon, applicable_type: {} does not apply to course_code {} with event_type: {}'.format(applicable_type, course_code, course.event_type.lower())
+          reason = 'invalid coupon'
+          return False, reason
+
+      # if use_type is "Unlimited" -> it works no matter what
+      # if use_type is "Limited"-> check for use_count and use_capacity, if we still have quota, approve; if no quota left, deny
+      if use_type != 'Unlimited':
+        # check quota
+        if use_count >= use_capacity:
+          reason = 'invalid coupon, promotion has ended. Try earlier next time.'
+          return False, reason 
+
+      # if course_code is provided -> this coupon only works for this course/event (term/camp/event), deny if coupon_code and course_code do not match
+      if coupon_specific_course_code:
+        if course_code != coupon_specific_course_code:
+          reason = 'invalid coupon, coupon does not apply to this product.'
+          return False, reason
+
+
+      # if Today is not between start_date + starttime and end_date + end_time, deny the coupon use.
+      if use_type != 'Unlimited':
+        start_dateTime = start_date
+        start_dateTime.replace(
+          hour = start_time.hour, 
+          minute = start_time.minute, 
+          second = start_time.second, 
+          microsecond = start_time.microsecond
+        )
+
+        end_dateTime = end_date
+        end_dateTime.replace(
+          hour = end_time.hour, 
+          minute = end_time.minute, 
+          second = end_time.second, 
+          microsecond = end_time.microsecond
+        )
+
+        now = timezone.now()
+
+        if now <= start_dateTime or now >= end_dateTime:
+          print 'invalid coupon {}, invalid date range'.format(coupon_code)
+          reason = 'invalid coupon, promotion has ended. Try earlier next time.'
+          return False, reason 
+
+
+      # If coupon's active = false, deny the coupon use
+      # @alan, only active coupons are shown in API, so no need to check
+
+      
+      
+      # after the payment is processed, hit the PATCH coupon API to update the use_count
+      if useCoupon:
+        # if actually using coupon, send a patch back to update the coupon
+        new_use_count = use_count + 1
+        payload = {
+          'use_count': new_use_count
+        }
+        r = requests.patch(url = 'https://hk.firstcodeacademy.com/api/coupons/{}'.format(coupon_code), headers= cnHeaders, json=payload )
+        
+        if r.status_code != 200:
+          reason = "use coupon failed"
+          print 'https://hk.firstcodeacademy.com/api/coupons/{}'.format(coupon_code), reason
+          print r.text
+          return False, reason
+
+        reason = 'valid coupon, used for purchase'
+        return True, reason
+
+      reason = 'valid coupon'
+      return True, reason
+
+
+  reason = 'invalid coupon'
+  return False, reason
 
 
