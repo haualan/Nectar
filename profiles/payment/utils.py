@@ -378,7 +378,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
 
       discount_amount = float(i.get('discount_amount', 0.0))
 
-      currency = i.get('currency')
+      currency = i.get('currency').lower()
       use_type = i.get('use_type')
 
       start_date = dateTimeParse(i.get('start_date'))
@@ -426,6 +426,26 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
           return p
 
       # if currency code does not match, throw error
+      course_currency = [p.get('currency') for p in course.prices if i.get('price_code') == price_code]
+      if len(course_currency) == 0:
+        p = {
+          'reason': 'invalid coupon, coupon does not apply to this product.',
+          'isValid': False,
+          'discount_amount': 0.0,
+        }
+        return p
+      course_currency = course_currency[0].lower()
+
+      if course_currency != currency:
+        print 'invalid coupon {}, invalid currency code'.format(coupon_code)
+        p = {
+          'reason': 'invalid coupon, coupon does not apply to this product.',
+          'isValid': False,
+          'discount_amount': 0.0,
+        }
+        return p
+
+
 
 
       # if course_code is provided -> this coupon only works for this course/event (term/camp/event), deny if coupon_code and course_code do not match
