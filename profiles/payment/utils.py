@@ -311,7 +311,7 @@ def updateCodeNinjaEnrollment(order):
 
 
 def useCodeNinjaCoupon(coupon_code, course_code, price_code):
-  return validateCodeNinjaCoupon(coupon_code, course_code, useCoupon=True)
+  return validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=True)
 
 
 def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=False):
