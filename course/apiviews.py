@@ -476,8 +476,11 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
         # needed for codeninja verification
 
-        countriesUrl = 'http://www.firstcodeacademy.com/api/countries'
-        r = requests.get(countriesUrl, headers = self.cnHeaders, verify=False)
+
+
+        countriesUrl = 'https://www.firstcodeacademy.com/api/countries'
+        # countriesUrl = 'https://www.google.com'
+        r = requests.get(countriesUrl, headers = self.cnHeaders)
 
         # print r, r.status_code, r.text, self.cnHeaders
 
