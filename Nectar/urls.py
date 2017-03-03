@@ -101,6 +101,10 @@ urlpatterns = [
     
     url(r'^api/v1/paymentmanualcharge/$', PaymentManualChargeView.as_view() , name = 'paymentmanualcharge-list'),
     url(r'^api/v1/paymentmanualrefund/$', PaymentManualRefundView.as_view() , name = 'paymentmanualrefund-list'),
+
+    url(r'^api/v1/couponvalidation/$', CouponValidationView.as_view() , name = 'couponvalidation-list'),
+
+    
     
     
 

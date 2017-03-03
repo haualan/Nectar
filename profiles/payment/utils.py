@@ -325,7 +325,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, useCoupon=False):
     p = {
       'reason': 'invalid coupon, coupon cannot be empty',
       'isValid': False,
-      'discount_amount': 0,
+      'discount_amount': 0.0,
     }
     return p
 
@@ -333,7 +333,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, useCoupon=False):
     p = {
       'reason': 'invalid coupon, course_code cannot be empty',
       'isValid': False,
-      'discount_amount': 0,
+      'discount_amount': 0.0,
     }
     return p
   
@@ -342,7 +342,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, useCoupon=False):
     p = {
       'reason': 'course_code is invalid',
       'isValid': False,
-      'discount_amount': 0,
+      'discount_amount': 0.0,
     }
     return p
 
@@ -376,7 +376,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, useCoupon=False):
   for i in r.json():
     if i.get('coupon_code') == coupon_code:
 
-      discount_amount = float(i.get('discount_amount', 0))
+      discount_amount = float(i.get('discount_amount', 0.0))
 
       currency = i.get('currency')
       use_type = i.get('use_type')
@@ -409,7 +409,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, useCoupon=False):
           p = {
             'reason': 'invalid coupon',
             'isValid': False,
-            'discount_amount': 0,
+            'discount_amount': 0.0,
           }
           return p
 
@@ -421,7 +421,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, useCoupon=False):
           p = {
             'reason': 'invalid coupon, promotion has ended. Try earlier next time.',
             'isValid': False,
-            'discount_amount': 0,
+            'discount_amount': 0.0,
           }
           return p
 
@@ -431,7 +431,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, useCoupon=False):
           p = {
             'reason': 'invalid coupon, coupon does not apply to this product.',
             'isValid': False,
-            'discount_amount': 0,
+            'discount_amount': 0.0,
           }
           return p
 
@@ -461,7 +461,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, useCoupon=False):
           p = {
             'reason': 'invalid coupon, promotion has ended. Try earlier next time.',
             'isValid': False,
-            'discount_amount': 0,
+            'discount_amount': 0.0,
           }
           return p
 
@@ -486,7 +486,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, useCoupon=False):
           p = {
             'reason': "use coupon failed",
             'isValid': False,
-            'discount_amount': 0,
+            'discount_amount': 0.0,
           }
           return p
 
@@ -509,7 +509,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, useCoupon=False):
   p = {
     'reason': 'invalid coupon',
     'isValid': False,
-    'discount_amount': 0,
+    'discount_amount': 0.0,
   }
   return p
 

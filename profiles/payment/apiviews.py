@@ -9,7 +9,7 @@ from .serializers import *
 from course.models import Course
 from .models import *
 
-from .utils import send_order_confirm_email, send_internal_sales_email, updateCodeNinjaEnrollment, validateCodeNinjaCoupon
+from .utils import send_order_confirm_email, send_internal_sales_email, updateCodeNinjaEnrollment, validateCodeNinjaCoupon, useCodeNinjaCoupon
 
 
 import stripe
@@ -326,6 +326,11 @@ class PaymentChargeUserView(views.APIView):
       raise ParseError('price_code does not exist')
 
     # apply coupon and discounts here
+    discount_amount = 0.0
+    if coupon_code:
+      couponValidityDict = useCodeNinjaCoupon(course_code = course.course_code, coupon_code = coupon_code)
+      if couponValidityDict.get('isValid'):
+        discount_amount = couponValidityDict.get('discount_amount')
 
 
     # check if student is already registered to class. do not want to pay twice
@@ -396,6 +401,10 @@ class PaymentChargeUserView(views.APIView):
     if amt is None or currency is None:
       raise ParseError('course: {} incorrect prices config: {}'.format(course_code, price_code))
 
+
+    # set coupon or discounts now
+    amt = amt - discount_amount
+
     mult = currencyMultiplier.get(currency.lower(), None)
     if mult is None:
       raise ParseError('currency multiplier not recognized {}'.format(currency.lower()))
@@ -455,7 +464,7 @@ class PaymentManualChargeView(views.APIView):
     # email user a receipt.
 
 
-    return {'status': 'success', 'event_id': openTrans.event_id}
+    return Response({'status': 'success', 'event_id': openTrans.event_id})
 
 
 class PaymentManualRefundView(views.APIView):
@@ -474,7 +483,7 @@ class PaymentManualRefundView(views.APIView):
 
     closingTrans = Ledger.createManualRefund(**serializer.validated_data)
 
-    return {'status': 'success', 'event_id': closingTrans.event_id}
+    return Response({'status': 'success', 'event_id': closingTrans.event_id})
 
 
 
@@ -510,8 +519,9 @@ class LedgerViewSet(viewsets.ReadOnlyModelViewSet):
 
 class CouponValidationView(views.APIView):
   """
-  given a payload of { 'coupon': 'SOMECOUPON'}
-  validate with code ninja to see if coupon is actually valid.
+  /n given a payload of 
+  /n { 'coupon_code': 'SOMECOUPON', 'course_code': '123' }
+  /n validate with code ninja to see if coupon is actually valid.
 
   Front end should update with price
   """
@@ -524,12 +534,12 @@ class CouponValidationView(views.APIView):
     serializer = self.serializer_class(data=request.data)
     serializer.is_valid(raise_exception=True)
 
-    coupon_code = serializer.validated_data.get('coupon')
+    coupon_code = serializer.validated_data.get('coupon_code')
     course_code = serializer.validated_data.get('course_code')
 
 
-    isValid, reason = validateCodeNinjaCoupon(coupon_code = coupon_code , course_code = course_code)
-    return {'isValid': isValid, 'reason': reason}
+    resultDict = validateCodeNinjaCoupon(coupon_code = coupon_code , course_code = course_code)
+    return Response(resultDict)
 
 
 
