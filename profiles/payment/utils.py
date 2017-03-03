@@ -405,9 +405,9 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
       if applicable_type != 'all':
         # check if restriction applies to course
         if applicable_type != course.event_type.lower():
-          print 'invalid coupon, applicable_type: {} does not apply to course_code {} with event_type: {}'.format(applicable_type, course_code, course.event_type.lower())
+          print 'Invalid promo code, applicable_type: {} does not apply to course_code {} with event_type: {}'.format(applicable_type, course_code, course.event_type.lower())
           p = {
-            'reason': 'invalid coupon',
+            'reason': 'Invalid promo code',
             'isValid': False,
             'discount_amount': 0.0,
           }
@@ -419,7 +419,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
         # check quota
         if use_count >= use_capacity:
           p = {
-            'reason': 'invalid coupon, promotion has ended. Try earlier next time.',
+            'reason': 'Invalid promo code, promotion has ended. Try earlier next time.',
             'isValid': False,
             'discount_amount': 0.0,
           }
@@ -432,7 +432,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
       # print 'course_currency', course_currency
       if len(course_currency) == 0:
         p = {
-          'reason': 'invalid coupon, coupon does not apply to this product.',
+          'reason': 'Promo code does not apply to this product.',
           'isValid': False,
           'discount_amount': 0.0,
         }
@@ -444,9 +444,9 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
 
 
       if course_currency != currency:
-        print 'invalid coupon {}, invalid currency code'.format(coupon_code)
+        print 'Invalid promo code {}, invalid currency code'.format(coupon_code)
         p = {
-          'reason': 'invalid coupon, coupon does not apply to this product.',
+          'reason': 'Promo code does not apply to this product.',
           'isValid': False,
           'discount_amount': 0.0,
         }
@@ -459,7 +459,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
       if coupon_specific_course_code:
         if course_code != coupon_specific_course_code:
           p = {
-            'reason': 'invalid coupon, coupon does not apply to this product.',
+            'reason': 'Promo code does not apply to this product.',
             'isValid': False,
             'discount_amount': 0.0,
           }
@@ -489,7 +489,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
         if now <= start_dateTime or now >= end_dateTime:
           print 'invalid coupon {}, invalid date range'.format(coupon_code)
           p = {
-            'reason': 'invalid coupon, promotion has ended. Try earlier next time.',
+            'reason': 'Promotion has ended. Try earlier next time.',
             'isValid': False,
             'discount_amount': 0.0,
           }
@@ -514,30 +514,30 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
           print 'https://hk.firstcodeacademy.com/api/coupons/{}'.format(coupon_code), reason
           print r.text
           p = {
-            'reason': "use coupon failed",
+            'reason': "use promo code failed",
             'isValid': False,
             'discount_amount': 0.0,
           }
           return p
 
         p = {
-          'reason': 'valid coupon, used for purchase',
+          'reason': 'valid promo code, used for purchase',
           'isValid': True,
           'discount_amount': discount_amount,
         }
         return p
 
       p = {
-        'reason': 'valid coupon',
+        'reason': 'Valid promo code',
         'isValid': True,
         'discount_amount': discount_amount,
       }
       return p
 
 
-  print 'coupon {} not found in api'.format(coupon_code)
+  print 'Promo code {} not found in api'.format(coupon_code)
   p = {
-    'reason': 'invalid coupon',
+    'reason': 'Invalid promo code',
     'isValid': False,
     'discount_amount': 0.0,
   }
