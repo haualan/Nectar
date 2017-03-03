@@ -527,7 +527,9 @@ class CouponValidationView(views.APIView):
   """
   api_name = 'couponvalidation'
   http_method_names = ['post']
-  permission_classes = (IsAuthenticated, )
+
+  # it has to be public otherwise anonymous buyer cannot verify
+  permission_classes = (AllowAny, )
   serializer_class = CouponValidationSerializer
 
   def post(self, request, format=None, *args, **kwargs):
