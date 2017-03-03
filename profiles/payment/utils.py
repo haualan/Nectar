@@ -310,11 +310,11 @@ def updateCodeNinjaEnrollment(order):
 #   print r.text
 
 
-def useCodeNinjaCoupon(coupon_code, course_code):
+def useCodeNinjaCoupon(coupon_code, course_code, price_code):
   return validateCodeNinjaCoupon(coupon_code, course_code, useCoupon=True)
 
 
-def validateCodeNinjaCoupon(coupon_code, course_code, useCoupon=False):
+def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=False):
   """
   given coupon_code, send a get request to https://hk.firstcodeacademy.com/api/coupons
   and see if the coupon is valid for the course_code in question.
@@ -424,6 +424,9 @@ def validateCodeNinjaCoupon(coupon_code, course_code, useCoupon=False):
             'discount_amount': 0.0,
           }
           return p
+
+      # if currency code does not match, throw error
+
 
       # if course_code is provided -> this coupon only works for this course/event (term/camp/event), deny if coupon_code and course_code do not match
       if coupon_specific_course_code:

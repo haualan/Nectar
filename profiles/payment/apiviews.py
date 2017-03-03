@@ -328,7 +328,7 @@ class PaymentChargeUserView(views.APIView):
     # apply coupon and discounts here
     discount_amount = 0.0
     if coupon_code:
-      couponValidityDict = useCodeNinjaCoupon(course_code = course.course_code, coupon_code = coupon_code)
+      couponValidityDict = useCodeNinjaCoupon(course_code = course.course_code, coupon_code = coupon_code, price_code = price_code)
       if couponValidityDict.get('isValid'):
         discount_amount = couponValidityDict.get('discount_amount')
 
@@ -538,9 +538,10 @@ class CouponValidationView(views.APIView):
 
     coupon_code = serializer.validated_data.get('coupon_code')
     course_code = serializer.validated_data.get('course_code')
+    price_code = serializer.validated_data.get('price_code')
 
 
-    resultDict = validateCodeNinjaCoupon(coupon_code = coupon_code , course_code = course_code)
+    resultDict = validateCodeNinjaCoupon(coupon_code = coupon_code , course_code = course_code, price_code = price_code)
     return Response(resultDict)
 
 
