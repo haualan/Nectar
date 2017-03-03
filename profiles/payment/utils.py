@@ -322,17 +322,30 @@ def validateCodeNinjaCoupon(coupon_code, course_code, useCoupon=False):
   """
 
   if not coupon_code:
-    reason = 'invalid coupon, coupon cannot be empty'
-    return False, reason
+    p = {
+      'reason': 'invalid coupon, coupon cannot be empty',
+      'isValid': False,
+      'discount_amount': 0,
+    }
+    return p
 
   if not course_code:
-    reason = 'invalid coupon, course_code cannot be empty'
-    return False, reason
+    p = {
+      'reason': 'invalid coupon, course_code cannot be empty',
+      'isValid': False,
+      'discount_amount': 0,
+    }
+    return p
   
   course = Course.objects.filter(course_code = course_code)
   if not course:
-    reason = 'course_code is invalid'
-    return False, reason
+    p = {
+      'reason': 'course_code is invalid',
+      'isValid': False,
+      'discount_amount': 0,
+    }
+    return p
+
   course = course.first()
 
 
@@ -393,22 +406,34 @@ def validateCodeNinjaCoupon(coupon_code, course_code, useCoupon=False):
         # check if restriction applies to course
         if applicable_type != course.event_type.lower():
           print 'invalid coupon, applicable_type: {} does not apply to course_code {} with event_type: {}'.format(applicable_type, course_code, course.event_type.lower())
-          reason = 'invalid coupon'
-          return False, reason
+          p = {
+            'reason': 'invalid coupon',
+            'isValid': False,
+            'discount_amount': 0,
+          }
+          return p
 
       # if use_type is "Unlimited" -> it works no matter what
       # if use_type is "Limited"-> check for use_count and use_capacity, if we still have quota, approve; if no quota left, deny
       if use_type != 'Unlimited':
         # check quota
         if use_count >= use_capacity:
-          reason = 'invalid coupon, promotion has ended. Try earlier next time.'
-          return False, reason 
+          p = {
+            'reason': 'invalid coupon, promotion has ended. Try earlier next time.',
+            'isValid': False,
+            'discount_amount': 0,
+          }
+          return p
 
       # if course_code is provided -> this coupon only works for this course/event (term/camp/event), deny if coupon_code and course_code do not match
       if coupon_specific_course_code:
         if course_code != coupon_specific_course_code:
-          reason = 'invalid coupon, coupon does not apply to this product.'
-          return False, reason
+          p = {
+            'reason': 'invalid coupon, coupon does not apply to this product.',
+            'isValid': False,
+            'discount_amount': 0,
+          }
+          return p
 
 
       # if Today is not between start_date + starttime and end_date + end_time, deny the coupon use.
@@ -433,8 +458,12 @@ def validateCodeNinjaCoupon(coupon_code, course_code, useCoupon=False):
 
         if now <= start_dateTime or now >= end_dateTime:
           print 'invalid coupon {}, invalid date range'.format(coupon_code)
-          reason = 'invalid coupon, promotion has ended. Try earlier next time.'
-          return False, reason 
+          p = {
+            'reason': 'invalid coupon, promotion has ended. Try earlier next time.',
+            'isValid': False,
+            'discount_amount': 0,
+          }
+          return p
 
 
       # If coupon's active = false, deny the coupon use
@@ -452,19 +481,38 @@ def validateCodeNinjaCoupon(coupon_code, course_code, useCoupon=False):
         r = requests.patch(url = 'https://hk.firstcodeacademy.com/api/coupons/{}'.format(coupon_code), headers= cnHeaders, json=payload )
         
         if r.status_code != 200:
-          reason = "use coupon failed"
           print 'https://hk.firstcodeacademy.com/api/coupons/{}'.format(coupon_code), reason
           print r.text
-          return False, reason
+          p = {
+            'reason': "use coupon failed",
+            'isValid': False,
+            'discount_amount': 0,
+          }
+          return p
 
-        reason = 'valid coupon, used for purchase'
-        return True, reason
+        p = {
+          'reason': 'valid coupon, used for purchase',
+          'isValid': True,
+          'discount_amount': discount_amount,
+        }
+        return p
 
-      reason = 'valid coupon'
-      return True, reason
+      p = {
+        'reason': 'valid coupon',
+        'isValid': True,
+        'discount_amount': discount_amount,
+      }
+      return p
 
 
-  reason = 'invalid coupon'
-  return False, reason
+  print 'coupon {} not found in api'.format(coupon_code)
+  p = {
+    'reason': 'invalid coupon',
+    'isValid': False,
+    'discount_amount': 0,
+  }
+  return p
+
+
 
 
