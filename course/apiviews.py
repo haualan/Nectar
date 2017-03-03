@@ -199,6 +199,10 @@ class CodeNinjaCacheUpdateView(views.APIView):
         # filter out certain keys that should not be overwritten
         c = {k:v for (k,v) in c.items() if k not in ['id'] and k in get_model_concrete_fields(Course) }
 
+        # prevent null course_icon_url fields
+        if 'course_icon_url' in c and c['course_icon_url'] is None:
+            c['course_icon_url'] = ''
+
         course, created = Course.objects.update_or_create(
             # filter by
             course_code = c['course_code'],

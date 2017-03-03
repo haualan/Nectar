@@ -180,10 +180,6 @@ class Course(models.Model):
     #   ValueError at /api/v1/codeninjacacheupdate/
     # save() prohibited to prevent data loss due to unsaved related object 'course'.
 
-    if self.course_icon_url is None:
-      # sometimes codeninja does not have this field set as empty string, force it here instead
-      self.course_icon_url = ''
-
     if self.event_type not in ('term'):
       # if event is a camp or an event, fill the dates
       self.updateClassDates()
