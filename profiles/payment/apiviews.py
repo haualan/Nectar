@@ -403,6 +403,7 @@ class PaymentChargeUserView(views.APIView):
 
 
     # set coupon or discounts now
+    amt = float(amt)
     amt = amt - discount_amount
 
     mult = currencyMultiplier.get(currency.lower(), None)
