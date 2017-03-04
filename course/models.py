@@ -129,7 +129,16 @@ class UserCourseRelationship(models.Model):
     - returns a query set
 
     """
-    pass
+    return cls.objects.filter(
+      course__active = True,
+    ).exclude(
+      user__role__in = ['I', 'O', 'C'],
+    ).exclude(
+      user__email__regex  = internalEmailExclusionRegex,
+    ).exclude(
+      # exclude count from test users and internal accounts
+      user__GuardianStudentRelation_student__guardian__email__regex  = internalEmailExclusionRegex,
+    )
 
   @classmethod
   def getAllEnrollmentReport(cls):
@@ -139,7 +148,9 @@ class UserCourseRelationship(models.Model):
       Order no. Order Date  First Name  Surname Email Quantity  Ticket Type Order Type  Total Paid  Eventbrite Fees Eventbrite Payment Processing Attendee Status Student's First Name  Student's Last Name Student's Gender  Student's Date of Birth (DD/MM/YYYY)  Student's School  Student's Level in School Student's Email Parent's First Name Parent's Last Name  Parent's Email  Parent's Contact Number Alternative Parent Full Name  Alternative Parent Email  Alternative Parent's Contact Number Address District  Remarks (e.g. health) How did you hear about First Code Academy?  Computer Requirement  Got a friend learning at First Code? Please fill in his/her unique referrer code to enjoy the $380 referral rebate! Terms and Conditions
     """
 
-    r = cls.objects.exclude(
+    r = cls.objects.filter(
+      course__active = True,
+    ).exclude(
       user__role__in = ['I', 'O', 'C'],
     ).exclude(
       user__email__regex  = internalEmailExclusionRegex,

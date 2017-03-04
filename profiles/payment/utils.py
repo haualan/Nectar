@@ -484,7 +484,9 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
           microsecond = end_time.microsecond
         )
 
+        # has to be naive comparison otherwise start_dateTime will throw erorr
         now = timezone.now()
+        now = timezone.make_naive(now)
 
         if now <= start_dateTime or now >= end_dateTime:
           print 'invalid coupon {}, invalid date range'.format(coupon_code)
