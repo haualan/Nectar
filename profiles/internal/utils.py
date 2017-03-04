@@ -66,7 +66,7 @@ def guardiansPendingPurchaseEmail(request):
     \n - If the same user has not made a purchase for up till 7 days, the user will be dropped from the report (user no longer interested)
     \n - users signed up for less than 24 hrs are excluded from the report (maybe user is still deciding)
     \n
-    """ + r
+    """
 
   send_internal_email(
     subject = 'test guardiansPendingPurchase report',
