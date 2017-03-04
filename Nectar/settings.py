@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 from __future__ import unicode_literals
 
-
+# DEFAULT_CHARSET = 'utf-16'
 
 
 import os, sys, codecs, locale
