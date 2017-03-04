@@ -31,7 +31,6 @@ def send_internal_email(subject, text, html, file, subdomain = 'hk' ):
           "text": text,
           "html": html,
           "files":[("attachment", file)],
-          ""
 
           })
 
