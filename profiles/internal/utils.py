@@ -9,8 +9,10 @@ import csv
 
 
 internalEmailRecipients = [
-  # 'michelle@firstcodeacademy.com', 
+  'michelle@firstcodeacademy.com', 
+  'kevon@firstcodeacademy.com',
   'alan@firstcodeacademy.com',
+  'hello@firstcodeacademy.com',
   ]
 
 def send_internal_email(subject, text, html, file, subdomain = 'hk' ):
@@ -48,7 +50,7 @@ def guardiansPendingPurchaseEmail(request):
   csvwriter = csv.writer(csvfile)
 
   # define the columns, also serve as keys
-  cols = [ 'hoursWithoutPurchase','guardianEmail', 'guardianPhone', 'guardianAddress' ]
+  cols = [ 'hoursWithoutPurchase','guardianEmail', 'guardianPhone', 'guardianFirstName', 'guardianLastName', 'guardianAddress' ]
 
   # write header
   csvwriter.writerow(cols)
@@ -69,7 +71,7 @@ def guardiansPendingPurchaseEmail(request):
     """
 
   send_internal_email(
-    subject = 'test guardiansPendingPurchase report',
+    subject = 'Payments guardiansPendingPurchase report',
     text = text,
     html = text,
     file  = file
@@ -110,6 +112,8 @@ def guardiansPendingPurchase(request):
     {
       'hoursWithoutPurchase': (now - u.date_joined).total_seconds() / 3600.0,
       'guardianEmail': u.email,
+      'guardianFirstName': u.firstname,
+      'guardianLastName': u.lastname,
       'guardianPhone': u.phoneNumber,
       'guardianAddress': u.address,
 
