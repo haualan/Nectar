@@ -54,7 +54,7 @@ def guardiansPendingPurchaseEmail(request):
   csvwriter.writerow(cols)
 
   for row in r:
-    csvwriter.writerow((row.get(i) for i in cols))
+    csvwriter.writerow([row.get(i) for i in cols])
 
 
   file = csvfile.getvalue()
