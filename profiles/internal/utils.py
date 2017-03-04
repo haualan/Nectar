@@ -5,6 +5,7 @@ from django.db.models import FloatField, IntegerField
 from django.db.models.functions import Cast
 import StringIO, requests
 from django.conf import settings
+import csv
 
 
 internalEmailRecipients = [
