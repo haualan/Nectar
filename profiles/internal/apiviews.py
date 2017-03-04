@@ -20,51 +20,48 @@ from .utils import *
 
 
 class InternalView(views.APIView):
-    """
-    API endpoint for internal usage
-    
-    \n notification_id_topic_id: the first item is the notfication_id, the second is the topic_id, when showing stream to user, if topic_id matches this list...
-    \n then for each notification_id, send a PUT to the /topicnotification/'notification_id'/ endpoint to signify a read action
-    """
-    api_name = 'internal'
-
-    # queryset = User.objects.all()
-    # serializer_class = MeSerializer
-    http_method_names = ['post']
-    permission_classes = (IsAuthenticated,)
-
-
-    def post(self, request, format=None, *args, **kwargs):
-        viewingUser = request.user
-
-        op = request.data.get('op', None)
-
-        if op not in ['guardiansPendingPurchase']:
-        	raise ParseError('expectinh operation variable op')
+  """
+  \n API endpoint for internal usage
+  
+  \n
+  \n find users looking to purchase but haven't done so for a period of time
+  \n      {
+  \n      "verifyToken": <token>,
+  \n          "op": "guardiansPendingPurchase"
+  \n      }
+  \n same as above but fires the email to internal users
+  \n      {
+  \n          "verifyToken": <token>,
+  \n          "op": "guardiansPendingPurchaseEmail"
+  \n      }
 
 
+  """
+  api_name = 'internal'
 
-        r = globals()[op](request):
-
-
-
-
-        
-
-    def get_queryset(self):
-        # every time this query is called, it kicks off an insert to user profile that the user has logged in.
-
-        # print self.request._request.session
-        # print self.request.session.items()
-        # for i in self.request.session.keys():
-        #     print i 
+  # queryset = User.objects.all()
+  # serializer_class = MeSerializer
+  http_method_names = ['post']
+  permission_classes = (AllowAny,)
 
 
-        # self.request.user.record_login()
-        # getSegment(self.request, 'identify')
+  def post(self, request, format=None, *args, **kwargs):
+      # viewingUser = request.user
 
-        
-        return self.queryset.filter(id=self.request.user.id)
+    verifyToken = request.data.get('verifyToken')
+
+    # confirm that frontend has a signature passed
+    if verifyToken != settings.VERIFYTOKEN:
+      raise PermissionDenied('Verification Token missing or invalid')
+
+
+    op = request.data.get('op', None)
+
+    if op not in ['guardiansPendingPurchase', 'guardiansPendingPurchaseEmail']:
+      raise ParseError('expecting operation variable op')
+
+    return Response(globals()[op](request))
+
 
 
 

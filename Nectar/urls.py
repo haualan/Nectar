@@ -83,6 +83,8 @@ urlpatterns = [
     url(r'^api/v1/schoolupdateorcreate/$', SchoolUpdateOrCreateView.as_view() , name = 'schoolupdateorcreate-list'),
 
 
+
+
     
 
 
@@ -95,6 +97,8 @@ urlpatterns = [
 
     
     url(r'^api/v1/marketingcustom/$', MarketingCustomView.as_view() , name = 'marketingcustom-list'),
+    
+    url(r'^api/v1/internal/$', InternalView.as_view() , name = 'internal-list'),
 
     # payment views
     url(r'^api/v1/paymentchargeuser/$', PaymentChargeUserView.as_view() , name = 'paymentchargeuser-list'),

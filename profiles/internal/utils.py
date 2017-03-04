@@ -42,7 +42,7 @@ def guardiansPendingPurchaseEmail(request):
   wrapper for guardiansPendingPurchase, sends email 
 
   """
-  r = guardiansPendingPurchase()
+  r = guardiansPendingPurchase(request)
 
   csvfile = StringIO.StringIO()
   csvwriter = csv.writer(csvfile)
@@ -79,7 +79,7 @@ def guardiansPendingPurchaseEmail(request):
 
   pass
 
-def guardiansPendingPurchase():
+def guardiansPendingPurchase(request):
   """
   finds all users (that are guardians) who has registered but hasn't made a purchase in the system
   - the idea behind this is that a buyer landed on the page, looking to pay but might be deterred from making actual payment what gives...
