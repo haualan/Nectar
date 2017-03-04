@@ -23,6 +23,41 @@ from rest_framework.settings import api_settings
 from rest_framework_csv import renderers as r
 
 
+class EnrollmentReportViewCSVRenderer(r.CSVRenderer):
+    header = [ 
+        'orderId',
+        'orderDate',
+        'buyerFirstname',
+        'buyerLastname',
+        'buyerEmail',
+        'quantity',
+        'course_code',
+        'orderType',
+        'totalPaid',
+        'fees',
+        'fees2',
+        'attendeeStatus',
+        'studentFirstname',
+        'studentLastname',
+        'studentGender',
+        'studentBirthdate',
+        'studentSchoolName',
+        'studentSchoolLevel',
+        'studentEmail',
+
+        'guardianFirstname',
+        'guardianLastname',
+        'guardianEmail',
+        'guardianPhoneNumber',
+        'guardianAddress',
+        'guardianAddressDistrict',
+        'studentRemarks',
+        'guardianHeardFromOption',
+        'studentNeedComputer',
+        'referral',
+        'termsAndConditions',
+        ]
+
 class EnrollmentReportView(views.APIView):
     """
     yields report for the user
@@ -31,7 +66,7 @@ class EnrollmentReportView(views.APIView):
     api_name = 'enrollmentreport'
     # queryset = UserCourseRelationship.getAllEnrollmentReport
     permission_classes = (IsAuthenticated,)
-    renderer_classes = [r.CSVRenderer, ] + api_settings.DEFAULT_RENDERER_CLASSES
+    renderer_classes = [EnrollmentReportViewCSVRenderer, ] + api_settings.DEFAULT_RENDERER_CLASSES
     http_method_names =['get']
 
     def get(self, request, *args, **kwargs):
