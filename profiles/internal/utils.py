@@ -69,7 +69,7 @@ def guardiansPendingPurchaseEmail(request):
   send_internal_email(
     subject = 'test guardiansPendingPurchase report',
     text = text,
-    html = html,
+    html = text,
     file  = file
   )
 
