@@ -25,14 +25,13 @@ def send_internal_email(subject, text, html, file, subdomain = 'hk' ):
   r = requests.post(
     settings.MAILGUN_API_URL,
     auth=("api", settings.MAILGUN_KEY),
+    files=[("attachment", file)],
     data={"from": settings.SUBDOMAINSPECIFICMAPPING.get(subdomain).get('emailFrom'),
           "h:Reply-To": settings.SUBDOMAINSPECIFICMAPPING.get(subdomain).get('emailFrom'),
           "to": ', '.join(internalEmailRecipients),
           "subject": subject,
           "text": text,
           "html": html,
-          "files":[("attachment", file)],
-
           })
 
   return r.status_code
@@ -60,10 +59,12 @@ def guardiansPendingPurchaseEmail(request):
   file = csvfile.getvalue()
 
   text = """
-    This report contains all users who signed up as a guardian after landing on the payments page (thereby showing high interest), 
-    but haven't made purchase after 24 hours.
-    - If the same user has not made a purchase for up till 7 days, the user will be dropped from the report (user no longer interested)
-    - users signed up for less than 24 hrs are excluded from the report (maybe user is still deciding)
+    \n
+    \n This report contains all users who signed up as a guardian after landing on the payments page (thereby showing high interest), 
+    \n but haven't made purchase after 24 hours.
+    \n - If the same user has not made a purchase for up till 7 days, the user will be dropped from the report (user no longer interested)
+    \n - users signed up for less than 24 hrs are excluded from the report (maybe user is still deciding)
+    \n
     """
 
   send_internal_email(
