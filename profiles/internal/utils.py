@@ -42,7 +42,7 @@ def guardiansPendingPurchaseEmail(request):
   wrapper for guardiansPendingPurchase, sends email 
 
   """
-  r = guardiansPendingPurchase
+  r = guardiansPendingPurchase()
 
   csvfile = StringIO.StringIO()
   csvwriter = csv.writer(csvfile)
