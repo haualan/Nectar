@@ -35,6 +35,8 @@ class EnrollmentReportView(views.APIView):
     http_method_names =['get']
 
     def get(self, request, *args, **kwargs):
+        if request.user.role not in ('I', 'O', 'C'):
+            raise PermissionDenied('Only internal users allowed access')
         return Response(UserCourseRelationship.getAllEnrollmentReport())
 
 
