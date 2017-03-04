@@ -216,7 +216,7 @@ class UserCourseRelationship(models.Model):
         'guardianEmail': i.guardianEmail,
         'guardianPhoneNumber': i.guardianPhoneNumber,
         'guardianAddress': i.guardianAddress,
-        'guardianAddressDistrict': i.guardianAddressDistrict,
+        'guardianAddressDistrict': '',
         'studentRemarks': i.studentRemarks,
         'guardianHeardFromOption': i.guardianHeardFromOption,
         'studentNeedComputer': i.studentNeedComputer,
