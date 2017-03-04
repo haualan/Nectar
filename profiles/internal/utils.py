@@ -44,4 +44,6 @@ def guardiansPendingPurchase(request):
     for u in r if (((now - u.date_joined).total_seconds() / 3600.0) >= detectionWindowHours)
   ]
 
+  return results
+
 
