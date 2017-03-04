@@ -19,6 +19,25 @@ import requests
 
 from dateutil.parser import parse as dateTimeParse
 
+from rest_framework.settings import api_settings
+from rest_framework_csv import renderers as r
+
+
+class EnrollmentReportView(views.APIView):
+    """
+    yields report for the user
+    """
+
+    api_name = 'enrollmentreport'
+    # queryset = UserCourseRelationship.getAllEnrollmentReport
+    permission_classes = (IsAuthenticated,)
+    renderer_classes = [r.CSVRenderer, ] + api_settings.DEFAULT_RENDERER_CLASSES
+    http_method_names =['get']
+
+    def get(self, request, *args, **kwargs):
+        return Response(UserCourseRelationship.getAllEnrollmentReport())
+
+
 
 
 
