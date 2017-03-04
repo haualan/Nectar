@@ -9,7 +9,7 @@ from django.conf import settings
 from django.dispatch import receiver
 from django.forms import ModelForm
 from datetime import datetime
-from django.db.models import Avg, Case, Count, F, Max, Min, Prefetch, Q, Sum, When
+from django.db.models import Avg, Case, Count, F, Max, Min, Prefetch, Q, Sum, When, CharField, Value, IntegerField
 
 
 from datetime import timedelta
@@ -110,6 +110,9 @@ class CodeNinjaCache(models.Model):
 def makeEmptyList():
   return []
 
+internalEmailExclusionRegex = '(@firstcodeacademy.com|alan.wc.hau)'
+
+
 class UserCourseRelationship(models.Model):
   """
   this takes care of both student enrollment and instructor assignment
@@ -118,6 +121,114 @@ class UserCourseRelationship(models.Model):
   course = models.ForeignKey('Course')
 
   role = models.CharField(max_length=1, default='S', choices = role_UserCourseRelationship_choices)
+
+  @classmethod
+  def getAllEnrollment(cls):
+    """
+    looks at all active courses and selects the active ones that have at least one student signup
+    - returns a query set
+
+    """
+    pass
+
+  @classmethod
+  def getAllEnrollmentReport(cls):
+    """
+    as per @kevon, return an eventbrite-like report
+    with these columns:
+      Order no. Order Date  First Name  Surname Email Quantity  Ticket Type Order Type  Total Paid  Eventbrite Fees Eventbrite Payment Processing Attendee Status Student's First Name  Student's Last Name Student's Gender  Student's Date of Birth (DD/MM/YYYY)  Student's School  Student's Level in School Student's Email Parent's First Name Parent's Last Name  Parent's Email  Parent's Contact Number Alternative Parent Full Name  Alternative Parent Email  Alternative Parent's Contact Number Address District  Remarks (e.g. health) How did you hear about First Code Academy?  Computer Requirement  Got a friend learning at First Code? Please fill in his/her unique referrer code to enjoy the $380 referral rebate! Terms and Conditions
+    """
+
+    r = cls.objects.exclude(
+      user__role__in = ['I', 'O', 'C'],
+    ).exclude(
+      user__email__regex  = internalEmailExclusionRegex,
+    ).exclude(
+      # exclude count from test users and internal accounts
+      user__GuardianStudentRelation_student__guardian__email__regex  = internalEmailExclusionRegex,
+    ).annotate(
+      orderId = Value('', output_field = CharField()),
+      orderDate = Value('', output_field = CharField()),
+
+      buyerFirstname = F('user__GuardianStudentRelation_student__guardian__firstname'),
+      buyerLastname = F('user__GuardianStudentRelation_student__guardian__lastname'),
+      buyerEmail = F('user__GuardianStudentRelation_student__guardian__email'),
+      quantity= Value(1, output_field = IntegerField()),
+
+      course_code = F('course__course_code'),
+      orderType = Value('', output_field = CharField()),
+      totalPaid = Value('', output_field = CharField()),
+      fees = Value('', output_field = CharField()),
+      fees2 = Value('', output_field = CharField()),
+
+      attendeeStatus = Value('Attending', output_field = CharField()),
+
+
+      studentFirstname = F('user__firstname'),
+      studentLastname = F('user__lastname'),
+      studentGender = F('user__gender'),
+      studentBirthdate = F('user__birth_date'),
+      studentSchoolName = F('user__school__name'),
+      studentSchoolLevel = Value('', output_field = CharField()),
+      studentEmail = F('user__email'),
+
+      guardianFirstname = F('user__GuardianStudentRelation_student__guardian__firstname'),
+      guardianLastname = F('user__GuardianStudentRelation_student__guardian__lastname'),
+      guardianEmail = F('user__GuardianStudentRelation_student__guardian__email'),
+      guardianPhoneNumber = F('user__GuardianStudentRelation_student__guardian__phoneNumber'),
+      guardianAddress = F('user__GuardianStudentRelation_student__guardian__address'),
+      # guardianAddressDistrict = F('user__GuardianStudentRelation_student__guardian__address'),
+
+      studentRemarks = F('user__remarks'),
+      guardianHeardFromOption = F('user__GuardianStudentRelation_student__guardian__heardFromOption'),
+      studentNeedComputer = F('user__needComputer'),
+
+
+
+
+
+    ).prefetch_related('user',)
+
+    results = [
+      {
+        'orderId': '',
+        'orderDate': '',
+        'buyerFirstname': i.guardianFirstname,
+        'buyerLastname': i.guardianLastname,
+        'buyerEmail': i.guardianEmail,
+        'quantity': 1,
+        'course_code': i.course_code,
+        'orderType': '',
+        'totalPaid': '',
+        'fees': '',
+        'fees2': '',
+        'attendeeStatus': 'Attending',
+        'studentFirstname': i.studentFirstname,
+        'studentLastname': i.studentLastname,
+        'studentGender': i.studentGender,
+        'studentBirthdate': i.studentBirthdate,
+        'studentSchoolName': i.studentSchoolName,
+        'studentSchoolLevel': i.studentSchoolLevel,
+        'studentEmail': i.studentEmail,
+
+        'guardianFirstname': i.guardianFirstname,
+        'guardianLastname': i.guardianLastname,
+        'guardianEmail': i.guardianEmail,
+        'guardianPhoneNumber': i.guardianPhoneNumber,
+        'guardianAddress': i.guardianAddress,
+        'guardianAddressDistrict': i.guardianAddressDistrict,
+        'studentRemarks': i.studentRemarks,
+        'guardianHeardFromOption': i.guardianHeardFromOption,
+        'studentNeedComputer': i.studentNeedComputer,
+        'referral':'',
+        'termsAndConditions': '',
+
+      }
+    for i in r]
+
+    return results
+
+
 
   class Meta:
     unique_together = ('user', 'course',)
@@ -378,10 +489,13 @@ class Course(models.Model):
     """
 
     return self.usercourserelationship_set.exclude(
-      user__role__in = ['I', 'O', 'C']
+      user__role__in = ['I', 'O', 'C'],
+    ).exclude(
+      user__email__regex  = internalEmailExclusionRegex,
     ).exclude(
       # exclude count from test users and internal accounts
-      user__GuardianStudentRelation_student__guardian__email__regex  = '(@firstcodeacademy.com|alan.wc.hau)')
+      user__GuardianStudentRelation_student__guardian__email__regex  = internalEmailExclusionRegex,
+    )
 
 
   class Meta:
