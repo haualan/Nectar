@@ -1,6 +1,8 @@
 from profiles.models import *
 from django.utils import timezone
 from course.models import internalEmailExclusionRegex
+from django.db.models import FloatField
+from django.db.models.functions import Cast
 
 
 
