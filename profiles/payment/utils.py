@@ -316,7 +316,7 @@ def useCodeNinjaCoupon(coupon_code, course_code, price_code):
 
 def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=False):
   """
-  given coupon_code, send a get request to https://hk.firstcodeacademy.com/api/coupons
+  given coupon_code, send a get request to https://<subdomain>.firstcodeacademy.com/api/coupons
   and see if the coupon is valid for the course_code in question.
   - return True if valid, else False
   """
@@ -351,7 +351,9 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
 
 
   cnHeaders = {'Authorization': settings.CNKEY}
-  r = requests.get(url = 'https://hk.firstcodeacademy.com/api/coupons', headers = cnHeaders)
+  r = requests.get(
+    url = 'https://{}.firstcodeacademy.com/api/coupons'.format(course.subdomain), 
+    headers = cnHeaders)
 
 
 #   expect r.json() like this:

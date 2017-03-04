@@ -312,6 +312,8 @@ class Course(models.Model):
     given a list of course_codes as str, inactivate courses outside this list
     """ 
 
+    print 'setActiveCourses', listOfActiveCourse_codes
+
     cls.objects.filter(course_code__in = listOfActiveCourse_codes).update(active = True)
     cls.objects.exclude(course_code__in = listOfActiveCourse_codes).update(active = False)
 
