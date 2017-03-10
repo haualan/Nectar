@@ -326,11 +326,11 @@ class PaymentChargeUserView(views.APIView):
       raise ParseError('price_code does not exist')
 
     # apply coupon and discounts here
-    discount_amount = 0.0
+    final_discount_amount = 0.0
     if coupon_code:
       couponValidityDict = useCodeNinjaCoupon(course_code = course.course_code, coupon_code = coupon_code, price_code = price_code)
       if couponValidityDict.get('isValid'):
-        discount_amount = couponValidityDict.get('discount_amount')
+        final_discount_amount = couponValidityDict.get('final_discount_amount')
 
 
     # check if student is already registered to class. do not want to pay twice
@@ -404,7 +404,7 @@ class PaymentChargeUserView(views.APIView):
 
     # set coupon or discounts now
     amt = float(amt)
-    amt = amt - discount_amount
+    amt = amt - final_discount_amount
 
     mult = currencyMultiplier.get(currency.lower(), None)
     if mult is None:

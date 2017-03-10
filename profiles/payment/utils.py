@@ -325,7 +325,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
     p = {
       'reason': 'invalid coupon, coupon cannot be empty',
       'isValid': False,
-      'discount_amount': 0.0,
+      'final_discount_amount': 0.0,
     }
     return p
 
@@ -333,7 +333,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
     p = {
       'reason': 'invalid coupon, course_code cannot be empty',
       'isValid': False,
-      'discount_amount': 0.0,
+      'final_discount_amount': 0.0,
     }
     return p
   
@@ -342,7 +342,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
     p = {
       'reason': 'course_code is invalid',
       'isValid': False,
-      'discount_amount': 0.0,
+      'final_discount_amount': 0.0,
     }
     return p
 
@@ -379,6 +379,8 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
     if i.get('coupon_code') == coupon_code:
 
       discount_amount = float(i.get('discount_amount', 0.0))
+      discount_percentage = float(i.get('discount_percentage', 0.0))
+      discount_type = i.get('discount_type')
 
       currency = i.get('currency').lower()
       use_type = i.get('use_type')
@@ -411,7 +413,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
           p = {
             'reason': 'This promo code is invalid',
             'isValid': False,
-            'discount_amount': 0.0,
+            'final_discount_amount': 0.0,
           }
           return p
 
@@ -423,23 +425,25 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
           p = {
             'reason': 'This promo code has expired',
             'isValid': False,
-            'discount_amount': 0.0,
+            'final_discount_amount': 0.0,
           }
           return p
 
       # if currency code does not match, throw error
 
       course_currency = [p.get('currency') for p in course.prices if p.get('price_code') == price_code]
+      course_price = [p.get('amount', 0.0) for p in course.prices if p.get('price_code') == price_code]
 
       # print 'course_currency', course_currency
       if len(course_currency) == 0:
         p = {
           'reason': 'This promo code is invalid',
           'isValid': False,
-          'discount_amount': 0.0,
+          'final_discount_amount': 0.0,
         }
         return p
       course_currency = course_currency[0].lower()
+      course_price = float(course_price)
       # print 'course_currency lower', course_currency
       # print 'coupon currency lower', currency
 
@@ -450,7 +454,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
         p = {
           'reason': 'This promo code is invalid',
           'isValid': False,
-          'discount_amount': 0.0,
+          'final_discount_amount': 0.0,
         }
         return p
 
@@ -463,7 +467,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
           p = {
             'reason': 'This promo code is invalid',
             'isValid': False,
-            'discount_amount': 0.0,
+            'final_discount_amount': 0.0,
           }
           return p
 
@@ -495,15 +499,25 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
           p = {
             'reason': 'This promo code has expired',
             'isValid': False,
-            'discount_amount': 0.0,
+            'final_discount_amount': 0.0,
           }
           return p
 
 
       # If coupon's active = false, deny the coupon use
-      # @alan, only active coupons are shown in API, so no need to check
+      # @alan, only active coupons are shown in API anyways from codeninja, so no need to check
 
-      
+      p = {
+        'reason': 'Valid promo code',
+        'isValid': True,
+        'final_discount_amount': discount_amount,
+      }
+
+      if discount_type == 'Absolute':
+        p['final_discount_amount']: discount_amount
+
+      if discount_type == 'Percentage':
+        p['final_discount_amount']: course_price * (1.0 - discount_percentage)
       
       # after the payment is processed, hit the PATCH coupon API to update the use_count
       if useCoupon:
@@ -520,22 +534,19 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
           p = {
             'reason': "use promo code failed",
             'isValid': False,
-            'discount_amount': 0.0,
+            'final_discount_amount': 0.0,
           }
           return p
 
-        p = {
-          'reason': 'valid promo code, used for purchase',
-          'isValid': True,
-          'discount_amount': discount_amount,
-        }
+        
+
+        p['reason'] = 'valid promo code, used for purchase'
+
+
+
         return p
 
-      p = {
-        'reason': 'Valid promo code',
-        'isValid': True,
-        'discount_amount': discount_amount,
-      }
+
       return p
 
 
@@ -543,7 +554,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
   p = {
     'reason': 'This promo code is invalid',
     'isValid': False,
-    'discount_amount': 0.0,
+    'final_discount_amount': 0.0,
   }
   return p
 
