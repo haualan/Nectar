@@ -126,7 +126,7 @@ class User(AbstractEmailUser):
 
 
 
-  def save(self, *args, **kwargs, clearClientDump=False):
+  def save(self, clearClientDump=False, *args, **kwargs ):
     if self.clientDump and self.pk is not None and clearClientDump = False:
       # if clientDump has something (non-empty) and it is an existing value (not a new creation), 
       
