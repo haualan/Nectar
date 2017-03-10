@@ -452,7 +452,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
         }
         return p
       course_currency = course_currency[0].lower()
-      course_price = float(course_price)
+      course_price = float(course_price[0])
       # print 'course_currency lower', course_currency
       # print 'coupon currency lower', currency
 
