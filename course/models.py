@@ -314,6 +314,14 @@ class Course(models.Model):
 
     print 'setActiveCourses', listOfActiveCourse_codes
 
+    if '' in listOfActiveCourse_codes:
+      listOfActiveCourse_codes.remove('')
+
+    # Django has a bug where if None is excluded, the result set is always empty
+    if None in listOfActiveCourse_codes:
+      listOfActiveCourse_codes.remove(None)
+
+
     cls.objects.filter(course_code__in = listOfActiveCourse_codes).update(active = True)
     cls.objects.exclude(course_code__in = listOfActiveCourse_codes).update(active = False)
 
