@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from profiles.models import *
 from django.utils import timezone
 from course.models import internalEmailExclusionRegex, Course
