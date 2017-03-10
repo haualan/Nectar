@@ -126,8 +126,8 @@ class User(AbstractEmailUser):
 
 
 
-  def save(self, *args, **kwargs):
-    if self.clientDump and self.pk is not None:
+  def save(self, *args, **kwargs, clearClientDump=False):
+    if self.clientDump and self.pk is not None and clearClientDump = False:
       # if clientDump has something (non-empty) and it is an existing value (not a new creation), 
       
 
@@ -154,6 +154,9 @@ class User(AbstractEmailUser):
     super(User, self).save(*args, **kwargs) # Call the "real" save() method.
 
 
+  def clearClientDump(self):
+    self.clientDump = {}
+    self.save(clearClientDump=True)
 
   def updateStripeCustomer(self):
     """
