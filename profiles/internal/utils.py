@@ -65,7 +65,7 @@ def guardiansPendingPurchaseEmail(request):
 
 
   df = pd.DataFrame(r)
-  df.to_csv(csvfile, index=None, columns = cols)
+  df.to_csv(csvfile, index=None, columns = cols, encoding='utf-8')
 
   file = csvfile.getvalue()
 
