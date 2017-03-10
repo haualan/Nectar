@@ -514,10 +514,10 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
       }
 
       if discount_type == 'Absolute':
-        p['final_discount_amount']: discount_amount
+        p['final_discount_amount']= discount_amount
 
       if discount_type == 'Percentage':
-        p['final_discount_amount']: course_price * (1.0 - discount_percentage)
+        p['final_discount_amount']= course_price * (1.0 - discount_percentage)
       
       # after the payment is processed, hit the PATCH coupon API to update the use_count
       if useCoupon:
