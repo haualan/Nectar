@@ -473,6 +473,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
       # if course_code is provided -> this coupon only works for this course/event (term/camp/event), deny if coupon_code and course_code do not match
       if coupon_specific_course_code:
         if course_code != coupon_specific_course_code:
+          print 'Invalid promo code {}, coupon_specific_course_code: {}, course_code: {}, mismatch'.format(coupon_code, coupon_specific_course_code, course_code)
           p = {
             'reason': 'This promo code is invalid',
             'isValid': False,
@@ -526,7 +527,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
         p['final_discount_amount']= discount_amount
 
       if discount_type == 'Percentage':
-        p['final_discount_amount']= course_price * (1.0 - discount_percentage)
+        p['final_discount_amount']= course_price * discount_percentage
       
       # after the payment is processed, hit the PATCH coupon API to update the use_count
       if useCoupon:
