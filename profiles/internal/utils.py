@@ -115,7 +115,7 @@ def guardiansPendingPurchase(request):
     email__regex  = internalEmailExclusionRegex,
   )
 
-  course_codes = set([ u.clientDump.get('paymentInterest', {}).get('course_code') for u in r if c.clientDump.get('paymentInterest', None) is not None ])
+  course_codes = set([ u.clientDump.get('paymentInterest', {}).get('course_code') for u in r if u.clientDump.get('paymentInterest', None) is not None ])
   courses = Course.objects.filter(course_code__in = course_codes)
 
   course_codes_dict = {
