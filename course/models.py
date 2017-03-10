@@ -149,7 +149,7 @@ class UserCourseRelationship(models.Model):
     """
 
     r = cls.objects.filter(
-      # course__active = True,
+      course__active = True,
     ).exclude(
       user__role__in = ['I', 'O', 'C'],
     ).exclude(
