@@ -378,9 +378,18 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=Fals
   for i in r.json():
     if i.get('coupon_code') == coupon_code:
 
-      discount_amount = float(i.get('discount_amount', 0.0))
-      discount_percentage = float(i.get('discount_percentage', 0.0))
+      discount_amount = i.get('discount_amount', None)
+      discount_percentage = i.get('discount_percentage', None)
       discount_type = i.get('discount_type')
+
+      if discount_amount is None:
+        discount_amount = 0.0
+
+      if discount_percentage is None:
+        discount_percentage = 0.0
+
+      discount_amount = float(discount_amount)
+      discount_percentage = float(discount_percentage)
 
       currency = i.get('currency').lower()
       use_type = i.get('use_type')
