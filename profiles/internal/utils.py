@@ -10,6 +10,8 @@ import StringIO, requests
 from django.conf import settings
 import csv
 
+import pandas as pd
+
 
 internalEmailRecipients = [
   'michelle@firstcodeacademy.com', 
@@ -50,17 +52,20 @@ def guardiansPendingPurchaseEmail(request):
   r = guardiansPendingPurchase(request)
 
   csvfile = StringIO.StringIO()
-  csvwriter = csv.writer(csvfile)
+  # csvwriter = csv.writer(csvfile)
 
   # define the columns, also serve as keys
   cols = [ 'hoursWithoutPurchase','guardianEmail', 'guardianPhone', 'guardianFirstName', 'guardianLastName', 'guardianAddress' ]
 
   # write header
-  csvwriter.writerow(cols)
+  # csvwriter.writerow(cols)
 
-  for row in r:
-    csvwriter.writerow([u'{}'.format(row.get(i)) for i in cols])
+  # for row in r:
+  #   csvwriter.writerow([u'{}'.format(row.get(i)) for i in cols])
 
+
+  df = pd.DataFrame(r)
+  df.to_csv(csvfile, index=None, columns = cols)
 
   file = csvfile.getvalue()
 
