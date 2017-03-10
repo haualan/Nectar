@@ -103,7 +103,8 @@ def guardiansPendingPurchase(request):
 
   """
 
-  buyerUserIDs = Ledger.objects.all().distinct('buyerID').annotate(user_id = Cast('buyerID', IntegerField()))
+  # for some reason the join did not work well if not foreign keyed, must be read first
+  buyerUserIDs = [l.get('buyerID') for l in Ledger.objects.all().distinct('buyerID').annotate(user_id = Cast('buyerID', IntegerField())).values('buyerID')]
 
   # users registered within this window but hasn't made a purchase
   detectionWindowHours = 24.0
