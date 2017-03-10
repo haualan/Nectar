@@ -70,12 +70,12 @@ def guardiansPendingPurchaseEmail(request):
     \n
     """
 
-  send_internal_email(
-    subject = 'Payments guardiansPendingPurchase report',
-    text = text,
-    html = text,
-    file  = file
-  )
+  # send_internal_email(
+  #   subject = 'Payments guardiansPendingPurchase report',
+  #   text = text,
+  #   html = text,
+  #   file  = file
+  # )
 
 
 
