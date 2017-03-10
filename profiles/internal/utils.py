@@ -62,20 +62,26 @@ def guardiansPendingPurchaseEmail(request):
   file = csvfile.getvalue()
 
   text = """
-    \n
+    <p>
     \n This report contains all users who signed up as a guardian after landing on the payments page (thereby showing high interest), 
     \n but haven't made purchase after 24 hours.
-    \n - If the same user has not made a purchase for up till 7 days, the user will be dropped from the report (user no longer interested)
-    \n - users signed up for less than 24 hrs are excluded from the report (maybe user is still deciding)
-    \n
+    </p>
+    <ul>
+      <li> - If the same user has not made a purchase for up till 7 days, the user will be dropped from the report (user no longer interested)
+      </li>
+      <li> - users signed up for less than 24 hrs are excluded from the report (maybe user is still deciding)
+      </li>
+    </ul>
     """
 
-  # send_internal_email(
-  #   subject = 'Payments guardiansPendingPurchase report',
-  #   text = text,
-  #   html = text,
-  #   file  = file
-  # )
+  subject = 'New Leads from Hummingbird'
+
+  send_internal_email(
+    subject = subject,
+    text = text,
+    html = text,
+    file  = file
+  )
 
 
 

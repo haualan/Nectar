@@ -25,6 +25,8 @@ from django.contrib.postgres.fields import JSONField
 # from activities.statistics.heartratemodel.utils import *
 # from activities.statistics.jackdaniels import calc_JD_pace_heartrate
 
+from botocore.utils import merge_dicts
+
 def metadata_default():
     return {}
 
@@ -112,16 +114,30 @@ class User(AbstractEmailUser):
   # where did you hear about fca
   heardFrom = models.TextField(blank=True)
 
-  # where did you specicifically hear about fca (fixed options on frontend)
+  # where did you specifically hear about fca (fixed options on frontend)
   # ex. google
   # facebook
   # printed ads
   heardFromOption = models.CharField(max_length=20, blank=True)
 
+  # is a miscellaneous field for client side data 
+  clientDump = JSONField(default = metadata_default)
+
 
 
 
   def save(self, *args, **kwargs):
+    if self.clientDump and self.pk is not None:
+      # if clientDump has something (non-empty) and it is an existing value (not a new creation), 
+      
+
+      prevClientDump = User.objects.get(pk = self.pk).clientDump
+
+      # attempt to merge with existing clientDump, 
+      # merge_dicts will modify existing variable
+      merge_dicts(self.clientDump, prevClientDump)
+
+
     if self.email == '':
       self.email = None
 
