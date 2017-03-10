@@ -1,6 +1,6 @@
 from profiles.models import *
 from django.utils import timezone
-from course.models import internalEmailExclusionRegex
+from course.models import internalEmailExclusionRegex, Course
 from django.db.models import FloatField, IntegerField
 from django.db.models.functions import Cast
 import StringIO, requests
@@ -104,6 +104,7 @@ def guardiansPendingPurchase(request):
   longWindowDays = 7 
 
   now = timezone.now()
+  hktz = timezone.pytz.timezone('Asia/Hong_Kong')
 
   r = User.objects.filter(
     date_joined__gte = now - timezone.timedelta(days = longWindowDays),
@@ -114,18 +115,44 @@ def guardiansPendingPurchase(request):
     email__regex  = internalEmailExclusionRegex,
   )
 
+  course_codes = set([ u.clientDump.get('paymentInterest', {}).get('course_code') for u in r if c.clientDump.get('paymentInterest', None) is not None ])
+  courses = Course.objects.filter(course_code__in = course_codes)
+
+  course_codes_dict = {
+    c.course_code : c
+    for c in courses
+  }
+
   results = [
-    {
+    { 
+
+      
+      
+      'created_at_HKT': u.date_joined.astimezone(hktz),
       'hoursWithoutPurchase': (now - u.date_joined).total_seconds() / 3600.0,
+
+      # could be none if course_code is stale
+      'course_code': u.clientDump.get('paymentInterest', {}).get('course_code', None),
+
       'guardianEmail': u.email,
       'guardianFirstName': u.firstname,
       'guardianLastName': u.lastname,
       'guardianPhone': u.phoneNumber,
       'guardianAddress': u.address,
+      'studentProfilesLinked': ', '.join([ '{}:{}'.format(s.student.id, s.student.displayName)  for s in u.guardianstudentrelation_set.all()])
 
     }
     for u in r if (((now - u.date_joined).total_seconds() / 3600.0) >= detectionWindowHours)
   ]
+
+  # pad results with subdomain
+  for r in results:
+    course_code = r.get('course_code')
+    if course_code and course_codes_dict.get(course_code, False):
+      r['subdomain'] = course_codes_dict.get(course_code).subdomain
+      continue
+    r['subdomain'] = None
+
 
   # sort by hoursWithoutPurchase
   results.sort(key= lambda x: x['hoursWithoutPurchase'] )
