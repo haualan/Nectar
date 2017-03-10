@@ -139,7 +139,7 @@ def guardiansPendingPurchase(request):
       'guardianLastName': u.lastname,
       'guardianPhone': u.phoneNumber,
       'guardianAddress': u.address,
-      'studentProfilesLinked': ', '.join([ '{}:{}'.format(s.student.id, s.student.displayName)  for s in u.guardianstudentrelation_set.all()])
+      'studentProfilesLinked': ', '.join([ u'{}:{}'.format(s.student.id, s.student.displayName)  for s in u.guardianstudentrelation_set.all()])
 
     }
     for u in r if (((now - u.date_joined).total_seconds() / 3600.0) >= detectionWindowHours)
