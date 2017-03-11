@@ -501,6 +501,10 @@ class Ledger(models.Model):
     print 'allCourses_dict', allCourses_dict
     print 'allBuyers_dict', allBuyers_dict
 
+    for i in allOrders:
+      print 'i.course_code', i.course_code
+      print 'i.buyerID', i.buyerID
+
     # fees lookup from stripe, there will be fees per stripe acct in subdomains
     # ugh
 
