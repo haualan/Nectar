@@ -284,8 +284,10 @@ def get_model_concrete_fields(MyModel):
 class UserSimpleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'email' ,'name', 'avatar_url' )
-        
+        fields = ( 'id' ,'role', 'avatar_url',
+            'displayName',
+            )
+
 class SchoolSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = School
