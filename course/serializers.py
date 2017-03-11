@@ -15,6 +15,8 @@ from rest_framework.exceptions import ValidationError
 
 from django.db.models import Avg, Count, F, Max, Min, Sum, Q, Prefetch
 
+from profiles.serializers import UserSimpleSerializer
+
 
 
 
@@ -57,8 +59,11 @@ class LessonSerializer(serializers.HyperlinkedModelSerializer):
         model = Lesson
         fields = get_model_concrete_fields(model) + ['url']
 
+
+
 class UserCourseRelationshipSerializer(serializers.HyperlinkedModelSerializer):
     course = CourseSerializer()
+    user = UserSimpleSerializer()
     class Meta:
         model = UserCourseRelationship
         fields = get_model_concrete_fields(model) + ['url']
