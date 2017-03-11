@@ -23,6 +23,15 @@ from rest_framework.settings import api_settings
 from rest_framework_csv import renderers as r
 
 
+# class MultiSerializerViewSet(viewsets.ModelViewSet):
+#     serializers = { 
+#         'default': None,
+#     }
+
+#     def get_serializer_class(self):
+#             return self.serializers.get(self.action,
+#                         self.serializers['default'])
+
 class EnrollmentReportViewCSVRenderer(r.CSVRenderer):
     header = [ 
         'orderId',
@@ -84,10 +93,20 @@ class UserCourseRelationshipViewSet(viewsets.ModelViewSet):
     """
     api_name = 'usercourserelationship'
     queryset = UserCourseRelationship.objects.all()
-    serializer_class = UserCourseRelationshipSerializer
+    # serializer_class = UserCourseRelationshipSerializer
+
+    serializers = {
+        'default': UserCourseRelationshipSerializer,
+        'create': UserCourseRelationshipCreateSerializer,
+    }
+
     permission_classes = (IsAuthenticated,)
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('user', 'course__course_code')
+
+    def get_serializer_class(self):
+        return self.serializers.get(self.action,
+                    self.serializers['default'])
 
 
 
@@ -638,8 +657,9 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
     
 clsmembers = inspect.getmembers(sys.modules[__name__], inspect.isclass)
-clsmembers = filter(lambda x: issubclass(x[1], viewsets.ModelViewSet )  \
+clsmembers = filter(lambda x: (issubclass(x[1], viewsets.ModelViewSet )  \
                     or issubclass(x[1], viewsets.ReadOnlyModelViewSet ) \
-                    or issubclass(x[1], views.APIView ) \
+                    or issubclass(x[1], views.APIView )) \
+                    # and not issubclass(x[1], MultiSerializerViewSet ) 
                     # or issubclass(x[1], CreateAPIView ) \
                     , clsmembers)

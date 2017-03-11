@@ -60,6 +60,11 @@ class LessonSerializer(serializers.HyperlinkedModelSerializer):
         fields = get_model_concrete_fields(model) + ['url']
 
 
+class UserCourseRelationshipCreateSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = UserCourseRelationship
+        fields = get_model_concrete_fields(model) + ['url']
+
 
 class UserCourseRelationshipSerializer(serializers.HyperlinkedModelSerializer):
     course = CourseSerializer()

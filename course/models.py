@@ -122,6 +122,8 @@ class UserCourseRelationship(models.Model):
 
   role = models.CharField(max_length=1, default='S', choices = role_UserCourseRelationship_choices)
 
+  createdDate = models.DateTimeField(default=timezone.now)
+
   @classmethod
   def getAllEnrollment(cls):
     """
