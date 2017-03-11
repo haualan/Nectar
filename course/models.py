@@ -214,7 +214,7 @@ class UserCourseRelationship(models.Model):
         # 'orderId': '',
         # 'orderDate': '',
         'enrollmentDatetimeUTC': i.createdDate,
-        'enrollmentDatetimeLocal': i.createdDate.astimezone(tzLookup.get(i.course_subdomain))
+        'enrollmentDatetimeLocal': i.createdDate.astimezone(tzLookup.get(i.course_subdomain)),
         'buyerFirstname': i.guardianFirstname,
         'buyerLastname': i.guardianLastname,
         'buyerEmail': i.guardianEmail,
