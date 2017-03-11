@@ -14,6 +14,7 @@ from django.db.models import Avg, Case, Count, F, Max, Min, Prefetch, Q, Sum, Wh
 
 from datetime import timedelta
 import uuid, os
+import requests
 
 DEFAULT_PROFILE_PICTURE_URL = 'https://s3-ap-southeast-1.amazonaws.com/fcanectar/assets/firstcode_logo.png'
 # from uploadApp.models import language_choices
@@ -517,6 +518,36 @@ class Course(models.Model):
       user__GuardianStudentRelation_student__guardian__email__regex  = internalEmailExclusionRegex,
     )
 
+  def updateCodeNinjaEnrollment(self):
+    """
+    notifies code ninja regarding class enrollment updates
+    """
+
+    # if these attributes are not available, may as well not notify
+    if not self.course_code:
+      return False
+
+    if not self.subdomain:
+      return False
+
+    url = 'https://{}.firstcodeacademy.com/api/events/offerings/{}'.format(self.subdomain, self.course_code)
+
+    enrollment_count = self.getEnrollment().count()
+
+    jsonBody = { "enrollment_count": enrollment_count }
+
+    r = requests.patch(
+      url,
+      headers={'Authorization': settings.CNKEY, 'Content-type': 'application/json', 'Accept': 'text/plain'},
+      json=jsonBody
+    )
+
+    print 'updateCodeNinjaEnrollment',  r.status_code, r.url, jsonBody
+
+    if int(r.status_code) != 200:
+      print r.text
+
+    return r
 
   class Meta:
     # course code must be unique

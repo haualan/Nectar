@@ -108,6 +108,28 @@ class UserCourseRelationshipViewSet(viewsets.ModelViewSet):
         return self.serializers.get(self.action,
                     self.serializers['default'])
 
+    def perform_create(self, serializer):
+        user = self.request.user
+        if user.role not in ['I', 'O', 'C']:
+            raise PermissionDenied('only internal users can modify')
+
+        # send a signal to code ninja to update course_code
+
+        ucr = serializer.save()
+
+        # the course object must send the signal to codeninja
+        ucr.course.updateCodeNinjaEnrollment()
+
+
+
+    def perform_destroy(self, instance):
+        user = self.request.user
+        if user.role not in ['I', 'O', 'C']:
+            raise PermissionDenied('only internal users can modify')
+
+        instance.delete()
+        # this should show one less user in the class after the delete
+        instance.course.updateCodeNinjaEnrollment()
 
 
 class CourseViewSet(viewsets.ModelViewSet):

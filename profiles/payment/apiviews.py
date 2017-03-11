@@ -212,7 +212,7 @@ class StripeWebhookView(views.APIView):
 
 
     # tell codeninja about enrollment
-    updateCodeNinjaEnrollment(ledgerObj)
+    c.updateCodeNinjaEnrollment()
 
 
      
