@@ -195,9 +195,6 @@ class UserCourseRelationship(models.Model):
       studentNeedComputer = F('user__needComputer'),
 
 
-
-
-
     ).prefetch_related('user',)
 
     results = [
