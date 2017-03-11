@@ -530,7 +530,10 @@ class Course(models.Model):
     if not self.subdomain:
       return False
 
-    url = 'https://{}.firstcodeacademy.com/api/events/offerings/{}'.format(self.subdomain, self.course_code)
+    if not self.cnType:
+      return False
+
+    url = 'https://{}.firstcodeacademy.com/api/{}/offerings/{}'.format(self.subdomain, self.cnType, self.course_code)
 
     enrollment_count = self.getEnrollment().count()
 
