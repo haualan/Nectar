@@ -498,6 +498,9 @@ class Ledger(models.Model):
     allCourses_dict = { c.course_code : c for c in allCourses}
     allBuyers_dict = { u.id : u for u in allBuyers}
 
+    print 'allCourses_dict', allCourses_dict
+    print 'allBuyers_dict', allBuyers_dict
+
     # fees lookup from stripe, there will be fees per stripe acct in subdomains
     # ugh
 
