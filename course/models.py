@@ -404,7 +404,7 @@ class Course(models.Model):
 
     return None
 
-
+  @property
   def formatLocation(self):
     """
     returns a pretty format of locations 

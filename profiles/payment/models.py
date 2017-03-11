@@ -27,6 +27,8 @@ from django.db import transaction
 
 from rest_framework.exceptions import APIException, ParseError, PermissionDenied
 
+from profiles.models import User
+
 
 
 
@@ -464,7 +466,75 @@ class Ledger(models.Model):
     return None
 
   @classmethod
-  def getAmortizedRevenueSchedule(cls, startDate, endDate):
+  def getRevenueSchedule(cls, startDate=timezone.datetime.min , endDate=timezone.datetime.max):
+    """
+    show the revenue from our books
+    revenue report with course name + course code + courseType (term/camp/event) + parent info + 
+    payment amount + service fee + location of class + course start date + course end date + subdomain
+
+
+    """
+
+    endDate = endDate.replace(hour = 23, minute=59, second = 59, microsecond=999999)
+
+    tzLookup = { k: timezone.pytz.timezone(v.get('tzName'))  for k, v in settings.SUBDOMAINSPECIFICMAPPING.iteritems() }
+
+    
+
+    allOrders = cls.objects.filter(
+      livemode = True,
+      transactionDateTime__gte = startDate, 
+      transactionDateTime__lte = endDate
+    )
+
+    # list of course_codes from Ledger
+    course_codes_set = set([order.course_code for order in allOrders])
+    buyerID_set = set([order.buyerID for order in allOrders])
+
+    allCourses = Course.objects.filter(course_code__in = course_codes_set)
+    allBuyers = User.objects.filter(id__in = buyerID_set)
+
+    # use this to lookup course info and buyers
+    allCourses_dict = { c.course_code : c for c in allCourses}
+    allBuyers_dict = { u.id : u for u in allBuyers}
+
+    # fees lookup from stripe, there will be fees per stripe acct in subdomains
+    # ugh
+
+    # build results
+    r = [
+      {
+        'acctEvent_id': i.event_id,
+        'acctTransactionDateTimeUTC': i.transactionDateTime,
+        'acctTransactionDateTimeLocal': i.transactionDateTime.astimezone( allCourses_dict.get(i.course_code).subdomain ),
+        'acctSource': i.source,
+        'acctLocalCurrencyChargedAmount': i.localCurrencyChargedAmount,
+        'acctCurrency': i.currency,
+        'acctLocalCurrencyServiceFee': 0.0,
+
+        # courseInfo
+        'courseLocation': allCourses_dict.get(i.course_code).formatLocation,
+        'courseStartDate': allCourses_dict.get(i.course_code).start_date,
+        'courseEndDate': allCourses_dict.get(i.course_code).end_date,
+        'courseSubdomain': allCourses_dict.get(i.course_code).subdomain,
+
+        # parentInfo:
+        'guardianFirstname': allBuyers_dict.get(i.buyerID).firstname,
+        'guardianLastname': allBuyers_dict.get(i.buyerID).lastname,
+        'guardianEmail': allBuyers_dict.get(i.buyerID).email,
+        'guardianPhoneNumber': allBuyers_dict.get(i.buyerID).phoneNumber,
+        'guardianAddress': allBuyers_dict.get(i.buyerID).address,
+
+      }
+
+
+    for i in allOrders]
+
+    return r
+
+
+  @classmethod
+  def getAmortizedRevenueSchedule(cls, startDate=timezone.datetime.min , endDate=timezone.datetime.max):
     """
     show the amortized revenue from our books
     - assume each class date recieves a pro-rata revenue
@@ -474,7 +544,7 @@ class Ledger(models.Model):
     endDate = endDate.replace(hour = 23, minute=59, second = 59, microsecond=999999)
 
     allOrders = cls.objects.filter(
-      # livemode = True,
+      livemode = True,
       transactionDateTime__gte = startDate, 
       transactionDateTime__lte = endDate
     )

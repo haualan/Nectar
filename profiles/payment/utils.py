@@ -184,7 +184,7 @@ def renderOrderConfirmTemplate(p={}, isHtml = False, isInternal = False):
   lastTime = course.lastTime()
   courseName = course.name
   courseEventType = course.event_type
-  formatLocation = course.formatLocation()
+  formatLocation = course.formatLocation
 
   subdomain = course.subdomain
 
