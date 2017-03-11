@@ -485,14 +485,18 @@ SUBDOMAINSPECIFICMAPPING = {
     'fullClassCalendarUrl': 'https://hk.firstcodeacademy.com/en/programs/calendar',
     'emailFrom': 'hello@firstcodeacademy.com',
     'officePhone': '+852 2772 2108', 
-    'officeLocation': 'Unit 302-305, 3/F, Hollywood Centre, 233 Hollywood Road, Sheung Wan, Hong Kong'
+    'officeLocation': 'Unit 302-305, 3/F, Hollywood Centre, 233 Hollywood Road, Sheung Wan, Hong Kong',
+
+    # get the offical name from pytz
+    'tzName': 'Asia/Hong_Kong',
   },
   'sg': {
     'internalName': 'Wee Ping',
     'fullClassCalendarUrl': 'https://sg.firstcodeacademy.com/en/programs/calendar',
     'emailFrom': 'hellosg@firstcodeacademy.com',
     'officePhone': '+65 6820 2633',
-    'officeLocation': '#04-13, Stamford Court, 61 Stamford Road, Singapore 178892'
+    'officeLocation': '#04-13, Stamford Court, 61 Stamford Road, Singapore 178892',
+    'tzName': 'Asia/Singapore'
   },
   'tw': {
     'internalName': 'Chi',
@@ -501,7 +505,8 @@ SUBDOMAINSPECIFICMAPPING = {
     'officePhone': '+886 909 818 260',
 
     # tw has no fixed location yet
-    'officeLocation': ''
+    'officeLocation': '',
+    'tzName': 'Asia/Taipei',
 
   },
 

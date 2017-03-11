@@ -151,6 +151,12 @@ class UserCourseRelationship(models.Model):
       Order no. Order Date  First Name  Surname Email Quantity  Ticket Type Order Type  Total Paid  Eventbrite Fees Eventbrite Payment Processing Attendee Status Student's First Name  Student's Last Name Student's Gender  Student's Date of Birth (DD/MM/YYYY)  Student's School  Student's Level in School Student's Email Parent's First Name Parent's Last Name  Parent's Email  Parent's Contact Number Alternative Parent Full Name  Alternative Parent Email  Alternative Parent's Contact Number Address District  Remarks (e.g. health) How did you hear about First Code Academy?  Computer Requirement  Got a friend learning at First Code? Please fill in his/her unique referrer code to enjoy the $380 referral rebate! Terms and Conditions
     """
 
+    tzLookup = { k: timezone.pytz.timezone(k.get('tzName'))  for k in settings.SUBDOMAINSPECIFICMAPPING }
+
+    
+
+
+
     r = cls.objects.filter(
       course__active = True,
     ).exclude(
@@ -161,21 +167,24 @@ class UserCourseRelationship(models.Model):
       # exclude count from test users and internal accounts
       user__GuardianStudentRelation_student__guardian__email__regex  = internalEmailExclusionRegex,
     ).annotate(
-      orderId = Value('', output_field = CharField()),
-      orderDate = Value('', output_field = CharField()),
+      # orderId = Value('', output_field = CharField()),
+      # orderDate = Value('', output_field = CharField()),
 
       buyerFirstname = F('user__GuardianStudentRelation_student__guardian__firstname'),
       buyerLastname = F('user__GuardianStudentRelation_student__guardian__lastname'),
       buyerEmail = F('user__GuardianStudentRelation_student__guardian__email'),
-      quantity= Value(1, output_field = IntegerField()),
+      # quantity= Value(1, output_field = IntegerField()),
 
       course_code = F('course__course_code'),
-      orderType = Value('', output_field = CharField()),
-      totalPaid = Value('', output_field = CharField()),
-      fees = Value('', output_field = CharField()),
-      fees2 = Value('', output_field = CharField()),
+      course_type = F('course__event_type'),
+      course_name = F('course__name'),
+      course_subdomain = F('course__subdomain'),
+      # orderType = Value('', output_field = CharField()),
+      # totalPaid = Value('', output_field = CharField()),
+      # fees = Value('', output_field = CharField()),
+      # fees2 = Value('', output_field = CharField()),
 
-      attendeeStatus = Value('Attending', output_field = CharField()),
+      # attendeeStatus = Value('Attending', output_field = CharField()),
 
 
       studentFirstname = F('user__firstname'),
@@ -183,7 +192,7 @@ class UserCourseRelationship(models.Model):
       studentGender = F('user__gender'),
       studentBirthdate = F('user__birth_date'),
       studentSchoolName = F('user__school__name'),
-      studentSchoolLevel = Value('', output_field = CharField()),
+      # studentSchoolLevel = Value('', output_field = CharField()),
       studentEmail = F('user__email'),
 
       guardianFirstname = F('user__GuardianStudentRelation_student__guardian__firstname'),
@@ -202,17 +211,18 @@ class UserCourseRelationship(models.Model):
 
     results = [
       {
-        'orderId': '',
-        'orderDate': '',
+        # 'orderId': '',
+        # 'orderDate': '',
+        'enrollmentDatetimeUTC': i.createdDate,
+        'enrollmentDatetimeLocal': i.createdDate.astimezone(tzLookup.get(i.course_subdomain))
         'buyerFirstname': i.guardianFirstname,
         'buyerLastname': i.guardianLastname,
         'buyerEmail': i.guardianEmail,
         'quantity': 1,
-        'course_code': i.course_code,
-        'orderType': '',
-        'totalPaid': '',
-        'fees': '',
-        'fees2': '',
+        # 'orderType': '',
+        # 'totalPaid': '',
+        # 'fees': '',
+        # 'fees2': '',
         'attendeeStatus': 'Attending',
         'studentFirstname': i.studentFirstname,
         'studentLastname': i.studentLastname,
@@ -227,12 +237,16 @@ class UserCourseRelationship(models.Model):
         'guardianEmail': i.guardianEmail,
         'guardianPhoneNumber': i.guardianPhoneNumber,
         'guardianAddress': i.guardianAddress,
-        'guardianAddressDistrict': '',
+        # 'guardianAddressDistrict': '',
         'studentRemarks': i.studentRemarks,
         'guardianHeardFromOption': i.guardianHeardFromOption,
         'studentNeedComputer': i.studentNeedComputer,
-        'referral':'',
-        'termsAndConditions': '',
+        # 'referral':'',
+        # 'termsAndConditions': '',
+        'course_code': i.course_code,
+        'course_subdomain': i.course_subdomain,
+        'course_type': i.course_type,
+        'course_name': i.course_name
 
       }
     for i in r]
