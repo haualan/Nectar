@@ -229,7 +229,7 @@ class UserCourseRelationship(models.Model):
         'studentGender': i.studentGender,
         'studentBirthdate': i.studentBirthdate,
         'studentSchoolName': i.studentSchoolName,
-        'studentSchoolLevel': i.studentSchoolLevel,
+        # 'studentSchoolLevel': i.studentSchoolLevel,
         'studentEmail': i.studentEmail,
 
         'guardianFirstname': i.guardianFirstname,
