@@ -90,10 +90,10 @@ def send_order_confirm_email(order, isInternal = False, injectEmail=None):
 
     formatPriceStr = order.formatPriceStr()
 
-    subject = '[TEST][Hummingbird - {}] {} Signup {}'.format( subdomain, formatPriceStr, order.course_code)
+    subject = '[TEST][Hummingbird - {}] {} Order Confirmation: {}'.format( subdomain, formatPriceStr, order.course_code)
 
     if order.livemode:
-      subject = '[Hummingbird - {}] {} Signup {}'.format( subdomain, formatPriceStr, order.course_code)
+      subject = '[Hummingbird - {}] {} Order Confirmation: {}'.format( subdomain, formatPriceStr, order.course_code)
 
     bcc = "{}".format(internalEmails)
     
