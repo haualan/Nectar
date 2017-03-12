@@ -27,6 +27,7 @@ import requests
 # from allauth.account.models import EmailAddress, EmailConfirmation
 
 subdomainSpecificMapping = settings.SUBDOMAINSPECIFICMAPPING
+internalEmails = 'michelle@firstcodeacademy.com, kevon@firstcodeacademy.com, alan@firstcodeacademy.com'
 
 def send_internal_sales_email(order, injectEmail=None):
   """
@@ -89,12 +90,14 @@ def send_order_confirm_email(order, isInternal = False, injectEmail=None):
 
     formatPriceStr = order.formatPriceStr()
 
-    subject = '[{} - {}] {} Signup {} by {}'.format('TEST', subdomain, formatPriceStr, order.course_code, email)
-    if order.livemode:
-      subject = '[{} - {}] {} Signup {} by {}'.format('LIVE', subdomain, formatPriceStr, order.course_code, email)
+    subject = '[TEST][Hummingbird - {}] {} Signup {}'.format( subdomain, formatPriceStr, order.course_code)
 
+    if order.livemode:
+      subject = '[Hummingbird - {}] {} Signup {}'.format( subdomain, formatPriceStr, order.course_code)
+
+    bcc = "{}".format(internalEmails)
     
-    return send_email(email, subject, text, html, subdomain )
+    return send_email(email, subject, text, html, subdomain, bcc )
 
 
   html = renderOrderConfirmTemplate(payload ,isHtml = True)
@@ -105,7 +108,10 @@ def send_order_confirm_email(order, isInternal = False, injectEmail=None):
 
   subdomain = course.subdomain
 
-  return send_email(email, subject, text, html, subdomain )
+  # client facing email 
+  bcc = '{}, {}'.format(subdomainSpecificMapping.get(subdomain).get('emailFrom'), internalEmails)
+
+  return send_email(email, subject, text, html, subdomain, bcc )
 
 
 
@@ -119,7 +125,7 @@ def send_order_confirm_email(order, isInternal = False, injectEmail=None):
 
 
 
-def send_email(email, subject, text, html, subdomain = 'hk' ):
+def send_email(email, subject, text, html, subdomain = 'hk', bcc="" ):
   """
   base function for sending email
   """
@@ -137,8 +143,10 @@ def send_email(email, subject, text, html, subdomain = 'hk' ):
           "subject": subject,
           "text": text,
           "html": html,
+
+          "bcc": bcc,
           
-          "bcc" : 'michelle@firstcodeacademy.com, alan@firstcodeacademy.com',
+          # "bcc" : 'michelle@firstcodeacademy.com, alan@firstcodeacademy.com',
 
           })
 
