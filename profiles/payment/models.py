@@ -589,7 +589,7 @@ class Ledger(models.Model):
       print 'i.course_code', i.course_code
       print 'i.buyerID', i.buyerID
       print 'subdomain', allCourses_dict.get(i.course_code, {}).get('subdomain', None)
-      print 'txn_id', l.rawData.get(
+      print 'txn_id', i.rawData.get(
         'data', {}
       ).get(
         'object', {}
