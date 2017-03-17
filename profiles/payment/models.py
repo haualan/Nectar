@@ -500,13 +500,20 @@ class Ledger(models.Model):
     allCourses_dict = { c.course_code : model_to_dict(c) for c in allCourses}
     allBuyers_dict = { u.id : model_to_dict(u) for u in allBuyers}
 
-    print 'allCourses_dict', allCourses_dict
-    print 'allBuyers_dict', allBuyers_dict
+    # print 'allCourses_dict', allCourses_dict
+    # print 'allBuyers_dict', allBuyers_dict
 
     for i in allOrders:
       print 'i.course_code', i.course_code
       print 'i.buyerID', i.buyerID
       print 'subdomain', allCourses_dict.get(i.course_code, {}).get('subdomain', None)
+      print 'txn_id', l.rawData.get(
+        'data', {}
+      ).get(
+        'object', {}
+      ).get(
+        'balance_transaction', None
+      )
 
     # fees lookup from stripe, there will be fees per stripe acct in subdomains
 
