@@ -1,6 +1,6 @@
 Dear {{ guardianFirstname|default_if_none:"Guardian / Parent" }},
 
-I'm {{ internalName }} from First Code and I’d like to personally welcome you and your child, {{studentFirstname}}, to our academy. The class will start soon and we are very excited to see {{studentFirstname}} for the new term!
+I'm {{ internalName }} from First Code and I’d like to personally welcome you and your child, {{studentFirstname}}, to our academy. The class will start soon and we are very excited to see {{studentFirstname}}!
 
 We believe that coding can empower us to become creators and not just consumers of technology. It means a lot to us to have the opportunity to be part of this journey with your child.
 
@@ -15,7 +15,7 @@ Full Class Calendar: {{ fullClassCalendarUrl }}
 {% endif %}
 
 
-Meanwhile, feel free to reach out to me via email or at {{ officePhone }} if you have any questions. We will see you and {{studentFirstname}} on 1st day of class on {{firstDate}}! 
+Meanwhile, feel free to reach out to me via email or at {{ officePhone }} if you have any questions. We will see you and {{studentFirstname}} on 1st day of class! 
 
 Kind regards,
 {{ internalName }}    
