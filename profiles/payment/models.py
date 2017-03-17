@@ -572,7 +572,6 @@ class Ledger(models.Model):
       return fees_lookup_by_currency.get(
         currency, {}).get(
         txn_id, {}).get(
-        'data', {}).get(
         'fee', 0.0)
     
     def getTZstrbySubdomain(l):
