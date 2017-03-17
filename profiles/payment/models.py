@@ -498,7 +498,7 @@ class Ledger(models.Model):
 
     # use this to lookup course info and buyers
     allCourses_dict = { c.course_code : model_to_dict(c) for c in allCourses}
-    allBuyers_dict = { u.id : model_to_dict(u) for u in allBuyers}
+    allBuyers_dict = { str(u.id) : model_to_dict(u) for u in allBuyers}
 
     # print 'allCourses_dict', allCourses_dict
     # print 'allBuyers_dict', allBuyers_dict
@@ -602,6 +602,46 @@ class Ledger(models.Model):
       print ''
 
 
+    def getFormatLocation(l):
+      """
+      given ledger item give formatted location of the course, else return None
+      """
+      course = allCourses_dict.get(i.course_code, None)
+      if not course:
+        return ""
+
+      address = course.get('address')
+      location = course.get('location')
+
+      if address:
+        return address
+
+      return location
+
+
+    def getCourse_remarks(l):
+      """
+      drop a note if something wrong
+      """
+      course = allCourses_dict.get(l.course_code, None)
+      if not course:
+        return 'course code not found in DB, fees may not be accurate'
+
+      return ""
+
+
+    def getGuardian_remarks(l):
+      """
+      drop a note if something wrong with user i
+      """
+      guardian = allBuyers_dict.get(i.buyerID, None)
+      if not guardian:
+        return 'guardian code not found in DB, no guardian information'
+
+      return ""
+
+
+
     # build results
     r = []
     for i in allOrders:
@@ -617,12 +657,15 @@ class Ledger(models.Model):
         'acctLocalCurrencyServiceFee': lookupFees(i),
 
         # courseInfo
-        'courseLocation': allCourses_dict.get(i.course_code, {}).get('formatLocation', None),
+        'course_remarks': getCourse_remarks(i),
+        'course_code': i.course_code,
+        'courseLocation': getFormatLocation(i),
         'courseStartDate': allCourses_dict.get(i.course_code, {}).get('start_date', None),
         'courseEndDate': allCourses_dict.get(i.course_code, {}).get('end_date', None),
         'courseSubdomain': allCourses_dict.get(i.course_code, {}).get('subdomain', None),
 
         # parentInfo:
+        'guardian_remarks' getGuardian_remarks(i),
         'guardianFirstname': allBuyers_dict.get(i.buyerID, {}).get('firstname', None),
         'guardianLastname': allBuyers_dict.get(i.buyerID, {}).get('lastname', None),
         'guardianEmail': allBuyers_dict.get(i.buyerID, {}).get('email', None),
