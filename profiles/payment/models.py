@@ -24,6 +24,7 @@ import stripe
 from django.contrib.postgres.fields import JSONField
 
 from django.db import transaction
+from django.forms.models import model_to_dict
 
 from rest_framework.exceptions import APIException, ParseError, PermissionDenied
 
@@ -495,8 +496,8 @@ class Ledger(models.Model):
     allBuyers = User.objects.filter(id__in = buyerID_set)
 
     # use this to lookup course info and buyers
-    allCourses_dict = { c.course_code : c for c in allCourses}
-    allBuyers_dict = { u.id : u for u in allBuyers}
+    allCourses_dict = { c.course_code : model_to_dict(c) for c in allCourses}
+    allBuyers_dict = { u.id : model_to_dict(u) for u in allBuyers}
 
     print 'allCourses_dict', allCourses_dict
     print 'allBuyers_dict', allBuyers_dict
@@ -573,7 +574,7 @@ class Ledger(models.Model):
         'fee', 0.0)
 
 
-
+    def lookup
 
 
 
@@ -591,17 +592,17 @@ class Ledger(models.Model):
         'acctLocalCurrencyServiceFee': lookupFees(i),
 
         # courseInfo
-        'courseLocation': allCourses_dict.get(i.course_code).formatLocation,
-        'courseStartDate': allCourses_dict.get(i.course_code).start_date,
-        'courseEndDate': allCourses_dict.get(i.course_code).end_date,
-        'courseSubdomain': allCourses_dict.get(i.course_code).subdomain,
+        'courseLocation': allCourses_dict.get(i.course_code, {}).get('formatLocation', None),
+        'courseStartDate': allCourses_dict.get(i.course_code, {}).get('start_date', None),
+        'courseEndDate': allCourses_dict.get(i.course_code, {}).get('end_date', None),
+        'courseSubdomain': allCourses_dict.get(i.course_code, {}).get('subdomain', None),
 
         # parentInfo:
-        'guardianFirstname': allBuyers_dict.get(i.buyerID).firstname,
-        'guardianLastname': allBuyers_dict.get(i.buyerID).lastname,
-        'guardianEmail': allBuyers_dict.get(i.buyerID).email,
-        'guardianPhoneNumber': allBuyers_dict.get(i.buyerID).phoneNumber,
-        'guardianAddress': allBuyers_dict.get(i.buyerID).address,
+        'guardianFirstname': allBuyers_dict.get(i.buyerID, {}).get('firstname', None),
+        'guardianLastname': allBuyers_dict.get(i.buyerID, {}).get('lastname', None),
+        'guardianEmail': allBuyers_dict.get(i.buyerID, {}).get('email', None),
+        'guardianPhoneNumber': allBuyers_dict.get(i.buyerID, {}).get('phoneNumber', None),
+        'guardianAddress': allBuyers_dict.get(i.buyerID, {}).get('address', None),
 
       }
 
