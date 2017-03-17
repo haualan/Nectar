@@ -506,7 +506,77 @@ class Ledger(models.Model):
       print 'i.buyerID', i.buyerID
 
     # fees lookup from stripe, there will be fees per stripe acct in subdomains
-    # ugh
+
+    # pad the dates, because not sure when the created dates of these stripe objects match the transactions, what if they don't?
+    stripe_startDate = timezone.datetime.min
+    if startDate > timezone.datetime.min + timezone.timedelta(days = 3):
+      stripe_startDate = startDate - timezone.timedelta(days = 3)
+
+    stripe_endDate = timezone.datetime.min
+    if endDate < timezone.datetime.max - timezone.timedelta(days = 3):
+      stripe_endDate = endDate + timezone.timedelta(days = 3)
+
+    print 'stripe_startDate', stripe_startDate, 'stripe_endDate', stripe_endDate
+
+    # for each stripe acct in system we attempt to match the fees,
+    # non-live transactions will always have 0 fees
+    fees_lookup_by_currency = {}
+    for k, v in settings.STRIPE_SECRET_MAP_LIVE.iteritems():
+      stripe.api_key = v
+      bt = stripe.BalanceTransaction.all(
+        created = {
+          'gt': stripe_startDate,
+          'lt': stripe_endDate,
+        }
+      )
+      fees_lookup_by_currency[k] = { 
+        i.get('id'): i for i in bt.get('data') if i.get('id', None) and i.get('fee_details', None)
+      }
+
+
+    def lookupFees(l):
+      """
+      l is the ledger object, filter through currency and txn id to find the fee, 
+      fill with 0 for fees not found
+      """
+
+      source = l.source
+
+      if source != 'CC':
+        # there is fee only for Credit Card / CC transactions
+        return 0.0
+
+      currency = l.currency
+
+      txn_id = l.rawData.get(
+        'data', {}
+      ).get(
+        'object', {}
+      ).get(
+        'balance_transaction', None
+      )
+
+      if not currency or not txn_id:
+        # missing other info return no fees
+        return 0.0
+
+      if not l.livemode:
+        # only live mode has real fees / test transactions have nothing
+        return 0.0
+
+      # retreive balance transaction obj from lookup, use 0.0 as a fallback
+      return fees_lookup_by_currency.get(
+        currency, {}).get(
+        txn_id, {}).get(
+        'data', {}).get(
+        'fee', 0.0)
+
+
+
+
+
+
+    
 
     # build results
     r = [
