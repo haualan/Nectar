@@ -565,7 +565,9 @@ class Ledger(models.Model):
 
       print 'lookup fees', txn_id, fees_lookup_by_currency.get(
         currency, {}).get(
-        txn_id, {})
+        txn_id, {}), 'fee', fees_lookup_by_currency.get(
+        currency, {}).get(
+        txn_id, {}).get('fee')
       # retreive balance transaction obj from lookup, use 0.0 as a fallback
       return fees_lookup_by_currency.get(
         currency, {}).get(
