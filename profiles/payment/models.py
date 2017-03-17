@@ -575,9 +575,11 @@ class Ledger(models.Model):
     
 
     # build results
-    r = [
-      {
-      
+    r = []
+    for i in allOrders:
+      r.append(
+        {
+
         'acctEvent_id': i.event_id,
         'acctTransactionDateTimeUTC': i.transactionDateTime,
         'acctTransactionDateTimeLocal': i.transactionDateTime.astimezone( allCourses_dict.get(i.course_code).subdomain ),
@@ -599,7 +601,33 @@ class Ledger(models.Model):
         'guardianPhoneNumber': allBuyers_dict.get(i.buyerID, {}).get('phoneNumber', None),
         'guardianAddress': allBuyers_dict.get(i.buyerID, {}).get('address', None),
 
-      }
+      })
+      
+    # r = [
+    #   {
+
+    #     'acctEvent_id': i.event_id,
+    #     'acctTransactionDateTimeUTC': i.transactionDateTime,
+    #     'acctTransactionDateTimeLocal': i.transactionDateTime.astimezone( allCourses_dict.get(i.course_code).subdomain ),
+    #     'acctSource': i.source,
+    #     'acctLocalCurrencyChargedAmount': i.localCurrencyChargedAmount,
+    #     'acctCurrency': i.currency,
+    #     'acctLocalCurrencyServiceFee': lookupFees(i),
+
+    #     # courseInfo
+    #     'courseLocation': allCourses_dict.get(i.course_code, {}).get('formatLocation', None),
+    #     'courseStartDate': allCourses_dict.get(i.course_code, {}).get('start_date', None),
+    #     'courseEndDate': allCourses_dict.get(i.course_code, {}).get('end_date', None),
+    #     'courseSubdomain': allCourses_dict.get(i.course_code, {}).get('subdomain', None),
+
+    #     # parentInfo:
+    #     'guardianFirstname': allBuyers_dict.get(i.buyerID, {}).get('firstname', None),
+    #     'guardianLastname': allBuyers_dict.get(i.buyerID, {}).get('lastname', None),
+    #     'guardianEmail': allBuyers_dict.get(i.buyerID, {}).get('email', None),
+    #     'guardianPhoneNumber': allBuyers_dict.get(i.buyerID, {}).get('phoneNumber', None),
+    #     'guardianAddress': allBuyers_dict.get(i.buyerID, {}).get('address', None),
+
+    #   }
 
 
     for i in allOrders]
