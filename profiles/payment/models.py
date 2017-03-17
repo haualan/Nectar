@@ -519,8 +519,15 @@ class Ledger(models.Model):
 
     # for each stripe acct in system we attempt to match the fees,
     # non-live transactions will always have 0 fees
+
+    # what are the currency codes in the Ledger list to be considered, economize on looking at transactions from diff offices
+    distinctCurrency = [o.get('currency') for o in allOrders.distinct('currency').values('currency')]
+
     fees_lookup_by_currency = {}
     for k, v in settings.STRIPE_SECRET_MAP_LIVE.iteritems():
+      if k not in distinctCurrency:
+        continue
+
       stripe.api_key = v
       bt = stripe.BalanceTransaction.all(
         created = {
@@ -571,10 +578,17 @@ class Ledger(models.Model):
 
       # retreive balance transaction obj from lookup, use 0.0 as a fallback
       # remember to multiply by multiplier when converting to local currency
-      return fees_lookup_by_currency.get(
+      fee = fees_lookup_by_currency.get(
         currency, {}).get(
         txn_id, {}).get(
         'fee', 0.0) * currencyMultiplier.get(currency)
+
+      buySellMultiplier = 1.0
+      if l.get('event_type') =='charge.refunded':
+        buySellMultiplier = -1.0
+
+      return fee * buySellMultiplier
+
     
     def getTZstrbySubdomain(l):
       """
@@ -588,18 +602,18 @@ class Ledger(models.Model):
       return tzLookup.get(subdomain)
 
 
-    for i in allOrders:
-      print 'i.course_code', i.course_code
-      print 'i.buyerID', i.buyerID
-      print 'subdomain', allCourses_dict.get(i.course_code, {}).get('subdomain', None)
-      print 'txn_id', i.rawData.get(
-        'data', {}
-      ).get(
-        'object', {}
-      ).get(
-        'balance_transaction', None
-      )
-      print ''
+    # for i in allOrders:
+    #   print 'i.course_code', i.course_code
+    #   print 'i.buyerID', i.buyerID
+    #   print 'subdomain', allCourses_dict.get(i.course_code, {}).get('subdomain', None)
+    #   print 'txn_id', i.rawData.get(
+    #     'data', {}
+    #   ).get(
+    #     'object', {}
+    #   ).get(
+    #     'balance_transaction', None
+    #   )
+    #   print ''
 
 
     def getFormatLocation(l):
@@ -665,7 +679,7 @@ class Ledger(models.Model):
         'courseSubdomain': allCourses_dict.get(i.course_code, {}).get('subdomain', None),
 
         # parentInfo:
-        'guardian_remarks': getGuardian_remarks(i),
+        'guardian_report_remarks': getGuardian_remarks(i),
         'guardianFirstname': allBuyers_dict.get(i.buyerID, {}).get('firstname', None),
         'guardianLastname': allBuyers_dict.get(i.buyerID, {}).get('lastname', None),
         'guardianEmail': allBuyers_dict.get(i.buyerID, {}).get('email', None),
