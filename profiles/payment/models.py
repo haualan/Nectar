@@ -480,7 +480,7 @@ class Ledger(models.Model):
 
     tzLookup = { k: timezone.pytz.timezone(v.get('tzName'))  for k, v in settings.SUBDOMAINSPECIFICMAPPING.iteritems() }
 
-    defaultTZString = 'Asia/Hong_Kong'
+    defaultTZString = tzLookup.get('hk')
     
 
     allOrders = cls.objects.filter(
