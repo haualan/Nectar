@@ -584,7 +584,7 @@ class Ledger(models.Model):
         'fee', 0.0) * currencyMultiplier.get(currency)
 
       buySellMultiplier = 1.0
-      if l.get('event_type') =='charge.refunded':
+      if l.event_type =='charge.refunded':
         buySellMultiplier = -1.0
 
       return fee * buySellMultiplier
