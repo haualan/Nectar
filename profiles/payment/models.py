@@ -577,6 +577,7 @@ class Ledger(models.Model):
     # build results
     r = [
       {
+      
         'acctEvent_id': i.event_id,
         'acctTransactionDateTimeUTC': i.transactionDateTime,
         'acctTransactionDateTimeLocal': i.transactionDateTime.astimezone( allCourses_dict.get(i.course_code).subdomain ),
