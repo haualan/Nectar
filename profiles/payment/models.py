@@ -671,7 +671,7 @@ class Ledger(models.Model):
         'acctLocalCurrencyServiceFee': lookupFees(i),
 
         # courseInfo
-        'course_remarks': getCourse_remarks(i),
+        'courseReportRemarks': getCourse_remarks(i),
         'course_code': i.course_code,
         'courseLocation': getFormatLocation(i),
         'courseStartDate': allCourses_dict.get(i.course_code, {}).get('start_date', None),
@@ -679,7 +679,7 @@ class Ledger(models.Model):
         'courseSubdomain': allCourses_dict.get(i.course_code, {}).get('subdomain', None),
 
         # parentInfo:
-        'guardian_report_remarks': getGuardian_remarks(i),
+        'guardianReportRemarks': getGuardian_remarks(i),
         'guardianFirstname': allBuyers_dict.get(i.buyerID, {}).get('firstname', None),
         'guardianLastname': allBuyers_dict.get(i.buyerID, {}).get('lastname', None),
         'guardianEmail': allBuyers_dict.get(i.buyerID, {}).get('email', None),
