@@ -665,7 +665,7 @@ class Ledger(models.Model):
         'courseSubdomain': allCourses_dict.get(i.course_code, {}).get('subdomain', None),
 
         # parentInfo:
-        'guardian_remarks' getGuardian_remarks(i),
+        'guardian_remarks': getGuardian_remarks(i),
         'guardianFirstname': allBuyers_dict.get(i.buyerID, {}).get('firstname', None),
         'guardianLastname': allBuyers_dict.get(i.buyerID, {}).get('lastname', None),
         'guardianEmail': allBuyers_dict.get(i.buyerID, {}).get('email', None),
