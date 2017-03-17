@@ -480,6 +480,7 @@ class Ledger(models.Model):
 
     tzLookup = { k: timezone.pytz.timezone(v.get('tzName'))  for k, v in settings.SUBDOMAINSPECIFICMAPPING.iteritems() }
 
+    defaultTZString = 'Asia/Hong_Kong'
     
 
     allOrders = cls.objects.filter(
@@ -573,6 +574,11 @@ class Ledger(models.Model):
         'data', {}).get(
         'fee', 0.0)
     
+    def getTZstrbySubdomain(subdomain):
+      """
+      given subdomain
+      """
+
 
     # build results
     r = []
@@ -582,7 +588,7 @@ class Ledger(models.Model):
 
         'acctEvent_id': i.event_id,
         'acctTransactionDateTimeUTC': i.transactionDateTime,
-        'acctTransactionDateTimeLocal': i.transactionDateTime.astimezone( allCourses_dict.get(i.course_code).subdomain ),
+        'acctTransactionDateTimeLocal': i.transactionDateTime.astimezone( tzLookup.get(allCourses_dict.get(i.course_code, {}).get('subdomain', defaultTZString)) ),
         'acctSource': i.source,
         'acctLocalCurrencyChargedAmount': i.localCurrencyChargedAmount,
         'acctCurrency': i.currency,
@@ -602,7 +608,7 @@ class Ledger(models.Model):
         'guardianAddress': allBuyers_dict.get(i.buyerID, {}).get('address', None),
 
       })
-      
+
     # r = [
     #   {
 
