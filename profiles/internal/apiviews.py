@@ -21,7 +21,7 @@ from .utils import *
 
 class InternalView(views.APIView):
   """
-  \n API endpoint for internal usage
+  \n API endpoint for internal usage, mostly for AWS to trigger things since it requires a token
   
   \n
   \n find users looking to purchase but haven't done so for a period of time
@@ -63,6 +63,46 @@ class InternalView(views.APIView):
     return Response(globals()[op](request))
 
 
+from course.models import UserCourseRelationship
+def getAllEnrollmentReport(request):
+  return UserCourseRelationship.getAllEnrollmentReport()
+
+def getRevenueSchedule(request):
+  return Ledger.getRevenueSchedule()
+
+class InternalReportView(views.APIView):
+  """
+  \n API endpoint for internal usage, mostly for hummingbird internal frontend to generate reports
+  \n
+  \n enrollment report for all students
+  \n      {
+  \n          "op": "getAllEnrollmentReport"
+  \n      }
+  \n revenue schedule for all time
+  \n      {
+  \n          "op": "getRevenueSchedule"
+  \n      }
 
 
+  """
+  api_name = 'internalreport'
+
+  # queryset = User.objects.all()
+  # serializer_class = MeSerializer
+  http_method_names = ['post']
+  permission_classes = (IsAuthenticated,)
+
+
+  def post(self, request, format=None, *args, **kwargs):
+      # viewingUser = request.user
+
+    if request.user.role not in ['I', 'O', 'C']:
+      raise PermissionDenied('User not an internal officer')
+
+    op = request.data.get('op', None)
+
+    if op not in ['getAllEnrollmentReport', 'getRevenueSchedule']:
+      raise ParseError('expecting operation variable op')
+
+    return Response(globals()[op](request))
 

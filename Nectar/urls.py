@@ -99,6 +99,7 @@ urlpatterns = [
     url(r'^api/v1/marketingcustom/$', MarketingCustomView.as_view() , name = 'marketingcustom-list'),
     
     url(r'^api/v1/internal/$', InternalView.as_view() , name = 'internal-list'),
+    url(r'^api/v1/internalreport/$', InternalReportView.as_view() , name = 'internalreport-list'),
 
     # payment views
     url(r'^api/v1/paymentchargeuser/$', PaymentChargeUserView.as_view() , name = 'paymentchargeuser-list'),
