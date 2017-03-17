@@ -630,7 +630,7 @@ class Ledger(models.Model):
     #   }
 
 
-    for i in allOrders]
+    # for i in allOrders]
 
     return r
 
