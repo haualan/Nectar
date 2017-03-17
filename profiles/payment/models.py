@@ -563,16 +563,18 @@ class Ledger(models.Model):
         # only live mode has real fees / test transactions have nothing
         return 0.0
 
-      print 'lookup fees', txn_id, fees_lookup_by_currency.get(
-        currency, {}).get(
-        txn_id, {}), 'fee', fees_lookup_by_currency.get(
-        currency, {}).get(
-        txn_id, {}).get('fee')
+      # print 'lookup fees', txn_id, fees_lookup_by_currency.get(
+      #   currency, {}).get(
+      #   txn_id, {}), 'fee', fees_lookup_by_currency.get(
+      #   currency, {}).get(
+      #   txn_id, {}).get('fee')
+
       # retreive balance transaction obj from lookup, use 0.0 as a fallback
+      # remember to multiply by multiplier when converting to local currency
       return fees_lookup_by_currency.get(
         currency, {}).get(
         txn_id, {}).get(
-        'fee', 0.0)
+        'fee', 0.0) * currencyMultiplier.get(currency)
     
     def getTZstrbySubdomain(l):
       """
