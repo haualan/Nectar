@@ -581,7 +581,7 @@ class Ledger(models.Model):
       subdomain = allCourses_dict.get(l.course_code, {}).get('subdomain', None)
 
       if not subdomain:
-        return defaultTZString
+        return defaultTZ
 
       return tzLookup.get(subdomain)
 
