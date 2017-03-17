@@ -503,17 +503,6 @@ class Ledger(models.Model):
     # print 'allCourses_dict', allCourses_dict
     # print 'allBuyers_dict', allBuyers_dict
 
-    for i in allOrders:
-      print 'i.course_code', i.course_code
-      print 'i.buyerID', i.buyerID
-      print 'subdomain', allCourses_dict.get(i.course_code, {}).get('subdomain', None)
-      print 'txn_id', l.rawData.get(
-        'data', {}
-      ).get(
-        'object', {}
-      ).get(
-        'balance_transaction', None
-      )
 
     # fees lookup from stripe, there will be fees per stripe acct in subdomains
 
@@ -574,6 +563,9 @@ class Ledger(models.Model):
         # only live mode has real fees / test transactions have nothing
         return 0.0
 
+      print 'lookup fees', txn_id, fees_lookup_by_currency.get(
+        currency, {}).get(
+        txn_id, {})
       # retreive balance transaction obj from lookup, use 0.0 as a fallback
       return fees_lookup_by_currency.get(
         currency, {}).get(
@@ -591,6 +583,20 @@ class Ledger(models.Model):
         return defaultTZ
 
       return tzLookup.get(subdomain)
+
+
+    for i in allOrders:
+      print 'i.course_code', i.course_code
+      print 'i.buyerID', i.buyerID
+      print 'subdomain', allCourses_dict.get(i.course_code, {}).get('subdomain', None)
+      print 'txn_id', l.rawData.get(
+        'data', {}
+      ).get(
+        'object', {}
+      ).get(
+        'balance_transaction', None
+      )
+      print ''
 
 
     # build results
