@@ -504,6 +504,7 @@ class Ledger(models.Model):
     for i in allOrders:
       print 'i.course_code', i.course_code
       print 'i.buyerID', i.buyerID
+      print 'subdomain', allCourses_dict.get(i.course_code).subdomain,
 
     # fees lookup from stripe, there will be fees per stripe acct in subdomains
 
@@ -512,7 +513,7 @@ class Ledger(models.Model):
     if startDate > timezone.datetime.min + timezone.timedelta(days = 3):
       stripe_startDate = startDate - timezone.timedelta(days = 3)
 
-    stripe_endDate = timezone.datetime.min
+    stripe_endDate = timezone.datetime.max
     if endDate < timezone.datetime.max - timezone.timedelta(days = 3):
       stripe_endDate = endDate + timezone.timedelta(days = 3)
 
@@ -587,7 +588,7 @@ class Ledger(models.Model):
         'acctSource': i.source,
         'acctLocalCurrencyChargedAmount': i.localCurrencyChargedAmount,
         'acctCurrency': i.currency,
-        'acctLocalCurrencyServiceFee': 0.0,
+        'acctLocalCurrencyServiceFee': lookupFees(i),
 
         # courseInfo
         'courseLocation': allCourses_dict.get(i.course_code).formatLocation,
