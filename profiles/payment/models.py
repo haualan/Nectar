@@ -572,12 +572,6 @@ class Ledger(models.Model):
         txn_id, {}).get(
         'data', {}).get(
         'fee', 0.0)
-
-
-    def lookup
-
-
-
     
 
     # build results
