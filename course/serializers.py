@@ -32,6 +32,10 @@ def get_model_concrete_fields(MyModel):
     ]
 
 
+
+class CourseCapacitySerializer(serializers.Serializer):
+    course_code = serializers.CharField(max_length=200, required=True, allow_blank=False)
+
 class CourseClassDateRelationshipSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CourseClassDateRelationship

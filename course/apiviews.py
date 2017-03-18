@@ -255,6 +255,64 @@ class SendConfirmationView(views.APIView):
 
         return Response(r)
 
+
+class CourseCapacityView(views.APIView):
+    """
+\n    1. POST a payload with course_code to see if it's full on code-ninja
+    """
+
+    api_name = 'coursecapacity'
+
+    # this endpoint should be public so anyone can sign up
+    permission_classes = (AllowAny, )
+    http_method_names =['post']
+    cnHeaders = {'Authorization': settings.CNKEY}
+    serializer_class = CourseCapacitySerializer
+
+    def post(self, request, format=None, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        isFilled = False
+
+        course_code = serializer.validated_data.get('course_code')
+
+        c = Course.objects.filter(course_code = course_code, active=True)
+
+        if not c:
+            return Response({'isFilled': True, 'data': 'course_code not found'})
+
+        c = c.first()
+
+
+        r = requests.get(
+                url = 'https://{}.firstcodeacademy.com/api/{}/offerings/{}'.format(c.subdomain, c.cnType, course_code),
+                headers = self.cnHeaders
+            )
+
+        if (r.status_code == 200):
+            data = r.json()
+            enrollment_count = data.get('enrollment_count')
+            capacity = data.get('capacity')
+
+            # if capacity == 0:
+            #     isFilled = False
+            #     # assume 0 capacity is infinite?
+            #     return Response({ 'data':  })
+
+            if enrollment_count < capacity:
+                isFilled = False
+                return Response({'isFilled': isFilled, 'data': data})
+            else:
+                isFilled = True
+                return Response({'isFilled': isFilled, 'data': data})
+
+        isFilled = True
+        r = {'isFilled': isFilled, 'data': r.text}
+
+        return Response(r)
+
+
 class CodeNinjaCacheUpdateView(views.APIView):
     """
     \n POST to update CodeNinjaCache

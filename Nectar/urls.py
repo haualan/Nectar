@@ -17,7 +17,7 @@ from feed.apiviews import FeedView
 
 from marketing.apiviews import MarketingCustomView
 
-from course.apiviews import CodeNinjaCacheUpdateView, EnrollmentReportView
+from course.apiviews import CodeNinjaCacheUpdateView, EnrollmentReportView, CourseCapacityView
 
 
 from rest_framework import routers
@@ -94,6 +94,9 @@ urlpatterns = [
     
     url(r'^api/v1/codeninjacacheupdate/$', CodeNinjaCacheUpdateView.as_view() , name = 'codeninjacacheupdate-list'),
     url(r'^api/v1/enrollmentreport/$', EnrollmentReportView.as_view() , name = 'enrollmentreport-list'),
+    url(r'^api/v1/coursecapacity/$', CourseCapacityView.as_view() , name = 'coursecapacity-list'),
+    
+
 
     
     url(r'^api/v1/marketingcustom/$', MarketingCustomView.as_view() , name = 'marketingcustom-list'),

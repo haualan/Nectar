@@ -226,7 +226,7 @@ class StudentDeactivateView(views.APIView):
 class UserCreateView(views.APIView):
     """
 \n    1. POST a payload with username , password1, password2 to create a user 
-\n token is returned upon successful creation
+\n token is returned upon successful creation, pass in firstname, lastname as well (optional)
         {
         "username":"alan",
         "password1":"1q2w3e4r",
