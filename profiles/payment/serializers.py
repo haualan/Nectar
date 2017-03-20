@@ -13,6 +13,7 @@ def get_model_concrete_fields(MyModel):
     ]
 
 class CouponValidationSerializer(serializers.Serializer):
+    addlDiscount = serializers.IntegerField(required=False, default=0)
     coupon_code = serializers.CharField(max_length=200, required=True, allow_blank=False)
     course_code = serializers.CharField(max_length=200, required=True, allow_blank=False)
     price_code = serializers.CharField(max_length=200, required=True, allow_blank=False)
@@ -21,6 +22,14 @@ class ReferralValidationSerializer(serializers.Serializer):
     refCode = serializers.CharField(max_length=200, required=True, allow_blank=False)
     subdomain = serializers.CharField(max_length=200, required=True, allow_blank=False)
 
+class ReferralCreditSerializer(serializers.Serializer):
+    refCode = serializers.CharField(max_length=200, required=True, allow_blank=False)
+    subdomain = serializers.CharField(max_length=200, required=True, allow_blank=False)
+
+    class Meta:
+        model = ReferralCredit
+        # fields = '__all__' 
+        fields = get_model_concrete_fields(model) + ['url']
 
 
 class PaymentChargeUserSerializer(serializers.Serializer):

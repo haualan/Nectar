@@ -125,10 +125,16 @@ class ReferralCredit(models.Model):
   # that's the user who receives the credit
   creditedUser = models.ForeignKey('User', related_name = 'creditedUser')
 
+  isUsed = models.BooleanField(default = False)
+
   class Meta:
     # referral can only happen once
     unique_together = ('referToUser', 'creditedUser')
 
+  def save(self, *args, **kwargs):
+    # maybe prevent referToUser == creditedUser, users shouldn't refer themselves
+    
+    super(ReferralCredit, self).save(*args, **kwargs)
 
   @classmethod
   def verifyReferralCode(cls, referToUser, subdomain, refCode='', useCode = False):

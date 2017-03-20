@@ -338,14 +338,14 @@ class PaymentChargeUserView(views.APIView):
       )
 
       if refCodeValidityDict.get('isValid'):
-        final_discount_amount += couponValidityDict.get('final_discount_amount')
+        final_discount_amount += refCodeValidityDict.get('discount')
 
 
     # apply coupon and discounts here    
     if coupon_code:
       couponValidityDict = useCodeNinjaCoupon(addlDiscount = final_discount_amount, course_code = course.course_code, coupon_code = coupon_code, price_code = price_code)
       if couponValidityDict.get('isValid'):
-        final_discount_amount = couponValidityDict.get('final_discount_amount')
+        final_discount_amount += couponValidityDict.get('discount')
 
 
 
@@ -534,6 +534,27 @@ class LedgerViewSet(viewsets.ReadOnlyModelViewSet):
       return self.queryset
 
 
+
+class ReferralCreditViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows available referral credits to be seen for the current logged in user
+    """
+    api_name = 'referralcredit'
+
+    queryset = ReferralCredit.objects.all()
+    serializer_class = ReferralCreditSerializer
+    http_method_names = ['get']
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self): 
+
+      u = self.request.user
+
+      return self.queryset.filter(creditedUser = u, isUsed = false)
+
+
+
+
 class CouponValidationView(views.APIView):
   """
   /n given a payload of 
@@ -556,9 +577,10 @@ class CouponValidationView(views.APIView):
     coupon_code = serializer.validated_data.get('coupon_code')
     course_code = serializer.validated_data.get('course_code')
     price_code = serializer.validated_data.get('price_code')
+    addlDiscount = serializer.validated_data.get('addlDiscount', 0)
 
 
-    resultDict = validateCodeNinjaCoupon(coupon_code = coupon_code , course_code = course_code, price_code = price_code)
+    resultDict = validateCodeNinjaCoupon(addlDiscount = 0, coupon_code = coupon_code , course_code = course_code, price_code = price_code)
     return Response(resultDict)
 
 
