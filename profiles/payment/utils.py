@@ -15,6 +15,39 @@
 
 from django.contrib.auth import get_user_model
 from django.conf import settings
+from hashids import Hashids
+hashids = Hashids(
+  salt=settings.CNKEY,
+  alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
+)
+
+def decodeReferralCode(refCode = ''):
+  """
+  given a string of refCode, decode to find out what payload is inside
+  """
+  decodedTuple = hashids.decode(refCode)
+
+  if len(decodedTuple) == 0:
+    # indicates this is a bad referral code
+    return None
+
+  return decodedTuple
+
+
+def encodeReferralCode(payload):
+  """
+  given an int , encode and return a code
+  """
+  if type(payload) == str:
+    raise ValueError('encodeReferralCode payload cannot be a string, must be an integer of list of integers')
+
+  hashid = hashids.encode(payload)
+  return hashid
+
+
+
+
+
 from django.utils import timezone
 from django.template.loader import render_to_string
 
@@ -319,11 +352,11 @@ def updateCodeNinjaEnrollment(order):
 #   print r.text
 
 
-def useCodeNinjaCoupon(coupon_code, course_code, price_code):
-  return validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=True)
+def useCodeNinjaCoupon(coupon_code, course_code, price_code, addlDiscount = 0):
+  return validateCodeNinjaCoupon(coupon_code, course_code, price_code, addlDiscount, useCoupon=True)
 
 
-def validateCodeNinjaCoupon(coupon_code, course_code, price_code, useCoupon=False):
+def validateCodeNinjaCoupon(coupon_code, course_code, price_code, addlDiscount = 0, useCoupon=False):
   """
   given coupon_code, send a get request to https://<subdomain>.firstcodeacademy.com/api/coupons
   and see if the coupon is valid for the course_code in question.

@@ -34,85 +34,154 @@ from profiles.models import User
 
 
 
+# coupon validation handled by code ninja, do not make here
+# class Coupon(models.Model):
+#   """
+#   keeps all valid coupons in the system, 
+#   must be careful not to expose any on endpoints and that only validations are allowed
+#   """
 
-class Coupon(models.Model):
+#   # unique coupon codes are enforced
+#   code = models.CharField(max_length=255, blank=False, null=False, unique=True)
+
+#   description_public = models.TextField(blank=True)
+#   description_internal = models.TextField(blank=True)
+
+#   # effectDollar is the dollar amount it takes off the charge
+#   effectDollar = models.DecimalField(max_digits=15, decimal_places=6, default=0)
+
+#   # effectMultiplier is the multiplier applied for the discount (.95) implies 5% off
+#   effectMultiplier = models.DecimalField(max_digits=9, decimal_places=6, default=1.00)
+
+#   lastModified = models.DateTimeField(auto_now=True)
+
+#   # coupon may be set to have no end date
+#   validFrom = models.DateTimeField(default=timezone.now, null=True)
+#   validTo = models.DateTimeField(default=None, null=True)
+
+
+#   # optional fun things to do with coupons
+#   # optional timer 
+#   timerSeconds = models.IntegerField(default = None, null=True)
+
+#   maxUses = models.IntegerField(default = None, null=True)
+
+#   # if true, then coupon can be used for any products / like a general discount for everything
+#   isValidForAll = models.BooleanField(default = False)
+
+
+# class CouponCourseRelation(models.Model):
+#   """
+#   assigns relationship of coupons and the courses they are valid on
+#   """
+#   coupon = models.ForeignKey('Coupon')
+#   course = models.ForeignKey('course.Course')
+
+#   class Meta:
+#     # the same coupon must only be associated to the same course once 
+#     unique_together = ('coupon', 'course')
+
+
+# class CouponUserRelation(models.Model):
+#   """
+#   applies coupon to a user
+#   transaction amount must be determined by the server to avoid overrides on client side right before transaction
+#   - coupons may be used multiple times but may not stack towards the same transaction
+
+#   """
+
+#   user = models.ForeignKey('User')
+
+#   # creation timestamp
+#   timestamp = models.DateTimeField(auto_now_add=True)
+
+#   coupon = models.ForeignKey('Coupon')
+
+#   isUsed = models.BooleanField(default = False)
+
+#   @transaction.atomic
+#   def save(self, *args, **kwargs):
+#     # there can be multiple used coupons (isUsed = True) for a paying user but only one active coupon (isUsed = False)
+#     if not self.isUsed:
+#       CouponUserRelation.objects.filter(
+#         user = self.user,
+#         coupon = self.coupon,
+#         isUsed = False
+#       ).update(isUsed= True)
+
+#     super(CouponUserRelation, self).save(*args, **kwargs)
+
+
+from .utils import decodeReferralCode
+
+class ReferralCredit(models.Model):
   """
-  keeps all valid coupons in the system, 
-  must be careful not to expose any on endpoints and that only validations are allowed
+  tracks all the credit a buyer has earned from refering other buyers
   """
 
-  # unique coupon codes are enforced
-  code = models.CharField(max_length=255, blank=False, null=False, unique=True)
+  # that's the user who used the referall code successfully, right now only 1 is allowed
+  referToUser = models.ForeignKey('User', unique = True, related_name = 'referToUser')
 
-  description_public = models.TextField(blank=True)
-  description_internal = models.TextField(blank=True)
-
-  # effectDollar is the dollar amount it takes off the charge
-  effectDollar = models.DecimalField(max_digits=15, decimal_places=6, default=0)
-
-  # effectMultiplier is the multiplier applied for the discount (.95) implies 5% off
-  effectMultiplier = models.DecimalField(max_digits=9, decimal_places=6, default=1.00)
-
-  lastModified = models.DateTimeField(auto_now=True)
-
-  # coupon may be set to have no end date
-  validFrom = models.DateTimeField(default=timezone.now, null=True)
-  validTo = models.DateTimeField(default=None, null=True)
-
-
-  # optional fun things to do with coupons
-  # optional timer 
-  timerSeconds = models.IntegerField(default = None, null=True)
-
-  maxUses = models.IntegerField(default = None, null=True)
-
-  # if true, then coupon can be used for any products / like a general discount for everything
-  isValidForAll = models.BooleanField(default = False)
-
-
-class CouponCourseRelation(models.Model):
-  """
-  assigns relationship of coupons and the courses they are valid on
-  """
-  coupon = models.ForeignKey('Coupon')
-  course = models.ForeignKey('course.Course')
+  # that's the user who receives the credit
+  creditedUser = models.ForeignKey('User', related_name = 'creditedUser')
 
   class Meta:
-    # the same coupon must only be associated to the same course once 
-    unique_together = ('coupon', 'course')
+    # referral can only happen once
+    unique_together = ('referToUser', 'creditedUser')
+
+
+  @classmethod
+  def verifyReferralCode(cls, referToUser, subdomain, refCode='', useCode = False):
+    """
+    given a <user> referByUser, and a referral Code:
+    - decode the refCode and find the creditedUser Id
+    - create object in ReferralCredit model
+    - return { 'isValid': False, 'discount': 0} if invalid, and the actualu discount amount if valid (in accordance to settings)
+
+    """
+
+    decodedTuple = decodeReferralCode(refCode)
+
+    if not decodedTuple:
+      # decode failed
+      print 'decode failed', refCode
+      return { 'isValid': False, 'discount': 0 }
+
+    uid = decodedTuple[0]
+    creditedUser = User.objects.filter(id = uid)
+
+    if not creditedUser:
+      # creditedUser not found
+      print 'creditedUser not found', uid
+      return { 'isValid': False, 'discount': 0 }
+
+    creditedUser = creditedUser.first()
+
+    # give no discount if subdomain mapping is not found
+    discount = settings.SUBDOMAINSPECIFICMAPPING.get(subdomain, {}).get('refDiscount', None)
+
+    if not discount:
+      # SUBDOMAINSPECIFICMAPPING incorrectly set
+      print 'SUBDOMAINSPECIFICMAPPING incorrectly set', subdomain
+      return { 'isValid': False, 'discount': 0 }
+
+
+    if useCode:
+      # create object if actually used
+      cls.objects.create(referToUser = referToUser, creditedUser = creditedUser )
+    
+    return { 'isValid': True, 'discount': discount }
+
+  @classmethod
+  def useReferralCode(cls, referToUser, subdomain, refCode=''):
+    """
+    actually use the referral code and create a record
+    """
+    return verifyReferralCode( referToUser, subdomain, refCode, useCode = True)
 
 
 
 
-
-class CouponUserRelation(models.Model):
-  """
-  applies coupon to a user
-  transaction amount must be determined by the server to avoid overrides on client side right before transaction
-  - coupons may be used multiple times but may not stack towards the same transaction
-
-  """
-
-  user = models.ForeignKey('User')
-
-  # creation timestamp
-  timestamp = models.DateTimeField(auto_now_add=True)
-
-  coupon = models.ForeignKey('Coupon')
-
-  isUsed = models.BooleanField(default = False)
-
-  @transaction.atomic
-  def save(self, *args, **kwargs):
-    # there can be multiple used coupons (isUsed = True) for a paying user but only one active coupon (isUsed = False)
-    if not self.isUsed:
-      CouponUserRelation.objects.filter(
-        user = self.user,
-        coupon = self.coupon,
-        isUsed = False
-      ).update(isUsed= True)
-
-    super(CouponUserRelation, self).save(*args, **kwargs)
 
 event_type_choices = (
   ('charge.succeeded', 'charge.succeeded'),

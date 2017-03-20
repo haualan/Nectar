@@ -27,6 +27,8 @@ from django.contrib.postgres.fields import JSONField
 
 from botocore.utils import merge_dicts
 
+from payment.utils import encodeReferralCode
+
 def metadata_default():
     return {}
 
@@ -309,6 +311,13 @@ class User(AbstractEmailUser):
   @property
   def slugName(self):
     return slugify(self.displayName , allow_unicode=True)
+
+  @property
+  def referralCode(self):
+    """ returns this user's referral code """
+    return encodeReferralCode(self.id)
+
+
 
   class Meta:
     unique_together = ('username',)

@@ -17,6 +17,12 @@ class CouponValidationSerializer(serializers.Serializer):
     course_code = serializers.CharField(max_length=200, required=True, allow_blank=False)
     price_code = serializers.CharField(max_length=200, required=True, allow_blank=False)
 
+class ReferralValidationSerializer(serializers.Serializer):
+    refCode = serializers.CharField(max_length=200, required=True, allow_blank=False)
+    subdomain = serializers.CharField(max_length=200, required=True, allow_blank=False)
+
+
+
 class PaymentChargeUserSerializer(serializers.Serializer):
     token = serializers.CharField(max_length=200)
     course_code = serializers.CharField(max_length=200)

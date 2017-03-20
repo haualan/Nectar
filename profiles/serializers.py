@@ -493,6 +493,8 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
     isEmailVerified = serializers.SerializerMethodField(method_name = '_get_email_verification')
 
 
+
+
     def _get_email_verification(self, obj):
         ea = EmailAddress.objects.filter(user = obj)
 
@@ -536,6 +538,8 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
             'remarks',
             'heardFrom',
             'heardFromOption',
+
+            'referralCode',
 
         
             )

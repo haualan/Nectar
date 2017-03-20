@@ -489,6 +489,10 @@ SUBDOMAINSPECIFICMAPPING = {
 
     # get the offical name from pytz
     'tzName': 'Asia/Hong_Kong',
+
+    # referral discount
+    'refDiscount': 380,
+
   },
   'sg': {
     'internalName': 'Wee Ping',
@@ -496,7 +500,8 @@ SUBDOMAINSPECIFICMAPPING = {
     'emailFrom': 'hellosg@firstcodeacademy.com',
     'officePhone': '+65 6820 2633',
     'officeLocation': '#04-13, Stamford Court, 61 Stamford Road, Singapore 178892',
-    'tzName': 'Asia/Singapore'
+    'tzName': 'Asia/Singapore',
+    'refDiscount': 55,
   },
   'tw': {
     'internalName': 'Chi',
@@ -507,6 +512,7 @@ SUBDOMAINSPECIFICMAPPING = {
     # tw has no fixed location yet
     'officeLocation': '',
     'tzName': 'Asia/Taipei',
+    'refDiscount': 450,
 
   },
 

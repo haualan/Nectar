@@ -9,7 +9,7 @@ from .serializers import *
 from course.models import Course
 from .models import *
 
-from .utils import send_order_confirm_email, send_internal_sales_email, updateCodeNinjaEnrollment, validateCodeNinjaCoupon, useCodeNinjaCoupon
+from .utils import *
 
 
 import stripe
@@ -299,6 +299,7 @@ class PaymentChargeUserView(views.APIView):
     course_code = serializer.validated_data.get('course_code')
     price_code = serializer.validated_data.get('price_code')
     coupon_code = serializer.validated_data.get('coupon_code', None)
+    refCode = serializer.validated_data.get('coupon_code', None)
 
 
 
@@ -325,12 +326,27 @@ class PaymentChargeUserView(views.APIView):
     if price_obj is None:
       raise ParseError('price_code does not exist')
 
-    # apply coupon and discounts here
+    # set inital discount amount
     final_discount_amount = 0.0
+
+    # apply referral discounts here
+    if refCode:
+      refCodeValidityDict = ReferralCredit.useReferralCode(
+        referToUser = guardianUser, 
+        subdomain = course.subdomain, 
+        refCode = refCode,
+      )
+
+      if refCodeValidityDict.get('isValid'):
+        final_discount_amount += couponValidityDict.get('final_discount_amount')
+
+
+    # apply coupon and discounts here    
     if coupon_code:
-      couponValidityDict = useCodeNinjaCoupon(course_code = course.course_code, coupon_code = coupon_code, price_code = price_code)
+      couponValidityDict = useCodeNinjaCoupon(addlDiscount = final_discount_amount, course_code = course.course_code, coupon_code = coupon_code, price_code = price_code)
       if couponValidityDict.get('isValid'):
         final_discount_amount = couponValidityDict.get('final_discount_amount')
+
 
 
     # check if student is already registered to class. do not want to pay twice
@@ -543,6 +559,41 @@ class CouponValidationView(views.APIView):
 
 
     resultDict = validateCodeNinjaCoupon(coupon_code = coupon_code , course_code = course_code, price_code = price_code)
+    return Response(resultDict)
+
+
+class ReferralValidationView(views.APIView):
+  """
+  /n given a payload of 
+  /n { 'refCode': '<some code>', 'subdomain': 'hk' }
+  /n validate with code ninja to see if coupon is actually valid.
+
+  Front end should update with price
+  """
+  api_name = 'referralvalidation'
+  http_method_names = ['post']
+
+  # only logged in users can attempt to validate referral code
+  permission_classes = (IsAuthenticated, )
+  serializer_class = ReferralValidationSerializer
+
+  def post(self, request, format=None, *args, **kwargs):
+    serializer = self.serializer_class(data=request.data)
+    serializer.is_valid(raise_exception=True)
+
+    refCode = serializer.validated_data.get('refCode')
+    subdomain = serializer.validated_data.get('subdomain')
+
+    # the user calling this endpoint is being referred
+    referToUser = request.user
+
+
+    resultDict = ReferralCredit.verifyReferralCode(
+      referToUser = referToUser,
+      refCode = refCode,
+      subdomain = subdomain,
+    )
+
     return Response(resultDict)
 
 
