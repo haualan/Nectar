@@ -157,6 +157,11 @@ class ReferralCredit(models.Model):
 
     creditedUser = creditedUser.first()
 
+    if creditedUser.id  == referToUser.id:
+      # user cannot refer self
+      print 'user cannot refer self', creditedUser.id
+      return { 'isValid': False, 'discount': 0 }
+
     # give no discount if subdomain mapping is not found
     discount = settings.SUBDOMAINSPECIFICMAPPING.get(subdomain, {}).get('refDiscount', None)
 
