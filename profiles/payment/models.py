@@ -188,7 +188,7 @@ class ReferralCredit(models.Model):
     """
     actually use the referral code and create a record
     """
-    return verifyReferralCode( referToUser, subdomain, refCode, useCode = True)
+    return cls.verifyReferralCode( referToUser, subdomain, refCode, useCode = True)
 
 
 
