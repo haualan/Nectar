@@ -3,6 +3,29 @@ from .models import *
 from django.conf import settings
 from profiles.serializers import UserSimpleSerializer
 
+class JSONSerializerField(serializers.Field):
+    """ Serializer for JSONField -- required to make field writable"""
+    def to_internal_value(self, data):
+        # print 'JSONSerializerField data', type(data), data
+        if type(data) != dict and type(data) != list:
+            raise ParseError('expecting a dict or list instead of :{}'.format(data))
+        return data
+    def to_representation(self, value):
+        # print 'JSONSerializerField value', type(value),value
+        if type(value) != dict:
+            return json.loads(value)
+
+        # print 'to rep', value, self.default, value == {}
+        if value == {} or value == []:
+            # adhere to default representation if empty set or list is passed (because we don't know if user wants to save a list or dict) 
+            # print 'returning self default'
+            print 'self.default', self.default
+            if self.default is not empty:
+                return self.default
+            return value
+
+        return value
+
 def get_model_concrete_fields(MyModel):
     return [
         f.name
@@ -33,6 +56,8 @@ class PaymentChargeUserSerializer(serializers.Serializer):
     price_code = serializers.CharField(max_length=200)
     coupon_code = serializers.CharField(max_length=200, required=False)
     studentID = serializers.IntegerField()
+    refCode = serializers.CharField(max_length=200)
+    refCreditList = JSONSerializerField()
 
     class Meta:
         extra_kwargs = {'token': {'write_only': True},}

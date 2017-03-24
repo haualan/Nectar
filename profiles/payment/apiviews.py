@@ -299,8 +299,10 @@ class PaymentChargeUserView(views.APIView):
     course_code = serializer.validated_data.get('course_code')
     price_code = serializer.validated_data.get('price_code')
     coupon_code = serializer.validated_data.get('coupon_code', None)
-    refCode = serializer.validated_data.get('coupon_code', None)
+    refCode = serializer.validated_data.get('refCode', None)
     refCreditList = serializer.validated_data.get('refCreditList', None)
+
+    
 
 
 
