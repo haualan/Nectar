@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+from django.conf import settings
 
 def get_model_concrete_fields(MyModel):
     return [
@@ -62,10 +63,33 @@ class PaymentManualRefundSerializer(serializers.Serializer):
 
 
 class ReferralCreditSerializer(serializers.HyperlinkedModelSerializer):
+    discountAmount = serializers.SerializerMethodField(method_name = '_get_discountAmount')
+
+    def _get_discountAmount(self, obj):
+        """
+        returns the discount amount of the referral code, 
+        - requires the subdomain query param when this is requested, otherwise returns 0
+        """
+        subdomain = self.context.get("request").query_params.get('subdomain', None)
+        if not subdomain:
+            return 0
+
+        discountAmount = settings.SUBDOMAINSPECIFICMAPPING.get(
+            subdomain, {}
+        ).get(
+            'refDiscount', None
+        )
+
+        if not discountAmount:
+            return 0
+
+        return discountAmount
+
+
     class Meta:
         model = ReferralCredit
         # fields = '__all__' 
-        fields = get_model_concrete_fields(model) + ['url']
+        fields = get_model_concrete_fields(model) + ['url', 'discountAmount']
 
 class LedgerSerializer(serializers.HyperlinkedModelSerializer):
     localCurrencyChargedAmount = serializers.DecimalField(max_digits=15, decimal_places=6, coerce_to_string=False)
