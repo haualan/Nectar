@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import *
 from django.conf import settings
+from profiles.serializers import UserSimpleSerializer
 
 def get_model_concrete_fields(MyModel):
     return [
@@ -64,6 +65,7 @@ class PaymentManualRefundSerializer(serializers.Serializer):
 
 class ReferralCreditSerializer(serializers.HyperlinkedModelSerializer):
     discountAmount = serializers.SerializerMethodField(method_name = '_get_discountAmount')
+    referToUser = UserSimpleSerializer()
 
     def _get_discountAmount(self, obj):
         """
