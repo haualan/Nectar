@@ -198,6 +198,10 @@ class ReferralCredit(models.Model):
       print 'SUBDOMAINSPECIFICMAPPING incorrectly set', subdomain
       return { 'isValid': False, 'discount': 0 }
 
+    # check if user has already used another code before
+    if cls.objects.filter( creditedUser = creditedUser ):
+      print 'referral already used', creditedUser
+      return { 'isValid': False, 'discount': 0 }
 
     if useCode:
       # create object if actually used
