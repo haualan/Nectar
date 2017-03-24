@@ -23,9 +23,6 @@ class ReferralValidationSerializer(serializers.Serializer):
     subdomain = serializers.CharField(max_length=200, required=True, allow_blank=False)
 
 class ReferralCreditSerializer(serializers.Serializer):
-    refCode = serializers.CharField(max_length=200, required=True, allow_blank=False)
-    subdomain = serializers.CharField(max_length=200, required=True, allow_blank=False)
-
     class Meta:
         model = ReferralCredit
         # fields = '__all__' 
