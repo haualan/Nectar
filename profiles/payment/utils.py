@@ -568,6 +568,8 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, addlDiscount =
       if discount_type == 'Absolute':
         p['discount']=  discount_amount
 
+      print 'addlDiscount coupon', addlDiscount
+
       if discount_type == 'Percentage':
         p['discount']= (course_price - addlDiscount) * discount_percentage
       
