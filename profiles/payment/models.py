@@ -127,6 +127,8 @@ class ReferralCredit(models.Model):
 
   isUsed = models.BooleanField(default = False)
 
+  createdDate = models.DateTimeField(default=timezone.now)
+
   class Meta:
     # referral can only happen once
     unique_together = ('referToUser', 'creditedUser')
