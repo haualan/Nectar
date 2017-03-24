@@ -302,7 +302,7 @@ class PaymentChargeUserView(views.APIView):
     refCode = serializer.validated_data.get('refCode', None)
     refCreditList = serializer.validated_data.get('refCreditList', None)
 
-    
+
 
 
 
@@ -346,7 +346,7 @@ class PaymentChargeUserView(views.APIView):
 
     # apply referral Credits here
     if refCreditList:
-      final_discount_amount += ReferralCredit.useReferralCreditList.useReferralCreditList(
+      final_discount_amount += ReferralCredit.useReferralCreditList(
         creditedUser = guardianUser,
         listOfIDs = refCreditList,
       )
