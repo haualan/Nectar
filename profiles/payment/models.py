@@ -114,6 +114,26 @@ from profiles.models import User
 
 from .utils import decodeReferralCode
 
+
+def get_discountAmount( subdomain):
+  """ 
+  given subdomain str, find out what discount should be for referrals
+  """
+  if not subdomain:
+    return 0.0
+
+  discountAmount = settings.SUBDOMAINSPECIFICMAPPING.get(
+    subdomain, {}
+  ).get(
+    'refDiscount', None
+  )
+
+  if not discountAmount:
+    return 0.0
+
+  return discountAmount
+
+
 class ReferralCredit(models.Model):
   """
   tracks all the credit a buyer has earned from refering other buyers
@@ -192,8 +212,21 @@ class ReferralCredit(models.Model):
     """
     return cls.verifyReferralCode( referToUser, subdomain, refCode, useCode = True)
 
+  def get_discountAmount(self, subdomain):
+    return get_discountAmount(subdomain)
 
+  @classmethod
+  def useReferralCreditList(cls, listOfIDs, creditedUser, subdomain):
+    """
+    given a list of ids representing the credit objects belonging to the creditedUser, update isUsed to True
+  
+    return the amount discounted in total local currency (which requires subdomain info)
+    """
 
+    usableCredits = cls.objects.filter(creditedUser = creditedUser, id__in = listOfIDs, isUsed = False)
+    updateCount = cls.objects.filter(creditedUser = creditedUser, id__in = listOfIDs).update(isUsed = True)
+
+    return usableCredits.count() * get_discountAmount(subdomain)
 
 
 event_type_choices = (

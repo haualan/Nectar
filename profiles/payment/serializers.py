@@ -73,19 +73,8 @@ class ReferralCreditSerializer(serializers.HyperlinkedModelSerializer):
         - requires the subdomain query param when this is requested, otherwise returns 0
         """
         subdomain = self.context.get("request").query_params.get('subdomain', None)
-        if not subdomain:
-            return 0
 
-        discountAmount = settings.SUBDOMAINSPECIFICMAPPING.get(
-            subdomain, {}
-        ).get(
-            'refDiscount', None
-        )
-
-        if not discountAmount:
-            return 0
-
-        return discountAmount
+        return obj.get_discountAmount(subdomain = subdomain)
 
 
     class Meta:

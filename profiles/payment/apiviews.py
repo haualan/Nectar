@@ -300,6 +300,7 @@ class PaymentChargeUserView(views.APIView):
     price_code = serializer.validated_data.get('price_code')
     coupon_code = serializer.validated_data.get('coupon_code', None)
     refCode = serializer.validated_data.get('coupon_code', None)
+    refCreditList = serializer.validated_data.get('refCreditList', None)
 
 
 
@@ -340,6 +341,13 @@ class PaymentChargeUserView(views.APIView):
       if refCodeValidityDict.get('isValid'):
         final_discount_amount += refCodeValidityDict.get('discount')
 
+
+    # apply referral Credits here
+    if refCreditList:
+      final_discount_amount += ReferralCredit.useReferralCreditList.useReferralCreditList(
+        creditedUser = guardianUser,
+        listOfIDs = refCreditList,
+      )
 
     # apply coupon and discounts here    
     if coupon_code:
@@ -579,8 +587,7 @@ class CouponValidationView(views.APIView):
     price_code = serializer.validated_data.get('price_code')
     addlDiscount = serializer.validated_data.get('addlDiscount', 0)
 
-
-    resultDict = validateCodeNinjaCoupon(addlDiscount = 0, coupon_code = coupon_code , course_code = course_code, price_code = price_code)
+    resultDict = validateCodeNinjaCoupon(addlDiscount = addlDiscount, coupon_code = coupon_code , course_code = course_code, price_code = price_code)
     return Response(resultDict)
 
 
