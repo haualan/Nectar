@@ -224,9 +224,9 @@ class ReferralCredit(models.Model):
     """
 
     usableCredits = cls.objects.filter(creditedUser = creditedUser, id__in = listOfIDs, isUsed = False)
-    updateCount = cls.objects.filter(creditedUser = creditedUser, id__in = listOfIDs).update(isUsed = True)
+    updateCount = usableCredits.update(isUsed = True)
 
-    return usableCredits.count() * get_discountAmount(subdomain)
+    return updateCount * get_discountAmount(subdomain)
 
 
 event_type_choices = (
