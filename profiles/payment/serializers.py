@@ -22,11 +22,7 @@ class ReferralValidationSerializer(serializers.Serializer):
     refCode = serializers.CharField(max_length=200, required=True, allow_blank=False)
     subdomain = serializers.CharField(max_length=200, required=True, allow_blank=False)
 
-class ReferralCreditSerializer(serializers.Serializer):
-    class Meta:
-        model = ReferralCredit
-        # fields = '__all__' 
-        fields = get_model_concrete_fields(model) + ['url']
+
 
 
 class PaymentChargeUserSerializer(serializers.Serializer):
@@ -65,7 +61,11 @@ class PaymentManualRefundSerializer(serializers.Serializer):
     remarks = serializers.CharField(max_length=None, min_length=None, allow_blank=True,)
 
 
-
+class ReferralCreditSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = ReferralCredit
+        # fields = '__all__' 
+        fields = get_model_concrete_fields(model) + ['url']
 
 class LedgerSerializer(serializers.HyperlinkedModelSerializer):
     localCurrencyChargedAmount = serializers.DecimalField(max_digits=15, decimal_places=6, coerce_to_string=False)
