@@ -56,7 +56,7 @@ class PaymentChargeUserSerializer(serializers.Serializer):
     price_code = serializers.CharField(max_length=200)
     coupon_code = serializers.CharField(max_length=200, required=False)
     studentID = serializers.IntegerField()
-    refCode = serializers.CharField(max_length=200)
+    refCode = serializers.CharField(max_length=200, required=False)
     refCreditList = JSONSerializerField()
 
     class Meta:
