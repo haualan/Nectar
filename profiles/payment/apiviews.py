@@ -349,6 +349,7 @@ class PaymentChargeUserView(views.APIView):
       final_discount_amount += ReferralCredit.useReferralCreditList(
         creditedUser = guardianUser,
         listOfIDs = refCreditList,
+        subdomain = course.subdomain,
       )
 
     # apply coupon and discounts here    
