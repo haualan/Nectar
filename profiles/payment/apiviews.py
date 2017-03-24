@@ -550,7 +550,7 @@ class ReferralCreditViewSet(viewsets.ReadOnlyModelViewSet):
 
       u = self.request.user
 
-      return self.queryset.filter(creditedUser = u, isUsed = false)
+      return self.queryset.filter(creditedUser = u, isUsed = False)
 
 
 
