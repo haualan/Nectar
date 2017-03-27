@@ -150,10 +150,10 @@ class UserValidateView(views.APIView):
 
 class ReferralInviteView(views.APIView):
     """
-\n    POST a payload with a string of validated emails, mailgun will send them
+\n    POST a payload with a string of validated emails separated by comma, mailgun will send them
 
         {
-        "emailsStr":"alan"
+        "emailsStr":"alan [at] abc.com, alan2 [at] anotheremail.com"
         }
 
     """
@@ -168,7 +168,7 @@ class ReferralInviteView(views.APIView):
         emailsStr = request.data.get('emailsStr')
         referralCode = request.user.referralCode
 
-        request.user.send_referral_email(
+        r = request.user.send_referral_email(
             emailStr = emailsStr)
 
 
@@ -181,7 +181,7 @@ class ReferralInviteView(views.APIView):
 
 
         return Response({
-            'status': status,
+            'status': 'success',
         })
 
 class StudentResetPWView(views.APIView):
