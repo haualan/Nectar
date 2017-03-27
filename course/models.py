@@ -191,7 +191,7 @@ class UserCourseRelationship(models.Model):
       studentLastname = F('user__lastname'),
       studentGender = F('user__gender'),
       studentBirthdate = F('user__birth_date'),
-      studentSchoolName = F('user__school__name'),
+      studentSchoolName = F('user__school__enName'),
       # studentSchoolLevel = Value('', output_field = CharField()),
       studentEmail = F('user__email'),
 
