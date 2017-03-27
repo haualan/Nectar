@@ -492,6 +492,11 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
 
     isEmailVerified = serializers.SerializerMethodField(method_name = '_get_email_verification')
 
+    subdomain = serializers.CharField(
+        source = 'preferredSubdomain',
+        read_only = True,
+        )
+
 
 
 
@@ -540,6 +545,8 @@ class MeSerializer(serializers.HyperlinkedModelSerializer):
             'heardFromOption',
 
             'referralCode',
+
+            'subdomain',
 
         
             )
