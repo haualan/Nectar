@@ -399,10 +399,19 @@ class School(models.Model):
   lon = models.DecimalField(max_digits=9, decimal_places=6, null=True)
   lat = models.DecimalField(max_digits=9, decimal_places=6, null=True)
   formatted_address = models.CharField(max_length=255, null=True)
+  enName = models.CharField(max_length=255, blank=True)
+  enFormattedAddress = models.CharField(max_length=500, blank=True)
+  addressGoogleRef = JSONField(default = metadata_default)
 
   # this is a google place_id for google places API
   place_id = models.CharField(max_length=255, null=True, unique=True)
 
+
+  def getGoogleMapsENdetails():
+    """
+    gets the english version of the address details for internal reference
+    """
+    pass
 
   class Meta:
     # schools must be unique
