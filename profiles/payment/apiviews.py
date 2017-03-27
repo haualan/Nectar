@@ -619,6 +619,7 @@ class ReferralValidationView(views.APIView):
     # the user calling this endpoint is being referred
     referToUser = request.user
 
+    print 'referralvalidation', referToUser, refCode, subdomain
 
     resultDict = ReferralCredit.verifyReferralCode(
       referToUser = referToUser,
