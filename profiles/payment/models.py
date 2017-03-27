@@ -199,12 +199,12 @@ class ReferralCredit(models.Model):
       return { 'isValid': False, 'discount': 0 }
 
     # check if user has already used another code before
-    if cls.objects.filter( creditedUser = creditedUser ):
-      print 'referral already used', creditedUser
+    if cls.objects.filter( referToUser = referToUser ):
+      print 'referral already used', referToUser
       return { 'isValid': False, 'discount': 0 }
 
     if useCode:
-      # create object if actually used
+      # create object if actually being used
       cls.objects.create(referToUser = referToUser, creditedUser = creditedUser )
     
     return { 'isValid': True, 'discount': discount }
