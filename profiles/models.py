@@ -418,13 +418,16 @@ class School(models.Model):
     https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJMSntWhWqBjQRJdJYhASuRsM&key=AIzaSyBHyE9zHyLh_3tLBes7p1ZFqXnxncVMThQ
     """
 
-    url = "https://maps.googleapis.com/maps/api/place/details/json?placeid={}&key={}".format( self.place_id ,settings.GOOGLEAPIKEY )
+    url = "https://maps.googleapis.com/maps/api/place/details/json?language=en&placeid={}&key={}".format( self.place_id ,settings.GOOGLEAPIKEY )
     r = requests.post(url)
 
     if r.status_code == 200:
       data = r.json()
       self.enName = data.get('result', {}).get('name')
       self.addressGoogleRef = data
+
+      if not self.formatted_address:
+        self.formatted_address = data.get('result', {}).get('formatted_address')
 
 
     return
