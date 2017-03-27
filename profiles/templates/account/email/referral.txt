@@ -1,0 +1,8 @@
+
+Your friend {{ senderUser.displayName }} gave you {{ formattedReferralAmt }} off your first course on First Code Academy, the best place for students to learn to think by learning to code!
+
+Use code: {{ senderUser.referralCode }}
+
+Visit https://www.firstcodeacademy.com and redeem your credit!
+
+

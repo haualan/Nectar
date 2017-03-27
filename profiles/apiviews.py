@@ -1,5 +1,6 @@
 from .models import *
 from .permissions import *
+from .utils import *
 
 from django.db.models import Q
 
@@ -142,6 +143,42 @@ class UserValidateView(views.APIView):
 
         if email:
             status = not User.objects.filter(email=email).exclude(email__isnull = True).exists()
+
+        return Response({
+            'status': status,
+        })
+
+class ReferralInviteView(views.APIView):
+    """
+\n    POST a payload with a string of validated emails, mailgun will send them
+
+        {
+        "emailsStr":"alan"
+        }
+
+    """
+
+    api_name = 'referralinvite'
+
+    # this endpoint should be public so anyone can sign up / create user
+    permission_classes = (IsAuthenticated, )
+    http_method_names =['post']
+
+    def post(self, request, format=None, *args, **kwargs):
+        emailsStr = request.data.get('emailsStr')
+        referralCode = request.user.referralCode
+
+        request.user.send_referral_email(
+            emailStr = emailsStr)
+
+
+        # try:
+
+        # except:
+        #     raise ParseError('{} has some invalid emails in them'.format(emailsStr))
+
+
+
 
         return Response({
             'status': status,

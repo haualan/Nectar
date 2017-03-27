@@ -23,46 +23,21 @@
             <tbody>
               <tr>
                 <td style="color:#818181;font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5;; text-align:left;padding-bottom:25px; text-align:left">
-
-
                   <hr style="border-color:rgba(0,0,0,0.035);border-width:1px; margin:30px;">
 
-
-                  <p>Dear {{ guardianFirstname|default_if_none:"Guardian / Parent" }},</p>
-
                   <p>
-                  I'm {{ internalName }} from First Code and I’d like to personally welcome you and your child, {{studentFirstname}}, to our academy. The class will start soon and we are very excited to see {{studentFirstname}}!
-                  </p> 
-
-                  <p>
-                  We believe that coding can empower us to become creators and not just consumers of technology. It means a lot to us to have the opportunity to be part of this journey with your child.
+                  Your friend {{ senderUser.displayName }} gave you {{ formattedReferralAmt }} off your first purchase on First Code Academy, the best place for students to learn to think by learning to code!
                   </p>
 
-                  <p>
-                  Day(s): {{dateStr}} <br>
-                  Class Start Time: {{firstTime}} <br>
-                  Class End Time: {{lastTime}} <br>
-                  Course: {{courseName}} <br>
-                  Location: {{formatLocation}} <br>
+                  <p>Use code: <b>{{ senderUser.referralCode }}</b> </p>
 
-                  {% if courseEventType == 'term' %}
-                  Full Class Calendar: <a style="" href="{{ fullClassCalendarUrl }}">Click here</a><br>
-                  {% endif %}
-                  </p>
-
-
-
-                  <p>
-                  Meanwhile, feel free to reach out to me via email or at {{ officePhone }} if you have any questions. We will see you and {{studentFirstname}} on 1st day of class! 
-                  </p>
-
-                  <p>
-                  Kind regards, <br>
-                  {{ internalName }}  <br>
-                  Community Manager <br>
-                  First Code Academy <br>
-                  </p>
-
+                  <table border="0" cellpadding="0" cellspacing="0" style="background-color:#FE5671; border:0px solid #353535; border-radius:0px; margin-bottom:10px; margin-top: 50px;" align="center">
+                    <tr>
+                      <td align="center" valign="middle">
+                        <a href="https://www.firstcodeacademy.com" target="_blank" style="color:#FFFFFF; font-family:Helvetica, Arial, sans-serif; font-size:16px; font-weight:bold; letter-spacing:-.5px; line-height:150%; padding-top:15px; padding-right:30px; padding-bottom:15px; padding-left:30px;text-decoration:none;display:block;">Claim your {{ formattedReferralAmt }} credit</a>
+                      </td>
+                    </tr>
+                  </table>
               
                   <hr style="border-color:rgba(0,0,0,0.035);border-width:1px; margin:30px;">
 
@@ -72,193 +47,6 @@
               </tr>
             </tbody>
           </table>
-
-
-<!-- subbanner receipt -->
-                    <table bgcolor="#e56060" border="0" cellpadding="0" cellspacing="0" width="100%" align="center" style="">
-                      <tbody>
-                        <tr>
-                          <td align="center" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">
-                            <table class="width" border="0" cellpadding="0" cellspacing="0" width="100%">
-                              <tbody>
-                                <tr>
-                                  <td colspan="4" height="8" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="100%">
-                                    <div class="clear" style="height: 8px; width: 1px;">&nbsp;</div>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="perm-padding" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="20">
-                                    <div class="clear" style="height: 1px 20px;"></div>
-                                  </td>
-                                  <td align="left" class="subbanner-item font-small" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly; color: #ffffff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; line-height: 17px; text-shadow: 0 1px 1px #e56060;" width="230">
-                                    <span
-                                      class="apple-override-header"
-                                      style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly; color: #ffffff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; line-height: 17px; text-shadow: 0 1px 1px #e56060;"
-                                      >
-                                        {{ localizedTransactionDateTime }}
-                                    </span>
-                                  </td>
-                                  <td align="right" class="subbanner-item font-small" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly; color: #ffffff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; line-height: 17px; text-shadow: 0 1px 1px #e56060;" width="230">
-                                    <span class="apple-override-header" style="display: none, border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly; color: #ffffff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; line-height: 17px; text-shadow: 0 1px 1px #e56060;">Order ID: {{ orderCode }}</span>
-                                  </td>
-                                  <td class="perm-padding" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="20">
-                                    <div class="clear" style="height: 1px 20px;"></div>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td colspan="4" height="8" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="100%">
-                                    <div class="clear" style="height: 8px; width: 1px;">&nbsp;</div>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <!-- /subbanner -->
-
-
-
-              <!-- summary -->
-<table bgcolor="ffffff" border="0" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e4e6e8; padding:0 0 60px" width="100%">
-  <tbody>
-    <tr>
-      <td align="center" style="border: 0; margin: 0; padding: 0;">
-        <table border="0" cellpadding="0" cellspacing="0" class="width" width="100%">
-          <tbody>
-            <tr>
-              <td class="temp-padding" style="border: 0; margin: 0; padding: 0; mso-line-height-rule: exactly; font-size: 1px; line-height: 1px;">
-                <div class="clear" style="height: 1px; width: 20px;"></div>
-              </td>
-              <td style="border: 0; margin: 0; padding: 0; mso-line-height-rule: exactly; font-size: 1px; line-height: 1px;" align="center" width="100%">
-                <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                  <tbody>
-
-                    <!-- title -->
-                    <tr>
-                      <td colspan="5" height="12" style="border: 0; margin: 0; padding: 0; mso-line-height-rule: exactly; font-size: 1px; line-height: 1px;">
-                        <div class="clear" style="height: 12px; width: 1px;">&nbsp;</div>
-                      </td>
-                    </tr>
-                    <tr class="summary-item">
-                      <td class="summary-padding" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px;" width="1">
-                        <div class="clear" style="height: 1px; width: 1px;"></div>
-                      </td>
-                      <td align="left" class="font-small" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; color: #77858c; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: bold; line-height: 20px;" width="100%">
-                        Description
-                      </td>
-                      <td style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px;" width="10">
-                        <div class="clear" style="height: 1px; width: 10px;"></div>
-                      </td>
-                      <td align="right" class="font-small" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; color: #77858c; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: bold; line-height: 20px;" width="120">
-                        Amount
-                      </td>
-                      <td class="summary-padding" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px;" width="1">
-                        <div class="clear" style="height: 1px; width: 1px;"></div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="5" height="12" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly; border-bottom: 1px solid #eaeff2;">
-                        <div class="clear" style="height: 12px; width: 1px;">&nbsp;</div>
-                      </td>
-                    </tr>
-                    <!-- /title -->
-
-                      <!-- item -->
-                      <tr>
-                        <td colspan="5" height="11" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly; border-top: 1px solid #eaeff2;">
-                          <div class="clear" style="height: 11px; width: 1px;">&nbsp;</div>
-                        </td>
-                      </tr>
-                      <tr class="summary-item">
-                        <td class="summary-padding" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px;" width="1">
-                          <div class="clear" style="height: 1px; width: 1px;"></div>
-                        </td>
-                        <td align="left" class="font-medium" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; color: #292e31; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; line-height: 17px;" width="100%">
-                          <span class="apple-override-dark" style="border: 0; margin: 0; padding: 0;">{{courseName}}</span>
-                        </td>
-                        <td style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px;" width="10">
-                          <div class="clear" style="height: 1px; width: 10px;"></div>
-                        </td>
-                        <td align="right" class="font-medium" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; color: #292e31; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; line-height: 17px;" width="120">
-                          {{ formatPriceStr }}
-                        </td>
-                        <td class="summary-padding" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px;" width="1">
-                          <div class="clear" style="height: 1px; width: 1px;"></div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td colspan="5" height="12" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">
-                          <div class="clear" style="height: 12px; width: 1px;">&nbsp;</div>
-                        </td>
-                      </tr>
-                      <!-- /item -->
-
-                    <!-- breakdown -->
-                    <tr>
-                      <td colspan="5" align="right" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly; border-top: 2px solid #eaeff2;">
-                        <table border="0" cellpadding="0" cellspacing="0" class="width" width="320">
-                          <tbody>
-
-                            <!-- amount -->
-                            <tr>
-                              <td colspan="5" height="11" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">
-                                <div class="clear" style="height: 11px; width: 1px;">&nbsp;</div>
-                              </td>
-                            </tr>
-                            <tr class="summary-item">
-                              <td class="summary-padding" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px;" width="1">
-                                <div class="clear" style="height: 1px; width: 1px;"></div>
-                              </td>
-                              <td align="left" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; color: #292e31; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: bold; line-height: 17px;" width="100">
-                                Total
-                              </td>
-                              <td style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px;" width="10">
-                                <div class="clear" style="height: 1px; width: 10px;"></div>
-                              </td>
-                              <td align="right" class="summary-total width" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; color: #292e31; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 16px; font-weight: bold; line-height: 17px;" width="208">
-                                {{ formatPriceStr }}
-                              </td>
-                              <td class="summary-padding" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px;" width="1">
-                                <div class="clear" style="height: 1px; width: 1px;"></div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td colspan="5" height="12" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">
-                                <div class="clear" style="height: 12px; width: 1px;">&nbsp;</div>
-                              </td>
-                            </tr>
-                            <!-- /amount -->
-
-                          </tbody>
-                        </table>
-                      </td>
-                    </tr>
-                    <!-- /breakdown -->
-
-                  </tbody>
-                </table>
-              </td>
-              <td class="temp-padding" style="border: 0; margin: 0; padding: 0; mso-line-height-rule: exactly; font-size: 1px; line-height: 1px;">
-                <div class="clear" style="height: 1px; width: 20px;"></div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </td>
-    </tr>
-  </tbody>
-</table>
-<!-- /summary -->
-
-
-
-
-        </td>
-      </tr>
-    </tbody>
-  </table>
 
 
 

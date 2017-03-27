@@ -492,6 +492,10 @@ SUBDOMAINSPECIFICMAPPING = {
 
     # referral discount
     'refDiscount': 380,
+    'currency': 'HKD',
+
+    'lat': 22.28552,
+    'lon': 114.15769,
 
   },
   'sg': {
@@ -502,6 +506,10 @@ SUBDOMAINSPECIFICMAPPING = {
     'officeLocation': '#04-13, Stamford Court, 61 Stamford Road, Singapore 178892',
     'tzName': 'Asia/Singapore',
     'refDiscount': 55,
+    'currency': 'SGD',
+
+    'lat': 1.28967,
+    'lon': 103.85007,
   },
   'tw': {
     'internalName': 'Chi',
@@ -513,6 +521,10 @@ SUBDOMAINSPECIFICMAPPING = {
     'officeLocation': '',
     'tzName': 'Asia/Taipei',
     'refDiscount': 450,
+    'currency': 'TWD',
+
+    'lat': 25.04776,
+    'lon': 121.53185,
 
   },
 

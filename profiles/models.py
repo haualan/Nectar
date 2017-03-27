@@ -29,6 +29,8 @@ from botocore.utils import merge_dicts
 
 from payment.utils import encodeReferralCode
 
+from .utils import *
+
 def metadata_default():
     return {}
 
@@ -159,6 +161,34 @@ class User(AbstractEmailUser):
   def clearClientDump(self):
     self.clientDump = {}
     self.save(clearClientDump=True)
+
+
+  def preferredSubdomain(self):
+    """
+    from clientDump try to guess what is the preferred subdomain of this user, if none, fall back to HK
+    """
+    subdomain = None
+
+    if self.lon and self.lat:
+      subdomain = get_closestSubdomainByCoord(lon = self.lon, lat = self.lat)
+      return subdomain
+
+    if self.clientDump != {}:
+      course_code = self.clientDump.get('course_code', None)
+      if course_code:
+        from course.models import Course
+        c = Course.objects.filter(course_code = course_code)
+        if c:
+          c = c.first()
+          subdomain = c.subdomain
+          return subdomain
+
+    # by default return hong hong
+    return 'hk'
+
+
+
+
 
   def updateStripeCustomer(self):
     """
@@ -317,6 +347,11 @@ class User(AbstractEmailUser):
     """ returns this user's referral code """
     return encodeReferralCode(self.id)
 
+  def send_referral_email(self, emailStr):
+    """
+    sends a referral email to a string of email recipients separated by comma
+    """
+    send_referral_email(self, emailStr)
 
 
   class Meta:
