@@ -25,7 +25,7 @@ def get_closestSubdomainByCoord(lon, lat):
   """
   given lat/lon coords, return a string representing the closest subdomain (ie. hk, sg, tw)
   """
-  distanceList = [ (k, haversine(lon, lat, v.get('lon'), v.get('lat')) ) for k,v in settings.SUBDOMAINSPECIFICMAPPING]
+  distanceList = [ (k, haversine(lon, lat, v.get('lon'), v.get('lat')) ) for k,v in settings.SUBDOMAINSPECIFICMAPPING.iteritems()]
 
   minTuple = min(distanceList, key = lambda x: x[1])
 
