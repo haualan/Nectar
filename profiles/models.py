@@ -169,9 +169,9 @@ class User(AbstractEmailUser):
     """
     subdomain = None
 
-    if self.lon and self.lat:
-      subdomain = get_closestSubdomainByCoord(lon = self.lon, lat = self.lat)
-      return subdomain
+    # if self.lon and self.lat:
+    #   subdomain = get_closestSubdomainByCoord(lon = self.lon, lat = self.lat)
+    #   return subdomain
 
     if self.clientDump != {}:
       course_code = self.clientDump.get('course_code', None)
