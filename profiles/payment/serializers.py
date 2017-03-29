@@ -5,6 +5,7 @@ from profiles.serializers import UserSimpleSerializer
 
 class JSONSerializerField(serializers.Field):
     """ Serializer for JSONField -- required to make field writable"""
+    
     def to_internal_value(self, data):
         # print 'JSONSerializerField data', type(data), data
         if type(data) != dict and type(data) != list:
@@ -57,7 +58,7 @@ class PaymentChargeUserSerializer(serializers.Serializer):
     coupon_code = serializers.CharField(max_length=200, required=False)
     studentID = serializers.IntegerField()
     refCode = serializers.CharField(max_length=200, required=False)
-    refCreditList = JSONSerializerField()
+    refCreditList = JSONSerializerField(required=False)
 
     class Meta:
         extra_kwargs = {'token': {'write_only': True},}
