@@ -433,8 +433,9 @@ class School(models.Model):
     return
 
   class Meta:
-    # schools must be unique
-    unique_together = ('name',)
+    # place_id must be unique
+    # unique_together = ('name',)
+    pass
 
 
 
