@@ -417,6 +417,11 @@ class School(models.Model):
     example link to pull from API:
     https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJMSntWhWqBjQRJdJYhASuRsM&key=AIzaSyBHyE9zHyLh_3tLBes7p1ZFqXnxncVMThQ
     """
+    if not enName:
+      self.enName = ""
+      return
+
+    
 
     url = "https://maps.googleapis.com/maps/api/place/details/json?language=en&placeid={}&key={}".format( self.place_id ,settings.GOOGLEAPIKEY )
     r = requests.post(url)
