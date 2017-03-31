@@ -111,9 +111,14 @@ class UtilsView(views.APIView):
   """
   \n API endpoint for extrernal usage, mostly for publicly visible settings like referral code discount amounts
   \n
-  \n enrollment report for all students
+  \n subdomain settings
   \n      {
   \n          "op": "getSubdomainMapping"
+  \n      }
+  \n students of a guardian 
+  \n      {
+  \n          "op": "getStudents",
+  \n          "uid": 2
   \n      }
 
 
@@ -131,7 +136,7 @@ class UtilsView(views.APIView):
 
     op = request.data.get('op', None)
 
-    if op not in ['getSubdomainMapping']:
+    if op not in ['getSubdomainMapping', 'getStudents']:
       raise ParseError('expecting operation variable op')
 
     return Response(globals()[op](request))

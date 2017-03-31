@@ -174,3 +174,30 @@ def getSubdomainMapping(request):
   """
 
   return settings.SUBDOMAINSPECIFICMAPPING
+
+def getStudents(request):
+  """
+  return students of chosen user
+  """
+
+  # only authenticated users may use this
+  if not request.user.is_authenticated():
+    return []
+
+  guardianUserId = request.data.get('uid', None)
+  if not guardianUserId:
+    return []
+
+  guardianUser = User.objects.filter(id = guardianUserId)
+  if not guardianUser:
+    return []
+
+  guardianUser = guardianUser.first()
+
+  return guardianUser.get_myActiveStudents.values('id', 'firstname', 'lastname', 'username')
+
+
+
+
+
+
