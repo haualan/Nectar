@@ -6,6 +6,8 @@ from django.conf import settings
 from rest_framework.exceptions import APIException, ParseError, PermissionDenied
 from .serializers import *
 
+from botocore.utils import merge_dicts
+
 from course.models import Course
 from .models import *
 
@@ -484,9 +486,11 @@ class PaymentManualChargeView(views.APIView):
     serializer = self.serializer_class(data=request.data)
     serializer.is_valid(raise_exception=True)
 
+    p = serializer.validated_data
+    merge_dicts(p, {'user': request.user})
     
 
-    openTrans = Ledger.createManualCharge(**serializer.validated_data)
+    openTrans = Ledger.createManualCharge(**p)
 
     # TBD: subscribe user to course
     # email user a receipt.
