@@ -103,6 +103,8 @@ urlpatterns = [
     
     url(r'^api/v1/internal/$', InternalView.as_view() , name = 'internal-list'),
     url(r'^api/v1/internalreport/$', InternalReportView.as_view() , name = 'internalreport-list'),
+    url(r'^api/v1/utils/$', UtilsView.as_view() , name = 'utils-list'),
+
 
     # payment views
     url(r'^api/v1/paymentchargeuser/$', PaymentChargeUserView.as_view() , name = 'paymentchargeuser-list'),

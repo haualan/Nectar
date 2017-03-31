@@ -106,3 +106,33 @@ class InternalReportView(views.APIView):
 
     return Response(globals()[op](request))
 
+
+class UtilsView(views.APIView):
+  """
+  \n API endpoint for extrernal usage, mostly for publicly visible settings like referral code discount amounts
+  \n
+  \n enrollment report for all students
+  \n      {
+  \n          "op": "getSubdomainMapping"
+  \n      }
+
+
+  """
+  api_name = 'utils'
+
+  # queryset = User.objects.all()
+  # serializer_class = MeSerializer
+  http_method_names = ['post']
+  permission_classes = (AllowAny,)
+
+
+  def post(self, request, format=None, *args, **kwargs):
+      # viewingUser = request.user
+
+    op = request.data.get('op', None)
+
+    if op not in ['getSubdomainMapping']:
+      raise ParseError('expecting operation variable op')
+
+    return Response(globals()[op](request))
+

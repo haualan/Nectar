@@ -478,7 +478,7 @@ CODENINJACACHEENDPOINTS = [
 
 DEFAULT_FROM_EMAIL = 'hello@firstcodeacademy.com'
 
-
+# note items exposed here must be publicly safe to view
 SUBDOMAINSPECIFICMAPPING = {
   'hk': {
     'internalName': 'Natasha',

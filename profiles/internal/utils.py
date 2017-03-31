@@ -168,4 +168,9 @@ def guardiansPendingPurchase(request):
 
   return results
 
+def getSubdomainMapping(request):
+  """
+  returns the subdomain mappinng in settings
+  """
 
+  return settings.SUBDOMAINSPECIFICMAPPING
