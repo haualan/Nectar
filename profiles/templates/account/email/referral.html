@@ -25,12 +25,16 @@
                 <td style="color:#818181;font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5;; text-align:left;padding-bottom:25px; text-align:left">
                   <hr style="border-color:rgba(0,0,0,0.035);border-width:1px; margin:30px;">
 
+                  <p>
+                  Your friend {{ senderUser.displayName }} gave you {{ formattedReferralAmt }} off your first purchase on First Code Academy, the best place for students to learn to think by learning to code!
+                  </p>
 
+                  <p>Use code: <b>{{ senderUser.referralCode }}</b> </p>
 
                   <table border="0" cellpadding="0" cellspacing="0" style="background-color:#FE5671; border:0px solid #353535; border-radius:0px; margin-bottom:10px; margin-top: 50px;" align="center">
                     <tr>
                       <td align="center" valign="middle">
-                        <a href="{{ link }}" target="_blank" style="color:#FFFFFF; font-family:Helvetica, Arial, sans-serif; font-size:16px; font-weight:bold; letter-spacing:-.5px; line-height:150%; padding-top:15px; padding-right:30px; padding-bottom:15px; padding-left:30px;text-decoration:none;display:block;">Claim your {{ formattedReferralAmt }} credit</a>
+                        <a href="https://www.firstcodeacademy.com" target="_blank" style="color:#FFFFFF; font-family:Helvetica, Arial, sans-serif; font-size:16px; font-weight:bold; letter-spacing:-.5px; line-height:150%; padding-top:15px; padding-right:30px; padding-bottom:15px; padding-left:30px;text-decoration:none;display:block;">Claim your {{ formattedReferralAmt }} credit</a>
                       </td>
                     </tr>
                   </table>
