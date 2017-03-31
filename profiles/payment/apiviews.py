@@ -487,6 +487,8 @@ class PaymentManualChargeView(views.APIView):
     serializer.is_valid(raise_exception=True)
 
     p = serializer.validated_data
+
+    # insert the caller of this function, required to make sure this is a valid internal user
     merge_dicts(p, {'user': request.user})
     
 
@@ -513,7 +515,10 @@ class PaymentManualRefundView(views.APIView):
     serializer = self.serializer_class(data=request.data)
     serializer.is_valid(raise_exception=True)
 
-    closingTrans = Ledger.createManualRefund(**serializer.validated_data)
+    p = serializer.validated_data
+
+    merge_dicts(p, {'user': request.user})
+    closingTrans = Ledger.createManualRefund(**p)
 
     return Response({'status': 'success', 'event_id': closingTrans.event_id})
 

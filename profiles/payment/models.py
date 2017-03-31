@@ -332,6 +332,7 @@ class Ledger(models.Model):
     super(Ledger, self).save(*args, **kwargs)
 
   @classmethod
+  @transaction.atomic
   def createManualCharge(cls, currency, localCurrencyChargedAmount, buyerID, studentID, course_code, source, user=None, remarks = ""):
     """
     method to create a manual charge, which is an open tax lot, user is the employee_id authorizing this transaction
@@ -346,13 +347,18 @@ class Ledger(models.Model):
     if not UserModel.objects.filter(id = buyerID).exists():
       raise ParseError('buyerID does not exist')
 
-    if not UserModel.objects.filter(id = studentID).exists():
+
+    studentUser = UserModel.objects.filter(id = studentID)
+    if not studentUser:
       raise ParseError('studentID does not exist')
+    studentUser = studentUser.first()
 
 
     # verify that course_code exists
-    if not Course.objects.filter(course_code = course_code).exists():
+    course = Course.objects.filter(course_code = course_code)
+    if not course:
       raise ParseError('course_code does not exist')
+    course = course.first()
 
 
     openTrans = cls.objects.create(
@@ -375,6 +381,12 @@ class Ledger(models.Model):
 
 
     )
+
+    # register student to said course
+    studentUser.usercourserelationship_set.update_or_create(
+      course = course.id
+    )
+
     return openTrans
 
   @classmethod
