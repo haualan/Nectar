@@ -418,6 +418,7 @@ class GuardianStudentRelationViewSet(viewsets.ModelViewSet):
     queryset = GuardianStudentRelation.objects.all()
     serializer_class = GuardianStudentRelationSerializer
     permission_classes = (IsAuthenticated,)
+    filter_backends = (filters.DjangoFilterBackend,)
 
 
 
