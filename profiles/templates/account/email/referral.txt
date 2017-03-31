@@ -1,8 +1,7 @@
-
-Your friend {{ senderUser.displayName }} gave you {{ formattedReferralAmt }} off your first course on First Code Academy, the best place for students to learn to think by learning to code!
-
-Use code: {{ senderUser.referralCode }}
-
-Visit https://www.firstcodeacademy.com and redeem your credit!
+I’m giving you {{ formattedReferralAmt }} off your first enrollment at First Code Academy. I am signing up for their coding classes for children from 5-18, you should join me too. Use code "{{ senderUser.referralCode }}" when you sign up. Enjoy!
 
 
+Details: {{ link }}
+
+Regards,
+{{ senderUser.firstname|default: senderUser.displayName }}

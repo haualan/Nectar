@@ -85,6 +85,8 @@ def send_referral_email(senderUser, emailStr  ):
     'officeLocation': s.get('officeLocation'),
     'officePhone': s.get('officePhone'),
     'emailFrom': s.get('emailFrom'),
+    'preferredSubdomain': senderUser.preferredSubdomain(),
+    'link': 'https://{}.firstcodeacademy.com/en/programs/referral'.format(senderUser.preferredSubdomain()),
   }
 
   html = render_to_string("account/email/referral.html", context).strip()
