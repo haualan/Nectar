@@ -4,4 +4,8 @@ I’m giving you {{ formattedReferralAmt }} off your first enrollment at First C
 Details: {{ link }}
 
 Regards,
-{{ senderUser.firstname|default: senderUser.displayName }}
+{% if senderUser.firstname %}
+	{{ senderUser.firstname }}
+{% else %}
+	{{ senderUser.displayName }}
+{% endif %}
