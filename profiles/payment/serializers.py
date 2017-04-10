@@ -75,7 +75,7 @@ class PaymentManualChargeSerializer(serializers.Serializer):
     # will be collected by request
     # user=None, 
 
-    remarks = serializers.CharField(max_length=None, min_length=None, allow_blank=True,)
+    remarks = serializers.CharField(max_length=None, min_length=None, allow_blank=True, required=False)
 
 
 
@@ -86,7 +86,7 @@ class PaymentManualRefundSerializer(serializers.Serializer):
     source = serializers.CharField(max_length=10)
 
     # user=None
-    remarks = serializers.CharField(max_length=None, min_length=None, allow_blank=True,)
+    remarks = serializers.CharField(max_length=None, min_length=None, allow_blank=True, required=False)
 
 
 class ReferralCreditSerializer(serializers.HyperlinkedModelSerializer):
