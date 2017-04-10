@@ -8,11 +8,11 @@ from .serializers import *
 
 from botocore.utils import merge_dicts
 
-from course.models import Course
+from course.models import Course, UserCourseRelationship
 from .models import *
 
 from .utils import *
-
+from django.db.models import Avg, Case, Count, F, Max, Min, Prefetch, Q, Sum, When
 
 import stripe
 
@@ -654,6 +654,35 @@ class CouponValidationView(views.APIView):
     resultDict = validateCodeNinjaCoupon(addlDiscount = addlDiscount, coupon_code = coupon_code , course_code = course_code, price_code = price_code)
     return Response(resultDict)
 
+
+
+class ReferralAvailableView(views.APIView):
+  """
+  /n determines whether the user should be allowed to use referral code
+  - guardian should no longer be able to use this if:
+  - at least one student has enrolled before
+  - @kevon, if guardian paid and refunded fully then it is as if the parent is new, still show the referral box in this case
+  """
+
+  api_name = 'referralavailable'
+  http_method_names = ['post']
+
+  # only logged in users can attempt to validate referral code
+  permission_classes = (IsAuthenticated, )
+ 
+  def post(self, request, format=None, *args, **kwargs):
+    """
+    
+    """
+    u = request.user
+    enrollmentCount = UserCourseRelationship.objects.filter( 
+      Q(user__in = u.guardianstudentrelation_set.all().values('student')) | Q(user = u)
+    ).count()
+
+    if enrollmentCount == 0:
+      return Response({'isReferralAvailable' : True })
+    return Response({'isReferralAvailable' : False })
+    
 
 class ReferralValidationView(views.APIView):
   """

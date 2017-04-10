@@ -117,6 +117,9 @@ urlpatterns = [
     url(r'^api/v1/couponvalidation/$', CouponValidationView.as_view() , name = 'couponvalidation-list'),
     url(r'^api/v1/referralvalidation/$', ReferralValidationView.as_view() , name = 'referralvalidation-list'),
     url(r'^api/v1/referralinvite/$', ReferralInviteView.as_view() , name = 'referralinvite-list'),
+    url(r'^api/v1/referralavailable/$', ReferralAvailableView.as_view() , name = 'referralavailable-list'),
+    
+
 
 
     
