@@ -503,6 +503,27 @@ class Ledger(models.Model):
 
     return None
 
+
+
+  def getMetadata(self):
+    """
+    extract metadata from payment, returns empty set if not existent
+    """
+
+    if self.rawData is None:
+      # do nothing if no rawData
+      return {}
+
+    dataWrapper = self.rawData
+    obj = dataWrapper['data']['object']
+
+    # so we can relate dataset to the user this is applied on
+    metadata = obj['metadata']
+
+    return metadata
+
+
+
   def processRawData(self):
     """
     given a payload from stripe, extract details and add contents back into ledger
@@ -790,6 +811,9 @@ class Ledger(models.Model):
     # build results
     r = []
     for i in allOrders:
+      metadata = i.getMetadata()
+
+
       r.append(
         {
 
@@ -800,6 +824,21 @@ class Ledger(models.Model):
         'acctLocalCurrencyChargedAmount': i.localCurrencyChargedAmount,
         'acctCurrency': i.currency,
         'acctLocalCurrencyServiceFee': lookupFees(i),
+
+        # this will surface if user has used a referral code
+        'acctLocalCurrencyRefCodeStatus_used': metadata.get('refCodeStatus_used', False),
+        'acctLocalCurrencyRefCodeStatus_discount': metadata.get('refCodeStatus_discount', 0),
+        'acctLocalCurrencyRefCodeStatus_refCode': metadata.get('refCodeStatus_refCode', None),
+
+        # surfacing referral credit recieved
+        'acctLocalCurrencyRefCreditStatus_used': metadata.get('refCreditStatus_used', False),
+        'acctLocalCurrencyRefCreditStatus_discount': metadata.get('refCreditStatus_discount', 0),
+        'acctLocalCurrencyRefCreditStatus_listOfIDs': metadata.get('refCreditStatus_listOfIDs', None),
+
+        # surfacing coupon used
+        'acctLocalCurrencyCouponStatus_used': metadata.get('couponStatus_used', False),
+        'acctLocalCurrencyCouponStatus_discount': metadata.get('couponStatus_discount', 0),
+        'acctLocalCurrencyCouponStatus_coupon_code': metadata.get('couponStatus_coupon_code', None),
 
         # courseInfo
         'courseReportRemarks': getCourse_remarks(i),
