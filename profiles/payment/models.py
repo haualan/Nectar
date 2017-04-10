@@ -383,11 +383,13 @@ class Ledger(models.Model):
     )
 
     # register student to said course
-    studentUser.usercourserelationship_set.update_or_create(
-      course = course.id
-    )
+    openTrans.enrollCourse()
+
 
     return openTrans
+
+
+
 
   @classmethod
   def createManualRefund(cls, localCurrencyChargedAmount, order_id, source, user=None, remarks = "" ):
@@ -404,6 +406,24 @@ class Ledger(models.Model):
       raise ParseError('order_id does not exist')
 
     openTrans = openTrans.first()
+
+    if source == 'CC':
+      # if source is credit card, refund via stripe
+
+      # set the api key first, because we do not know what this transaction belongs to yet
+      key = settings.STRIPE_SECRET_MAP.get(openTrans.currency, 'hkd')
+      if openTrans.livemode:
+        # if it's live, set a live key
+        key = settings.STRIPE_SECRET_MAP_LIVE.get(openTrans.currency, 'hkd')
+
+      
+      refundResponse = stripe.Refund.create(
+        charge = openTrans.order_id,
+        amount = int(localCurrencyChargedAmount / currencyMultiplier[openTrans.currency]),
+      )
+
+
+      return refundResponse
 
 
     # many attributes of openTrans will be reused
@@ -424,12 +444,13 @@ class Ledger(models.Model):
       source = source,
       remarks = remarks,
 
-
       livemode= openTrans.livemode,
-
 
     )
 
+    # unenroll when net amount is 0, or fully refunded
+    if newRefund.getNetPayemntByOrder() <= 0:
+      newRefund.unenrollCourse()
 
 
     return newRefund
@@ -638,6 +659,75 @@ class Ledger(models.Model):
       return c.first()
 
     return None
+
+  def getNetPayemntByOrder(self):
+    """
+    an order may have multiple refunds attached to the order, this finds the net amount of the order
+    """
+
+    commonItems = self.getCommonOrders()
+    return sum(i.localCurrencyChargedAmount for i in commonItems)
+
+  def getCommonTransactionsByOrder(self):
+    """
+    gets all transactions within the same order
+    """
+    order_id = self.order_id
+
+    commonItems = Ledger.objects.filter(order_id = self.order_id)
+
+    return commonItems
+    
+
+
+
+
+  def enrollCourse(self):
+    """
+    following a manual transaction, student will be enrolled to a class
+    """
+
+    print 'enrollCourse'
+
+    studentUser = UserModel.objects.filter(id = self.studentID)
+    if not studentUser:
+      print 'enrollCourse studentID does not exist'
+      return
+
+    studentUser = studentUser.first()
+
+
+    # verify that course_code exists
+    course = Course.objects.filter(course_code = course_code)
+    if not course:
+      print 'course_code does not exist'
+    course = course.first()
+
+    return studentUser.usercourserelationship_set.update_or_create(
+      course = course
+    )
+
+
+  def unenrollCourse(self):
+    """
+    following a manual refund, if it is a full refund, the student will be removed from the course
+    """
+    print 'unenrollCourse'
+
+    studentUser = UserModel.objects.filter(id = self.studentID)
+    if not studentUser:
+      print 'enrollCourse studentID does not exist'
+      return
+
+    studentUser = studentUser.first()
+
+    ucrs = studentUser.usercourserelationship_set.filter(
+      course__course_code = self.course_code
+    )
+
+    for ucr in ucrs:
+      ucr.delete()
+
 
   @classmethod
   def getRevenueSchedule(cls, startDate=timezone.datetime.min , endDate=timezone.datetime.max):

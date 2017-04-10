@@ -174,12 +174,25 @@ class StripeWebhookView(views.APIView):
     print 'event_type', event_type == 'charge.succeeded'
     if event_type == 'charge.succeeded':
       self.broadcastChargeSucceeded(ledgerObj)
-      
+    
+    if event_type == 'charge.refunded':
+      self.broadcastChargeRefunded(ledgerObj)  
 
 
     # self.processPayload(request)
     # respond with a 200 if things are okay
     return Response({})
+
+  @postpone
+  def broadcastChargeRefunded(self, ledgerObj):
+    """
+    steps to do in the event of a refund
+    - if it's a full refund, unenroll the student
+    """
+    if ledgerObj.getNetPayemntByOrder() <= 0:
+      ledgerObj.unenrollCourse()
+
+
 
   @postpone
   def broadcastChargeSucceeded(self, ledgerObj):
@@ -559,7 +572,7 @@ class PaymentManualRefundView(views.APIView):
     merge_dicts(p, {'user': request.user})
     closingTrans = Ledger.createManualRefund(**p)
 
-    return Response({'status': 'success', 'event_id': closingTrans.event_id})
+    return Response({'status': 'success'})
 
 
 
