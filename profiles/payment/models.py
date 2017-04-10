@@ -416,10 +416,10 @@ class Ledger(models.Model):
         # if it's live, set a live key
         key = settings.STRIPE_SECRET_MAP_LIVE.get(openTrans.currency, 'hkd')
 
-      print 'refund response', int(float(localCurrencyChargedAmount) / float(currencyMultiplier[openTrans.currency])), localCurrencyChargedAmount, float(currencyMultiplier[openTrans.currency])
+      # print 'refund response', int(float(localCurrencyChargedAmount) / float(currencyMultiplier[openTrans.currency])), localCurrencyChargedAmount, float(currencyMultiplier[openTrans.currency])
       refundResponse = stripe.Refund.create(
         charge = openTrans.order_id,
-        amount = int(float(localCurrencyChargedAmount) / float(currencyMultiplier[openTrans.currency])),
+        amount = abs(int(float(localCurrencyChargedAmount) / float(currencyMultiplier[openTrans.currency]))),
       )
 
 
