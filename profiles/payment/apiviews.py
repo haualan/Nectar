@@ -357,7 +357,7 @@ class PaymentChargeUserView(views.APIView):
     refCreditStatus = {
       'used': False,
       'discount': 0,
-      'listOfIDs': refCreditList,
+      'listOfIDs': '|'.join(str(i) for i in refCreditList),
     }  
 
     if refCreditList:
