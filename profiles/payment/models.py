@@ -698,7 +698,7 @@ class Ledger(models.Model):
 
 
     # verify that course_code exists
-    course = Course.objects.filter(course_code = course_code)
+    course = Course.objects.filter(course_code = self.course_code)
     if not course:
       print 'course_code does not exist'
     course = course.first()
