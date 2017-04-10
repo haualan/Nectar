@@ -665,7 +665,7 @@ class Ledger(models.Model):
     an order may have multiple refunds attached to the order, this finds the net amount of the order
     """
 
-    commonItems = self.getCommonOrders()
+    commonItems = self.getCommonTransactionsByOrder()
     return sum(i.localCurrencyChargedAmount for i in commonItems)
 
   def getCommonTransactionsByOrder(self):
