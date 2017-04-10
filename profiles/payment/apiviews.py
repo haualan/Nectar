@@ -444,17 +444,18 @@ class PaymentChargeUserView(views.APIView):
     }
 
     # insert discount information
+    # stripe expects the value to be string only.... sigh
     if refCodeStatus.get('used'):
       for k , v in refCodeStatus.iteritems():
-        metadata['refCodeStatus_{}'.format(k)] = v
+        metadata['refCodeStatus_{}'.format(k)] = str(v)
 
     if refCreditStatus.get('used'):
       for k , v in refCreditStatus.iteritems():
-        metadata['refCreditStatus_{}'.format(k)] = v
+        metadata['refCreditStatus_{}'.format(k)] = str(v)
 
     if couponStatus.get('used'):
       for k , v in couponStatus.iteritems():
-        metadata['couponStatus_{}'.format(k)] = v
+        metadata['couponStatus_{}'.format(k)] = str(v)
 
 
 

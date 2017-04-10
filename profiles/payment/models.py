@@ -520,6 +520,27 @@ class Ledger(models.Model):
     # so we can relate dataset to the user this is applied on
     metadata = obj['metadata']
 
+
+    # since Stripe can only store string is metadata, search for possible coupon info and replace them with python datatypes
+    if metadata.get('refCodeStatus_used', False) == 'True':
+      metadata['refCodeStatus_used'] = True
+      metadata['refCodeStatus_discount'] = float(metadata.get('refCodeStatus_discount', 0))
+    else:
+      metadata['refCodeStatus_used'] = False
+
+    if metadata.get('refCreditStatus_used', False) == 'True':
+      metadata['refCreditStatus_used'] = True
+      metadata['refCreditStatus_discount'] = float(metadata.get('refCreditStatus_discount', 0))
+    else:
+      metadata['refCreditStatus_used'] = False
+
+    if metadata.get('couponStatus_used', False) == 'True':
+      metadata['couponStatus_used'] = True
+      metadata['couponStatus_discount'] = float(metadata.get('couponStatus_discount', 0))
+    else:
+      metadata['couponStatus_used'] = False
+
+
     return metadata
 
 
