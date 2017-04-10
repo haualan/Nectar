@@ -701,11 +701,15 @@ class Ledger(models.Model):
     course = Course.objects.filter(course_code = self.course_code)
     if not course:
       print 'course_code does not exist'
+      return
     course = course.first()
 
-    return studentUser.usercourserelationship_set.update_or_create(
+  
+    studentUser.usercourserelationship_set.update_or_create(
       course = course
     )
+
+    course.updateCodeNinjaEnrollment()
 
 
   def unenrollCourse(self):
@@ -718,15 +722,24 @@ class Ledger(models.Model):
     if not studentUser:
       print 'enrollCourse studentID does not exist'
       return
-
     studentUser = studentUser.first()
 
+    # verify that course_code exists
+    course = Course.objects.filter(course_code = self.course_code)
+    if not course:
+      print 'course_code does not exist'
+      return
+    course = course.first()
+
+
     ucrs = studentUser.usercourserelationship_set.filter(
-      course__course_code = self.course_code
+      course = course
     )
 
     for ucr in ucrs:
       ucr.delete()
+
+    course.updateCodeNinjaEnrollment()
 
 
   @classmethod
