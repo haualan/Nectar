@@ -335,6 +335,11 @@ class PaymentChargeUserView(views.APIView):
     final_discount_amount = 0.0
 
     # apply referral discounts here
+    refCodeStatus = {
+      'used': False,
+      'discount': 0,
+      'refCode': refCode,
+    }
     if refCode:
       refCodeValidityDict = ReferralCredit.useReferralCode(
         referToUser = guardianUser, 
@@ -343,21 +348,41 @@ class PaymentChargeUserView(views.APIView):
       )
 
       if refCodeValidityDict.get('isValid'):
+        refCodeStatus['used'] = True
+        refCodeStatus['discount'] = refCodeValidityDict.get('discount')
         final_discount_amount += refCodeValidityDict.get('discount')
 
 
     # apply referral Credits here
+    refCreditStatus = {
+      'used': False,
+      'discount': 0,
+      'listOfIDs': refCreditList,
+    }  
+
     if refCreditList:
-      final_discount_amount += ReferralCredit.useReferralCreditList(
+      referralCreditDiscount = ReferralCredit.useReferralCreditList(
         creditedUser = guardianUser,
         listOfIDs = refCreditList,
         subdomain = course.subdomain,
       )
 
-    # apply coupon and discounts here    
+      refCreditStatus['used'] = True,
+      refCreditStatus['discount'] = referralCreditDiscount
+
+      final_discount_amount += referralCreditDiscount
+
+    # apply coupon and discounts here  
+    couponStatus = {
+      'used': False,
+      'discount': 0,
+      'coupon_code': coupon_code,
+    }  
     if coupon_code:
       couponValidityDict = useCodeNinjaCoupon(addlDiscount = final_discount_amount, course_code = course.course_code, coupon_code = coupon_code, price_code = price_code)
       if couponValidityDict.get('isValid'):
+        couponStatus['used'] = True
+        couponStatus['discount'] = couponValidityDict.get('discount')
         final_discount_amount += couponValidityDict.get('discount')
 
 
@@ -417,6 +442,19 @@ class PaymentChargeUserView(views.APIView):
       "buyerID": guardianUser.id,
 
     }
+
+    # insert discount information
+    if refCodeStatus.get('used'):
+      for k , v in refCodeStatus.iteritems():
+        metadata['refCodeStatus_{}'.format(k)] = v
+
+    if refCreditStatus.get('used'):
+      for k , v in refCreditStatus.iteritems():
+        metadata['refCreditStatus_{}'.format(k)] = v
+
+    if couponStatus.get('used'):
+      for k , v in couponStatus.iteritems():
+        metadata['couponStatus_{}'.format(k)] = v
 
 
 
