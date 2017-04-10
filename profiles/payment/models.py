@@ -419,7 +419,7 @@ class Ledger(models.Model):
       
       refundResponse = stripe.Refund.create(
         charge = openTrans.order_id,
-        amount = int(localCurrencyChargedAmount / currencyMultiplier[openTrans.currency]),
+        amount = int(float(localCurrencyChargedAmount) / float(currencyMultiplier[openTrans.currency])),
       )
 
 
