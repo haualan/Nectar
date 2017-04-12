@@ -173,7 +173,7 @@ class User(AbstractEmailUser):
 
     # lookup by cookie
     if self.clientDump != {}:
-      course_code = self.clientDump.get('course_code', None)
+      course_code = self.clientDump.get('paymentInterest', {}).get('course_code', None)
       if course_code:
         from course.models import Course
         c = Course.objects.filter(course_code = course_code)
