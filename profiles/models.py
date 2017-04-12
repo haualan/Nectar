@@ -140,7 +140,7 @@ class User(AbstractEmailUser):
 
       # attempt to merge with existing clientDump, 
       # merge_dicts will modify existing variable
-      merge_dicts(self.clientDump, prevClientDump)
+      merge_dicts(prevClientDump, self.clientDump)
 
 
     if self.email == '':
