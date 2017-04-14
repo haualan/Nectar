@@ -31,6 +31,7 @@ from django.contrib.auth.views import password_reset_done
 
 # taking care of password reset stuff, not required for API access, but as django templates
 urlpatterns += [
+
     url(r'^user/password/reset/$', 
         custom_password_reset, 
         {   
@@ -44,6 +45,7 @@ urlpatterns += [
             
         },
         name="password_reset"),
+
     url(r'^user/password/reset/done/$',
         password_reset_done,
         {
@@ -52,6 +54,14 @@ urlpatterns += [
                 'appUrl': settings.SC_APP_URL,
                 },
         }),
+
+    url(r'^user/password/reset/invalidUser/$',
+        invalid_password_reset,
+        {
+            'template_name':'profiles/password_reset_invalidUser.html',
+        }),
+
+
     # (?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$
     url(r'^user/password/reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', 
         custom_password_reset_confirm, 

@@ -97,6 +97,8 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 
+from django.core.exceptions import ValidationError
+
 
 from django.contrib.auth.forms import (
     AuthenticationForm, PasswordChangeForm, PasswordResetForm, SetPasswordForm,
@@ -183,6 +185,29 @@ def custom_password_reset_confirm(request, uidb64=None, token=None,
 
     return TemplateResponse(request, template_name, context)
 
+def invalid_password_reset(request,
+                            template_name='registration/password_reset_invalidUser.html',
+                            current_app=None, extra_context=None):
+  if extra_context is None:
+    extra_context = {}
+
+  # inject token in this place
+  extra_context.update({
+    # it is not possible to inject tokn here because user may still be anonymous
+    # 'token': request.user.auth_token.key,
+    "redirectURL": settings.SC_APP_URL
+    })
+
+  r = password_reset_complete(
+    request = request,
+    template_name = template_name,
+    extra_context = extra_context
+  )
+  return r
+
+from django.contrib.sites.shortcuts import get_current_site
+
+
 def custom_password_reset_complete(request,
                             template_name='registration/password_reset_complete.html',
                             current_app=None, extra_context=None):
@@ -206,6 +231,32 @@ def custom_password_reset_complete(request,
 from django.contrib.sites.shortcuts import get_current_site
 
 class CustomPasswordResetForm(PasswordResetForm):
+
+  def clean(self):
+    email = self.cleaned_data.get('email')
+    usersList = list(self.get_users(email))
+
+    if not usersList:
+      # print 'User does not exist'
+
+      raise ValidationError(
+          'User does not exist: %(value)s',
+          params={'value': email},
+      )
+
+    
+  def get_users(self, email):
+      """Given an email, return matching user(s) who should receive a reset.
+
+      This allows subclasses to more easily customize the default policies
+      that prevent inactive users and users with unusable passwords from
+      resetting their password.
+
+      """
+      active_users = get_user_model()._default_manager.filter(
+          email__iexact=email, is_active=True)
+      return (u for u in active_users)
+
   def save(self, domain_override=None,
          subject_template_name='registration/password_reset_subject.txt',
          email_template_name='registration/password_reset_email.html',
@@ -217,7 +268,9 @@ class CustomPasswordResetForm(PasswordResetForm):
     user.
     """
     email = self.cleaned_data["email"]
-    for user in self.get_users(email):
+
+    usersList = list(self.get_users(email))
+    for user in usersList:
         if not domain_override:
             current_site = get_current_site(request)
             site_name = current_site.name
@@ -271,6 +324,8 @@ def custom_password_reset(request,
             }
             form.save(**opts)
             return HttpResponseRedirect(post_reset_redirect)
+
+        return HttpResponseRedirect('invalidUser/')
     else:
         form = password_reset_form()
     context = {
