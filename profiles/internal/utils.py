@@ -18,6 +18,8 @@ internalEmailRecipients = [
   'kevon@firstcodeacademy.com',
   'alan@firstcodeacademy.com',
   'hello@firstcodeacademy.com',
+  'hellosg@firstcodeacademy.com',
+  'hello.tw@firstcodeacademy.com',
   ]
 
 def send_internal_email(subject, text, html, file, subdomain = 'hk' ):
