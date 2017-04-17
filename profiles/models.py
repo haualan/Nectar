@@ -406,9 +406,11 @@ class GuardianStudentRelation(models.Model):
     )
 
     gsrs_values = gsrs.values(
+      'guardian__id',
       'guardian__email',
       'guardian__firstname',
       'guardian__lastname',
+      'student__id',
       'student__email',
       'student__firstname',
       'student__lastname',
