@@ -398,7 +398,12 @@ class GuardianStudentRelation(models.Model):
     """
     returns all the students and guardian relationship as a list of dicts
     """
-    gsrs = cls.objects.all().exclude(guardian__email__regex = settings.INTERNALEMAILEXCLUSIONREGEX)
+    gsrs = cls.objects.all().exclude(
+      guardian__email__regex = settings.INTERNALEMAILEXCLUSIONREGEX
+    ).order_by(
+      'guardian__email', 
+      'student__firstname'
+    )
 
     gsrs_values = gsrs.values(
       'guardian__email',
