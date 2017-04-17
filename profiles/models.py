@@ -409,6 +409,8 @@ class GuardianStudentRelation(models.Model):
       'student__lastname',
       )
 
+    r = [i for i in gsrs_values]
+
     return r
 
   class Meta:
