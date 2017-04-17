@@ -64,11 +64,16 @@ class InternalView(views.APIView):
 
 
 from course.models import UserCourseRelationship
+from profiles.models import GuardianStudentRelation
+
 def getAllEnrollmentReport(request):
   return UserCourseRelationship.getAllEnrollmentReport()
 
 def getRevenueSchedule(request):
   return Ledger.getRevenueSchedule()
+
+def getAllGuardianStudentsReport(request):
+  return GuardianStudentRelation.getAllGuardianStudentsReport()
 
 class InternalReportView(views.APIView):
   """
@@ -101,7 +106,7 @@ class InternalReportView(views.APIView):
 
     op = request.data.get('op', None)
 
-    if op not in ['getAllEnrollmentReport', 'getRevenueSchedule']:
+    if op not in ['getAllEnrollmentReport', 'getRevenueSchedule', 'getAllGuardianStudentsReport']:
       raise ParseError('expecting operation variable op')
 
     return Response(globals()[op](request))

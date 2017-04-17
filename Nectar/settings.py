@@ -530,4 +530,7 @@ SUBDOMAINSPECIFICMAPPING = {
 
 }
 
+
+INTERNALEMAILEXCLUSIONREGEX = '(@firstcodeacademy.com|alan.wc.hau)' 
+
 from config import *

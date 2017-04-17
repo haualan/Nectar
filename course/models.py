@@ -111,7 +111,8 @@ class CodeNinjaCache(models.Model):
 def makeEmptyList():
   return []
 
-internalEmailExclusionRegex = '(@firstcodeacademy.com|alan.wc.hau)'
+internalEmailExclusionRegex = settings.INTERNALEMAILEXCLUSIONREGEX
+
 
 
 class UserCourseRelationship(models.Model):

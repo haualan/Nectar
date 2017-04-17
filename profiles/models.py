@@ -392,6 +392,25 @@ class GuardianStudentRelation(models.Model):
   def __unicode__(self):
     return u'Guardian: %s Student: %s' % (self.guardian, self.student)
 
+
+  @classmethod
+  def getAllGuardianStudentsReport(cls):
+    """
+    returns all the students and guardian relationship as a list of dicts
+    """
+    gsrs = cls.objects.all().exclude(guardian__email__regex = settings.INTERNALEMAILEXCLUSIONREGEX)
+
+    gsrs_values = gsrs.values(
+      'guardian__email',
+      'guardian__firstname',
+      'guardian__lastname',
+      'student__email',
+      'student__firstname',
+      'student__lastname',
+      )
+
+    return r
+
   class Meta:
     unique_together = ('guardian', 'student',)
 
