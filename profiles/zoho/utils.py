@@ -153,7 +153,7 @@ def createZohoNote(entityId, title='', text=''):
   """
 
   notes = etree.Element("Notes")
-  row = etree.SubElement(contacts, "row", no="1")
+  row = etree.SubElement(notes, "row", no="1")
 
   # elements that need to be inserted to record
   ele = etree.SubElement(row, "FL", val='entityId')
