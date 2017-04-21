@@ -25,7 +25,7 @@ def insertZohoNoteByUser(subdomain, u, title="", text=""):
     print 'could not access zoho id for this user, cannot add note...', u.email
     return
 
-
+  print 'insertZohoNoteByUser', subdomain, zohoContactID, title
   return createZohoNote(subdomain = subdomain, entityId = zohoContactID, title = title, text = text)
 
 
