@@ -3,12 +3,33 @@ from django.conf import settings
 
 
 
+
+
+
 def insertZohoNoteByUser(u, title="", text=""):
   """
   given a user u, will attempt to insert a note for this user by email.
   - will avoid creating the same user twice by looking at the email
   - can be used post-purchase to add a note for example.
   """
+
+  zohoContactID = getZohoContactID(u.email)
+
+  if not zohoContactID:
+    # user does not exist, so create the user and extract entity id
+    r = createZohoContact(u)
+    zohoContactID = extractZohoContactIDFromResponse(r)
+
+
+  if not zohoContactID:
+    print 'could not access zoho id for this user, cannot add note...', u.email
+    return
+
+
+  return createZohoNote(entityId = zohoContactID, title = title, text = text)
+
+
+
 
 
 
@@ -188,6 +209,30 @@ def createZohoContact(u):
   r = requests.post(url = 'https://crm.zoho.com/crm/private/xml/Contacts/insertRecords?authtoken={}&scope=crmapi&newFormat=1&xmlData={}'.format(settings.ZOHO_KEY, xmlPayload) )
 
   return r
+
+
+from lxml import objectify
+def extractZohoContactIDFromResponse(r):
+  """
+  given a response r fom zoho contacts api creation, extract the id,
+  return None if broken
+  """
+
+  if r.status_code != 200:
+    return None
+
+  tree = objectify.fromstring('{}'.format(r.text))
+  records = tree.result.recorddetail.getchildren()
+
+  for i in records:
+    if i.attrib.get('val', None) == 'Id':
+      return i.text
+
+
+  # id not found
+  return None
+
+
 
 
 
