@@ -2,6 +2,7 @@
 from uploadApp.models import *
 from course.models import *
 from django.db.models import Avg, Case, Count, F, Max, Min, Prefetch, Q, Sum, When
+from django.utils import timezone
 
 def updatePriceToSampleCourse(currency):
 	c = Course.objects.get(id = 4)
@@ -166,7 +167,39 @@ def createSampleChallenge():
 
 
 
+def UserCourseRelationshipNearEnd(days = 30):
+	"""
+	finds all the UserCourseRelationship near its end date
+	- context: filter all the courses that are nearly ending and send email to the guardians to remind them to renew
+	"""
 
+
+	courses = Course.objects.filter(
+		
+		# courseclassdaterelationship__endDateTime__gt = now,
+		# courseclassdaterelationship__endDateTime__lt = now + timezone.timedelta(days = 7),
+
+		event_type = 'term',
+		active = True,
+
+		# filter for courses that have students
+		usercourserelationship__isnull = False,
+	).annotate(
+		# only look at the last date
+		max_courseclassdaterelationship__endDateTime =Max('courseclassdaterelationship__endDateTime')
+	).filter(
+		# filter courses that are nearly ending
+		max_courseclassdaterelationship__endDateTime__gt = now,
+		max_courseclassdaterelationship__endDateTime__lt = now + timezone.timedelta(days = days),
+	)
+
+	
+	ucrs = UserCourseRelationship.objects.filter(course__in = courses)
+
+	return ucrs
+
+	# find the guardians of these students???
+	# they may not have a guardian, which is okay( if it's an adult class for example)
 
 
 

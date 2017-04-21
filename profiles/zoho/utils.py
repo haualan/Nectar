@@ -6,18 +6,18 @@ from django.conf import settings
 
 
 
-def insertZohoNoteByUser(u, title="", text=""):
+def insertZohoNoteByUser(subdomain, u, title="", text=""):
   """
   given a user u, will attempt to insert a note for this user by email.
   - will avoid creating the same user twice by looking at the email
   - can be used post-purchase to add a note for example.
   """
 
-  zohoContactID = getZohoContactID(u.email)
+  zohoContactID = getZohoContactID(subdomain, u.email)
 
   if not zohoContactID:
     # user does not exist, so create the user and extract entity id
-    r = createZohoContact(u)
+    r = createZohoContact(subdomain, u)
     zohoContactID = extractZohoContactIDFromResponse(r)
 
 
@@ -26,7 +26,7 @@ def insertZohoNoteByUser(u, title="", text=""):
     return
 
 
-  return createZohoNote(entityId = zohoContactID, title = title, text = text)
+  return createZohoNote(subdomain = subdomain, entityId = zohoContactID, title = title, text = text)
 
 
 
@@ -34,11 +34,11 @@ def insertZohoNoteByUser(u, title="", text=""):
 
 
 
-def getZohoContactID(email):
+def getZohoContactID(subdomain, email):
   """
   returns the contact ID if user exists otherwise None
   """
-  r = searchZohoContactsByEmail(email)
+  r = searchZohoContactsByEmail(subdomain, email)
 
   if r.status_code == 200:
     resp = r.json()
@@ -125,7 +125,7 @@ def user_to_zohoContactXML(u):
 
 
 
-def createZohoNote(entityId, title='', text=''):
+def createZohoNote(subdomain, entityId, title='', text=''):
   """
   given a entity (Lead or Contact), add a textual note to the person
   https://www.zoho.com/crm/help/api/insertrecords.html
@@ -168,7 +168,12 @@ def createZohoNote(entityId, title='', text=''):
 
   xmlPayload = etree.tostring(notes)
 
-  r = requests.post(url = 'https://crm.zoho.com/crm/private/xml/Notes/insertRecords?authtoken={}&scope=crmapi&xmlData={}'.format(settings.ZOHO_KEY, xmlPayload) )
+  key = settings.ZOHO_KEY_MAP.get(subdomain, None)
+  if not key:
+    key = settings.ZOHO_KEY_MAP.get('hk')
+
+
+  r = requests.post(url = 'https://crm.zoho.com/crm/private/xml/Notes/insertRecords?authtoken={}&scope=crmapi&xmlData={}'.format(key, xmlPayload) )
 
   return r
 
@@ -177,7 +182,7 @@ def createZohoNote(entityId, title='', text=''):
 
 
 
-def createZohoContact(u):
+def createZohoContact(subdomain, u):
   """
   when passed a user, u, create a zoho contact:
   https://www.zoho.com/crm/help/api/insertrecords.html
@@ -206,7 +211,11 @@ def createZohoContact(u):
   """
   xmlPayload = user_to_zohoContactXML(u)
 
-  r = requests.post(url = 'https://crm.zoho.com/crm/private/xml/Contacts/insertRecords?authtoken={}&scope=crmapi&newFormat=1&xmlData={}'.format(settings.ZOHO_KEY, xmlPayload) )
+  key = settings.ZOHO_KEY_MAP.get(subdomain, None)
+  if not key:
+    key = settings.ZOHO_KEY_MAP.get('hk')
+
+  r = requests.post(url = 'https://crm.zoho.com/crm/private/xml/Contacts/insertRecords?authtoken={}&scope=crmapi&newFormat=1&xmlData={}'.format(key, xmlPayload) )
 
   return r
 
@@ -236,7 +245,7 @@ def extractZohoContactIDFromResponse(r):
 
 
 
-def searchZohoContactsByEmail(email):
+def searchZohoContactsByEmail(subdomain, email):
   """
   looks at zoho crm Contacts module for this email (belonging to parent or student)
   example response:
@@ -259,7 +268,11 @@ def searchZohoContactsByEmail(email):
 
   """
 
+  key = settings.ZOHO_KEY_MAP.get(subdomain, None)
+  if not key:
+    key = settings.ZOHO_KEY_MAP.get('hk')
+
   r = requests.get(
-    url = 'https://crm.zoho.com/crm/private/json/Contacts/getSearchRecordsByPDC?authtoken={}&scope=crmapi&selectColumns=Contacts(Email)&searchColumn=email&searchValue={}'.format(settings.ZOHO_KEY, email))
+    url = 'https://crm.zoho.com/crm/private/json/Contacts/getSearchRecordsByPDC?authtoken={}&scope=crmapi&selectColumns=Contacts(Email)&searchColumn=email&searchValue={}'.format(key, email))
 
   return r

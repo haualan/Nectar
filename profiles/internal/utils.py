@@ -4,6 +4,7 @@
 from profiles.models import *
 from django.utils import timezone
 from course.models import internalEmailExclusionRegex, Course
+from course.utils import UserCourseRelationshipNearEnd
 from django.db.models import FloatField, IntegerField
 from django.db.models.functions import Cast
 import StringIO, requests
@@ -21,6 +22,21 @@ internalEmailRecipients = [
   'hellosg@firstcodeacademy.com',
   'hello.tw@firstcodeacademy.com',
   ]
+
+def termRenewalEmail(request):
+  """
+  sends the term renewal emails for guardians
+  - context: a student is nearing his end of term
+  - we send an email to the parent asking to renew purchase for class
+  """
+
+  # collect the user relationships to be renewed
+  ucrs = UserCourseRelationshipNearEnd()
+
+  # 
+
+  pass
+
 
 def send_internal_email(subject, text, html, file, subdomain = 'hk' ):
   """

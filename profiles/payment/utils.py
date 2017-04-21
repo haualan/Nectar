@@ -74,13 +74,13 @@ subdomainSpecificMapping = settings.SUBDOMAINSPECIFICMAPPING
 internalEmails = 'michelle@firstcodeacademy.com, kevon@firstcodeacademy.com, alan@firstcodeacademy.com'
 
 @postpone
-def notifyZohoOnPurchase(user, subject, text):
+def notifyZohoOnPurchase(subdomain, user, subject, text):
   """
   series of actions that must happen to notify zoho crm,
   - must not be blocking because zoho 's API is v. slow
   """
 
-  insertZohoNoteByUser(u = user, title=subject, text=text)
+  insertZohoNoteByUser(subdomain = subdomain, u = user, title=subject, text=text)
 
 def send_internal_sales_email(order, injectEmail=None):
   """
@@ -152,7 +152,7 @@ def send_order_confirm_email(order, isInternal = False, injectEmail=None, notify
 
     # also notify zoho at this time if required
     if notifyZoho:
-      notifyZohoOnPurchase(user =buyerUser ,subject = subject, text= text)
+      notifyZohoOnPurchase(subdomain = subdomain, user =buyerUser ,subject = subject, text= text)
 
     
     return send_email(email, subject, text, html, subdomain, bcc )
