@@ -26,7 +26,10 @@ def insertZohoNoteByUser(subdomain, u, title="", text=""):
     return
 
   print 'insertZohoNoteByUser', subdomain, zohoContactID, title
-  return createZohoNote(subdomain = subdomain, entityId = zohoContactID, title = title, text = text)
+  r = createZohoNote(subdomain = subdomain, entityId = zohoContactID, title = title, text = text)
+
+  print r.status_code, r.text
+  return r
 
 
 
