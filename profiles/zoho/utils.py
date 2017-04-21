@@ -127,6 +127,7 @@ def user_to_zohoContactXML(u):
 
 
 from xml.sax.saxutils import escape
+import urllib
 
 def createZohoNote(subdomain, entityId, title='', text=''):
   """
@@ -166,7 +167,7 @@ def createZohoNote(subdomain, entityId, title='', text=''):
   ele.text = title
 
   ele = etree.SubElement(row, "FL", val='Note Content')
-  ele.text = escape(text)
+  ele.text = urllib.quote_plus(escape(text))
 
 
   xmlPayload = etree.tostring(notes)
