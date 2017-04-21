@@ -176,6 +176,9 @@ def createZohoNote(subdomain, entityId, title='', text=''):
     key = settings.ZOHO_KEY_MAP.get('hk')
 
 
+  print 'xmlPayload', xmlPayload
+
+
   r = requests.post(url = 'https://crm.zoho.com/crm/private/xml/Notes/insertRecords?authtoken={}&scope=crmapi&xmlData={}'.format(key, xmlPayload) )
 
   return r
