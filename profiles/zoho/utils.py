@@ -1,6 +1,18 @@
 import requests
 from django.conf import settings
 
+
+
+def insertZohoNoteByUser(u, title="", text=""):
+  """
+  given a user u, will attempt to insert a note for this user by email.
+  - will avoid creating the same user twice by looking at the email
+  - can be used post-purchase to add a note for example.
+  """
+
+
+
+
 def getZohoContactID(email):
   """
   returns the contact ID if user exists otherwise None
@@ -9,14 +21,20 @@ def getZohoContactID(email):
 
   if r.status_code == 200:
     resp = r.json()
-    contents = resp.get('response', {}).get('result', {}).get('Contacts', {}).get('row', {}).get('FL', [])
+
+    rows = resp.get('response', {}).get('result', {}).get('Contacts', {}).get('row', {})
+    # in zoho if rows is an iterable, it has multiple results, take the first item and continue
+    if type(rows) == list and len(rows) > 0:
+      fl = rows[0].get('FL', [])
+    else:
+      fl = rows.get('FL', [])
     # if there were stuff in contents we would expect something like this
     #    [{u'content': u'1921877000001222001', u'val': u'CONTACTID'},
     # {u'content': u'selinananny@gmail.com', u'val': u'Email'}]
 
 
     cid = None
-    for i in contents:
+    for i in fl:
       if i.get('val', None) == 'CONTACTID':
         # return the ID when we hit it
         return i.get('content')
@@ -36,6 +54,9 @@ zohoUserContactsMap = {
   'email': 'Email',
   'phoneNumber': 'Phone',
 }
+
+
+
 
 
 def user_to_zohoContactXML(u):
@@ -65,6 +86,12 @@ def user_to_zohoContactXML(u):
 
   # row = contacts.append( etree.Element("row", no="1") )
 
+  # Lead Source as hummingbird
+
+  ele = etree.SubElement(row, "FL", val='Lead Source')
+  ele.text = 'hummingbird'
+
+
   for k, v in zohoUserContactsMap.iteritems():
     userAttr = getattr(u, k, None)
     if userAttr:
@@ -75,6 +102,54 @@ def user_to_zohoContactXML(u):
 
 
 
+
+
+def createZohoNote(entityId, title='', text=''):
+  """
+  given a entity (Lead or Contact), add a textual note to the person
+  https://www.zoho.com/crm/help/api/insertrecords.html
+
+  Insert notes and relate to the primary module
+    XML Format:
+
+    https://crm.zoho.com/crm/private/xml/Notes/insertRecords?newFormat=1&authtoken=Auth Token
+    &scope=crmapi
+    &xmlData=
+
+    <Notes>
+
+    <row no="1">
+
+    <FL val="entityId">2000000078001</FL>
+
+    <FL val="Note Title">Zoho CRM Sample Note</FL>
+
+    <FL val="Note Content">This is sample content to test Zoho CRM API</FL>
+
+    </row>
+
+    </Notes>
+  """
+
+  notes = etree.Element("Notes")
+  row = etree.SubElement(contacts, "row", no="1")
+
+  # elements that need to be inserted to record
+  ele = etree.SubElement(row, "FL", val='entityId')
+  ele.text = entityId
+
+  ele = etree.SubElement(row, "FL", val='Note Title')
+  ele.text = title
+
+  ele = etree.SubElement(row, "FL", val='Note Content')
+  ele.text = text
+
+
+  xmlPayload = etree.tostring(notes)
+
+  r = requests.post(url = 'https://crm.zoho.com/crm/private/xml/Notes/insertRecords?authtoken={}&scope=crmapi&xmlData={}'.format(settings.ZOHO_KEY, xmlPayload) )
+
+  return r
 
 
 

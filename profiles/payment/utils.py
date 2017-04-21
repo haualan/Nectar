@@ -13,6 +13,17 @@
 #                                   public_key=settings.BRAINTREE_PUB_KEY,
 #                                   private_key=settings.BRAINTREE_PRIV_KEY)
 
+from profiles.zoho.utils import *
+
+from threading import Thread
+def postpone(function):
+  def decorator(*args, **kwargs):
+    t = Thread(target = function, args=args, kwargs=kwargs)
+    t.daemon = True
+    t.start()
+  return decorator
+
+
 from django.contrib.auth import get_user_model
 from django.conf import settings
 from hashids import Hashids
@@ -61,6 +72,13 @@ import requests
 
 subdomainSpecificMapping = settings.SUBDOMAINSPECIFICMAPPING
 internalEmails = 'michelle@firstcodeacademy.com, kevon@firstcodeacademy.com, alan@firstcodeacademy.com'
+
+@postpone
+def notifyZoho(order):
+  """
+  series of actions that must happen to notify zoho crm,
+  - must not be blocking because zoho 's API is v. slow
+  """
 
 def send_internal_sales_email(order, injectEmail=None):
   """
