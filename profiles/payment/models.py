@@ -29,6 +29,7 @@ from django.forms.models import model_to_dict
 from rest_framework.exceptions import APIException, ParseError, PermissionDenied
 
 from profiles.models import User
+from profiles.payment.utils import send_order_confirm_email
 
 
 
