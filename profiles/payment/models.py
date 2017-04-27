@@ -385,6 +385,8 @@ class Ledger(models.Model):
     # register student to said course
     openTrans.enrollCourse()
 
+    # notify the buyer of the transaction
+    send_order_confirm_email(openTrans)
 
     return openTrans
 

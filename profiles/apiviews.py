@@ -341,6 +341,10 @@ class UserCreateView(views.APIView):
             studentUser = user
             guardianUser.createMyStudentRelation(studentUser)
 
+
+
+
+
         r = {'id': user.id, 'key': token.key}
 
         return Response(r, status=status.HTTP_201_CREATED)

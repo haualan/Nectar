@@ -113,7 +113,7 @@ def user_to_zohoContactXML(u):
   # Lead Source as hummingbird
 
   ele = etree.SubElement(row, "FL", val='Lead Source')
-  ele.text = 'hummingbird'
+  ele.text = 'Hummingbird'
 
 
   for k, v in zohoUserContactsMap.iteritems():
