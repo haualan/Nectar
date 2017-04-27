@@ -443,7 +443,7 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, addlDiscount =
 # ]
 
   for i in r.json():
-    if i.get('coupon_code') == coupon_code:
+    if i.get('coupon_code').lower() == coupon_code.lower():
 
       discount_amount = i.get('discount_amount', None)
       discount_percentage = i.get('discount_percentage', None)
