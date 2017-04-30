@@ -99,6 +99,11 @@ class InternalReportView(views.APIView):
   \n      {
   \n          "op": "getRevenueSchedule"
   \n      }
+  \n get auth token by user id
+  \n      {
+  \n          "op": "getAuthToken"
+  \n          "user_id": 2
+  \n      }
 
 
   """
