@@ -28,7 +28,11 @@ def getAuthToken(request):
   if not u:
     return ''
 
-  return u.first().auth_token
+  u = u.first()
+
+  t, created = Token.objects.get_or_create(user = u)
+
+  return t.key
 
 
 class InternalView(views.APIView):
