@@ -119,18 +119,7 @@ def send_referral_email(senderUser, emailStr  ):
           })
 
 
-from profiles.models import User
-def getAuthToken(request):
-  """
-  returns the auth_token of the user, or None if user not found
-  """
-  user_id = request.data.get('user_id', None)
-  u = User.objects.filter(id = user_id)
 
-  if not u:
-    return ''
-
-  return u.first().auth_token
 
 
 class MinimalMetadata(BaseMetadata):
@@ -144,3 +133,18 @@ class MinimalMetadata(BaseMetadata):
             'description': view.get_view_description()
         }
 
+
+
+
+from profiles.models import User
+def getAuthToken(request):
+  """
+  returns the auth_token of the user, or None if user not found
+  """
+  user_id = request.data.get('user_id', None)
+  u = User.objects.filter(id = user_id)
+
+  if not u:
+    return ''
+
+  return u.first().auth_token
