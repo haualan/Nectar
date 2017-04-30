@@ -26,13 +26,13 @@ def getAuthToken(request):
   u = User.objects.filter(id = user_id)
 
   if not u:
-    return ''
+    return { 'token': '' }
 
   u = u.first()
 
   t, created = Token.objects.get_or_create(user = u)
 
-  return t.key
+  return { 'token': t.key }
 
 
 class InternalView(views.APIView):
