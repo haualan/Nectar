@@ -6,6 +6,10 @@ import requests
 from rest_framework.metadata import BaseMetadata
 
 from math import radians, cos, sin, asin, sqrt
+
+from profiles.models import User
+
+
 def haversine(lon1, lat1, lon2, lat2):
   """
   Calculate the great circle distance between two points 
@@ -113,6 +117,19 @@ def send_referral_email(senderUser, emailStr  ):
           # "bcc" : 'michelle@firstcodeacademy.com, alan@firstcodeacademy.com',
 
           })
+
+def getAuthToken(request):
+  """
+  returns the auth_token of the user, or None if user not found
+  """
+  user_id = request.data.get('user_id', None)
+  u = User.objects.filter(id = user_id)
+
+  if not u:
+    return ''
+
+  return u.first().auth_token
+
 
 class MinimalMetadata(BaseMetadata):
     """

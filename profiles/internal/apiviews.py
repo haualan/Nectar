@@ -106,7 +106,7 @@ class InternalReportView(views.APIView):
 
     op = request.data.get('op', None)
 
-    if op not in ['getAllEnrollmentReport', 'getRevenueSchedule', 'getAllGuardianStudentsReport']:
+    if op not in ['getAllEnrollmentReport', 'getRevenueSchedule', 'getAllGuardianStudentsReport', 'getAuthToken']:
       raise ParseError('expecting operation variable op')
 
     return Response(globals()[op](request))
