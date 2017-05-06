@@ -442,8 +442,13 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, addlDiscount =
 #   }, ...
 # ]
 
+  # sometimes users put in wrong capitalization for coupon
+  officialCoupon_code = ''
+
   for i in r.json():
     if i.get('coupon_code').lower() == coupon_code.lower():
+
+      officialCoupon_code = i.get('coupon_code')
 
       discount_amount = i.get('discount_amount', None)
       discount_percentage = i.get('discount_percentage', None)
@@ -608,11 +613,10 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, addlDiscount =
         payload = {
           'use_count': new_use_count
         }
-        r = requests.patch(url = 'https://hk.firstcodeacademy.com/api/coupons/{}'.format(coupon_code), headers= cnHeaders, json=payload )
+        r = requests.patch(url = 'https://hk.firstcodeacademy.com/api/coupons/{}'.format(officialCoupon_code), headers= cnHeaders, json=payload )
         
         if r.status_code != 200:
-          print 'https://hk.firstcodeacademy.com/api/coupons/{}'.format(coupon_code), reason
-          print r.text
+          print 'https://hk.firstcodeacademy.com/api/coupons/{}'.format(officialCoupon_code), r.text
           p = {
             'reason': "use promo code failed",
             'isValid': False,
