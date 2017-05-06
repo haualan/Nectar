@@ -613,10 +613,10 @@ def validateCodeNinjaCoupon(coupon_code, course_code, price_code, addlDiscount =
         payload = {
           'use_count': new_use_count
         }
-        r = requests.patch(url = 'https://hk.firstcodeacademy.com/api/coupons/{}'.format(officialCoupon_code), headers= cnHeaders, json=payload )
+        r = requests.patch(url = 'https://{}.firstcodeacademy.com/api/coupons/{}'.format( course.subdomain, officialCoupon_code), headers= cnHeaders, json=payload )
         
         if r.status_code != 200:
-          print 'https://hk.firstcodeacademy.com/api/coupons/{}'.format(officialCoupon_code), r.text
+          print 'https://{}.firstcodeacademy.com/api/coupons/{}'.format(course.subdomain, officialCoupon_code), r.text
           p = {
             'reason': "use promo code failed",
             'isValid': False,
