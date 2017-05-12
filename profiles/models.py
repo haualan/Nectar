@@ -453,6 +453,10 @@ class School(models.Model):
     if self.enName:
       return
 
+    # nothing to retrieve from google if not available
+    if not self.place_id:
+      return
+
 
 
     url = "https://maps.googleapis.com/maps/api/place/details/json?language=en&placeid={}&key={}".format( self.place_id ,settings.GOOGLEAPIKEY )
