@@ -28,19 +28,24 @@ class User(UserAdmin):
               'gender',
               'firstname',
               'lastname',
-              # 'username',
+              'username',
               'email',
               'tzName',
               'phoneNumber',
               'location',
-              'lon',
-              'lat',
+              # 'lon',
+              # 'lat',
               'hasOnboarded',
               'isSearchable',
               'role',
             ),
         }),
     )
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(UserAdmin, self).get_form(request, obj, **kwargs)
+        form.base_fields['username'].required = False
+        return form
 
 def autoregister(app):
   app = apps.get_app_config(app)
