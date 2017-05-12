@@ -519,7 +519,10 @@ class CodeNinjaCacheUpdateView(views.APIView):
 
                     if c['course_code'] not in memo:
                         c['cnType'] = 'programs'
-                        c['name'] = c.get('program', '')
+                        c['name'] = u'{} - {}'.format(
+                            c.get('program', ''), 
+                            c.get('name', ''), 
+                        )
 
                         # courseDates are supplied as a dict of {<weekday>: [<datetime>...]}
                         # classDates only selects the time of date
