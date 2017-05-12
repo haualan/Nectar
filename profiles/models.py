@@ -448,8 +448,9 @@ class School(models.Model):
     example link to pull from API:
     https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJMSntWhWqBjQRJdJYhASuRsM&key=AIzaSyBHyE9zHyLh_3tLBes7p1ZFqXnxncVMThQ
     """
-    if not self.enName:
-      self.enName = ""
+
+    # skips this function if english name is already there
+    if self.enName:
       return
 
 
