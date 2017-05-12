@@ -20,7 +20,7 @@ from profiles.models import User
 @admin.register(User)
 class User(UserAdmin):
     # add custom profile related attributes here
-    UserAdmin.fieldsets += (
+    fieldsets = UserAdmin.fieldsets += (
         ('Profile', {
             'fields': (
               'avatar_url',
@@ -28,7 +28,7 @@ class User(UserAdmin):
               'gender',
               'firstname',
               'lastname',
-              'username',
+              # 'username',
               'email',
               'tzName',
               'phoneNumber',
