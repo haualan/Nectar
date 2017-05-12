@@ -440,6 +440,9 @@ class CodeNinjaCacheUpdateView(views.APIView):
                     # inject subdomain to c
                     c['subdomain'] = subdomain
 
+                    # age_group is already mapped for camps
+                    # age_group = c['age_group'],
+
                     # print 'offering', c
 
                     if c['course_code'] not in memo:
@@ -524,6 +527,9 @@ class CodeNinjaCacheUpdateView(views.APIView):
                             c.get('name', ''), 
                         )
 
+                        # "program" in CourseLevel (term) is equivalent to age group
+                        c['age_group'] = c.get('program', '')
+
                         # courseDates are supplied as a dict of {<weekday>: [<datetime>...]}
                         # classDates only selects the time of date
                         classDates = []
@@ -607,6 +613,9 @@ class CodeNinjaCacheUpdateView(views.APIView):
                         # c['end_time'] = p['end_time']
 
                         c['event_type'] = p['event_type']
+
+                        # "suitable_age" in Event (event) is equivalent to age group
+                        c['age_group'] = c.get('suitable_age', '')
 
                         # inject prices, which are all the same for the set of courses in this event
                         c['prices'] = obj.data.get('prices', [])

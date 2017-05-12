@@ -973,7 +973,10 @@ class Ledger(models.Model):
         # courseInfo
         'courseReportRemarks': getCourse_remarks(i),
         'course_code': i.course_code,
-        'courseLocation': getFormatLocation(i),
+        'courseAgeGroup': allCourses_dict.get(i.course_code, {}).get('age_group', None),
+        'courseAddress': getFormatLocation(i),
+        'courseLocation': allCourses_dict.get(i.course_code, {}).get('location', None),
+        'courseEventType': allCourses_dict.get(i.course_code, {}).get('event_type', None),
         'courseStartDate': allCourses_dict.get(i.course_code, {}).get('start_date', None),
         'courseEndDate': allCourses_dict.get(i.course_code, {}).get('end_date', None),
         'courseSubdomain': allCourses_dict.get(i.course_code, {}).get('subdomain', None),
