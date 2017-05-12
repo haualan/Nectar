@@ -458,6 +458,9 @@ class School(models.Model):
     url = "https://maps.googleapis.com/maps/api/place/details/json?language=en&placeid={}&key={}".format( self.place_id ,settings.GOOGLEAPIKEY )
     r = requests.post(url)
 
+    # print url
+    # print r.json()
+
     if r.status_code == 200:
       data = r.json()
       self.enName = data.get('result', {}).get('name')
