@@ -108,6 +108,11 @@ class InternalReportView(views.APIView):
   \n          "op": "getAuthToken",
   \n          "user_id": 2
   \n      }
+  \n search user By ReferralCode 
+  \n      {
+  \n          "op": "searchByReferralCode",
+  \n          "code": "WNV"
+  \n      }
 
 
   """
@@ -146,11 +151,7 @@ class UtilsView(views.APIView):
   \n          "op": "getStudents",
   \n          "uid": 2
   \n      }
-  \n search user By ReferralCode 
-  \n      {
-  \n          "op": "searchByReferralCode",
-  \n          "code": "WNV"
-  \n      }
+
 
 
   """
