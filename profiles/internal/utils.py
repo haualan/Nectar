@@ -4,12 +4,14 @@
 from profiles.models import *
 from django.utils import timezone
 from course.models import internalEmailExclusionRegex, Course
+from rest_framework.exceptions import APIException, ParseError, PermissionDenied
 from course.utils import UserCourseRelationshipNearEnd
 from django.db.models import FloatField, IntegerField
 from django.db.models.functions import Cast
 import StringIO, requests
 from django.conf import settings
 import csv
+from django.forms import model_to_dict
 
 import pandas as pd
 
@@ -213,6 +215,34 @@ def getStudents(request):
   guardianUser = guardianUser.first()
 
   return guardianUser.get_myActiveStudents.values('id', 'firstname', 'lastname', 'username')
+
+def searchByReferralCode(request):
+  """
+  given referral code as string in request.data.get('code')
+  - return the user id and email and display name... etc
+  """
+
+  # only authenticated users may use this
+  if not request.user.is_authenticated():
+    raise PermissionDenied('User not an internal officer')
+
+  code = request.data.get('code', None)
+
+  if not code:
+    return {
+      'msg': 'invalid code'
+    }
+
+  u = ReferralCredit.searchUserByCode(code)
+
+  if not u:
+    raise ParseError('Invalid ReferralCode')
+
+  return {
+    'id': u.id,
+    'email': u.email,
+    'displayName': u.displayName,
+  }
 
 
 

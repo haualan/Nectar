@@ -160,6 +160,29 @@ class ReferralCredit(models.Model):
     super(ReferralCredit, self).save(*args, **kwargs)
 
   @classmethod
+  def searchUserByCode(cls, refCode=''):
+    """
+    given ref code return user, return None if not found
+    """
+
+    decodedTuple = decodeReferralCode(refCode)
+
+    if not decodedTuple:
+      # decode failed
+      print 'decode failed', refCode
+      return None
+
+    uid = decodedTuple[0]
+    creditedUser = User.objects.filter(id = uid)
+
+    if not creditedUser:
+      # creditedUser not found
+      print 'creditedUser not found', uid
+      return None
+      
+    return creditedUser.first()
+
+  @classmethod
   def verifyReferralCode(cls, referToUser, subdomain, refCode='', useCode = False):
     """
     given a <user> referByUser, and a referral Code:

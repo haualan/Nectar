@@ -685,7 +685,7 @@ class ReferralAvailableView(views.APIView):
     if enrollmentCount == 0:
       return Response({'isReferralAvailable' : True })
     return Response({'isReferralAvailable' : False })
-    
+
 
 class ReferralValidationView(views.APIView):
   """
