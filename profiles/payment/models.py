@@ -231,7 +231,15 @@ class ReferralCredit(models.Model):
     usableCredits = cls.objects.filter(creditedUser = creditedUser, id__in = listOfIDs, isUsed = False)
     updateCount = usableCredits.update(isUsed = True)
 
-    return updateCount * get_discountAmount(subdomain)
+    isValid = True
+
+    if updateCount < 1:
+      isValid = False
+
+    return {
+      'isValid': isValid,
+      'discount': updateCount * get_discountAmount(subdomain)
+    }
 
 
 event_type_choices = (

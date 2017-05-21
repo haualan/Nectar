@@ -374,16 +374,19 @@ class PaymentChargeUserView(views.APIView):
     }  
 
     if refCreditList:
-      referralCreditDiscount = ReferralCredit.useReferralCreditList(
+      referralCreditDiscountDict = ReferralCredit.useReferralCreditList(
         creditedUser = guardianUser,
         listOfIDs = refCreditList,
         subdomain = course.subdomain,
       )
 
-      refCreditStatus['used'] = True,
-      refCreditStatus['discount'] = referralCreditDiscount
+      if not referralCreditDiscountDict.get('isValid', False):
+        raise ParseError('referral credit invalid')
 
-      final_discount_amount += referralCreditDiscount
+      refCreditStatus['used'] = True,
+      refCreditStatus['discount'] = referralCreditDiscountDict.get('discount')
+
+      final_discount_amount += refCreditStatus['discount']
 
     # apply coupon and discounts here  
     couponStatus = {
