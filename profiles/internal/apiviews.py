@@ -146,6 +146,11 @@ class UtilsView(views.APIView):
   \n          "op": "getStudents",
   \n          "uid": 2
   \n      }
+  \n search user By ReferralCode 
+  \n      {
+  \n          "op": "searchByReferralCode",
+  \n          "code": "WNV"
+  \n      }
 
 
   """
