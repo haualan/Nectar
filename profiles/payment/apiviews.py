@@ -524,7 +524,7 @@ class PaymentChargeUserView(views.APIView):
 
 
     return Response({
-      'status': 'success'
+      'status': 'success',
       'course_code': course_code,
       'currency': currency.lower(),
       'metadata': metadata,
