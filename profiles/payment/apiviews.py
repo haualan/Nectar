@@ -426,9 +426,16 @@ class PaymentChargeUserView(views.APIView):
     if guardianUser.stripeCustomerId:
       try:
         cu = stripe.Customer.retrieve(guardianUser.stripeCustomerId)
-        cu.sources.create(source = token)
-        # cu.default_source = token
-        # cu.save()
+        oldCards = cu.sources.all(object="card")
+        oldCards_id = [c.get('id') for c in cards]
+
+        # delete all old cards (card numbers cannot be updated, must be created new)
+        for oc in oldCards_id:
+          cu.sources.retrieve(oc).delete()
+
+        card = cu.sources.create(source = token)
+        cu.default_source = card
+        cu.save()
 
 
       except stripe.InvalidRequestError, e:
