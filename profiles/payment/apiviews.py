@@ -426,8 +426,9 @@ class PaymentChargeUserView(views.APIView):
     if guardianUser.stripeCustomerId:
       try:
         cu = stripe.Customer.retrieve(guardianUser.stripeCustomerId)
-        cu.default_source = token
-        cu.save()
+        cu.sources.create(source = token)
+        # cu.default_source = token
+        # cu.save()
 
 
       except stripe.InvalidRequestError, e:
