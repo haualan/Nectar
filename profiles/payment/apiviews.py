@@ -526,7 +526,7 @@ class PaymentChargeUserView(views.APIView):
       # source=token,
       customer = guardianUser.stripeCustomerId,
       metadata = metadata,
-      source = token,
+   
     )
 
 
