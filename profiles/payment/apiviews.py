@@ -427,7 +427,7 @@ class PaymentChargeUserView(views.APIView):
       try:
         cu = stripe.Customer.retrieve(guardianUser.stripeCustomerId)
         oldCards = cu.sources.all(object="card")
-        oldCards_id = [c.get('id') for c in cards]
+        oldCards_id = [c.get('id') for c in oldCards]
 
         # delete all old cards (card numbers cannot be updated, must be created new)
         for oc in oldCards_id:
