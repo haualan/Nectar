@@ -512,6 +512,9 @@ class PaymentChargeUserView(views.APIView):
       amount=stripeAmt,
       currency=currency.lower(),
       description="enroll student id: {}, course_code : {}, name: {}".format(studentUser.id, course_code, course.name),
+      
+      # results in this error when used with token as source
+      # PaymentChargeUserView stripe cus test error Request req_6hUcJtfd6GhqDB: No such source: tok_1ApBPKAOJZvEwOxioiy9eqnw
       # source=token,
       customer = guardianUser.stripeCustomerId,
       metadata = metadata,
