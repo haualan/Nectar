@@ -134,6 +134,15 @@ class StripeWebhookView(views.APIView):
 
     dataWrapper = request.data
 
+    # we only care about charge success and refunds, all other is noise at this time
+    event_type = dataWrapper['type']
+
+    if event_type not in self.validEventTypes:
+      # do not bother
+      return Response({})
+
+
+
     # extract the currency and find the stripe key based on currency
     currency = 'hkd'
     try:
@@ -150,12 +159,8 @@ class StripeWebhookView(views.APIView):
     except stripe.InvalidRequestError, e:
       raise PermissionDenied(u'InvalidRequestError: {}'.format(e))
 
-    # we only care about charge success and refunds, all other is noise at this time
-    event_type = dataWrapper['type']
 
-    if event_type not in self.validEventTypes:
-      # do not bother
-      return Response({})
+
 
     event_id = dataWrapper['id']
     if Ledger.objects.filter(event_id = event_id).exists():
