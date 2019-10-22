@@ -73,7 +73,7 @@ PAM
 pandas
 patsy==0.2.1
 pexpect==3.1
-Pillow==2.9.0
+Pillow==6.2.0
 plotly
 polyline==1.3.1
 prettytable==0.7.2
