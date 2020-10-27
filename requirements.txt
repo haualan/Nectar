@@ -13,7 +13,7 @@ celery==3.1.23
 cffi==1.6.0
 Cheetah==2.4.4
 configobj==4.7.2
-cryptography==1.4
+cryptography==3.2
 decorator==3.4.0
 diff-match-patch==20121119
 Django==1.8.3
