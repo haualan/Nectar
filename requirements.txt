@@ -89,7 +89,7 @@ python-Levenshtein==0.12.0
 python-openid==2.2.5
 python-social-auth==0.2.12
 pytz
-PyYAML==3.10
+PyYAML==5.4
 pyzmq==14.0.1
 redis==2.10.5
 requests==2.7.0
