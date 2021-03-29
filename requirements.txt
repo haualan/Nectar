@@ -80,7 +80,7 @@ prettytable==0.7.2
 pyasn1==0.1.9
 pycparser==2.14
 pycurl==7.19.3
-Pygments==2.0.2
+Pygments==2.7.4
 PyJWT==1.4.0
 pyparsing==2.0.1
 pyserial==2.6
